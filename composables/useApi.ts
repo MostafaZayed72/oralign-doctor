@@ -5,7 +5,7 @@ export const useApi = () => {
   const config = useRuntimeConfig()
   const { locale } = useI18n()
 
-  const base = config.public.apiBase as string
+  const base = config.public.apiProxyBase as string
 
   const get = <T = any>(path: string, params: Record<string, any> = {}): Promise<T> =>
     $fetch<T>(`${base}/${path}`, {

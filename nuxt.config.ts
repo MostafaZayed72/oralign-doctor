@@ -44,14 +44,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // Use a relative path for the proxy to avoid CORS
-      apiBase: '/api-proxy',
-    },
-  },
-
-  routeRules: {
-    '/api-proxy/**': {
-      proxy: 'https://doctors.oralign.co/api/website/**',
+      // Use our new custom server proxy route
+      apiProxyBase: '/api/p',
     },
   },
 

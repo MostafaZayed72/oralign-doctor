@@ -70,7 +70,7 @@ const settings = globalSettings
 
 // Fetch settings on layout mount (once per locale change)
 const { data } = await useFetch<any>(
-  () => `${config.public.apiBase}/settings?lang=${locale.value}`,
+  () => `${config.public.apiProxyBase}/settings?lang=${locale.value}`,
 )
 
 watchEffect(() => {

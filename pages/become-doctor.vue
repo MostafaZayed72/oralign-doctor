@@ -86,7 +86,7 @@ const config = useRuntimeConfig()
 const { locale } = useI18n()
 
 const { data } = await useFetch<any>(
-  () => `${config.public.apiBase}/become-doctor?lang=${locale.value}`,
+  () => `${config.public.apiProxyBase}/become-doctor?lang=${locale.value}`,
 )
 
 const form = reactive({
@@ -111,7 +111,7 @@ const onCountryChange = async () => {
   regions.value = []
   areas.value = []
   if (!form.country_id) return
-  regions.value = await $fetch<any[]>(`${config.public.apiBase}/regions`, {
+  regions.value = await $fetch<any[]>(`${config.public.apiProxyBase}/regions`, {
     method: 'POST',
     body: { id: form.country_id, lang: locale.value },
   })
@@ -121,7 +121,7 @@ const onRegionChange = async () => {
   form.area_id = ''
   areas.value = []
   if (!form.region_id) return
-  areas.value = await $fetch<any[]>(`${config.public.apiBase}/areas`, {
+  areas.value = await $fetch<any[]>(`${config.public.apiProxyBase}/areas`, {
     method: 'POST',
     body: { id: form.region_id, lang: locale.value },
   })
@@ -131,7 +131,7 @@ const submit = async () => {
   errors.value = []
   loading.value = true
   try {
-    await $fetch(`${config.public.apiBase}/become-doctor`, {
+    await $fetch(`${config.public.apiProxyBase}/become-doctor`, {
       method: 'POST',
       body: { ...form, lang: locale.value },
     })

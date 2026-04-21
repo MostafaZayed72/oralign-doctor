@@ -337,9 +337,9 @@ const fixUrl = (url: string) => {
     .replace(/https?:\/\/localhost:8000/g, 'https://doctors.oralign.co')
 }
 
-// Ensure apiBase ends without slash then add it if needed
+// Ensure apiProxyBase ends without slash then add it if needed
 const apiEndpoint = computed(() => {
-  const base = config.public.apiBase || 'https://doctors.oralign.co/api/website'
+  const base = config.public.apiProxyBase || '/api-proxy'
   return `${base.replace(/\/$/, '')}/home?lang=${locale.value}`
 })
 

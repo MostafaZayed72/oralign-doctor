@@ -47,7 +47,7 @@ const localePath = useLocalePath()
 const page = computed(() => Number(route.query.page) || 1)
 
 const { data, refresh } = await useFetch<any>(
-  () => `${config.public.apiBase}/blogs?lang=${locale.value}&page=${page.value}`,
+  () => `${config.public.apiProxyBase}/blogs?lang=${locale.value}&page=${page.value}`,
 )
 
 watch([locale, page], () => refresh())

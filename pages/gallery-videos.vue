@@ -49,7 +49,7 @@ const config = useRuntimeConfig()
 const { locale } = useI18n()
 
 const { data } = await useFetch<any>(
-  () => `${config.public.apiBase}/gallery-videos?lang=${locale.value}`,
+  () => `${config.public.apiProxyBase}/gallery-videos?lang=${locale.value}`,
 )
 
 const isYoutube = (url: string | null) =>

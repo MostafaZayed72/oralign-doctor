@@ -26,6 +26,6 @@ const config = useRuntimeConfig()
 const { locale } = useI18n()
 
 const { data } = await useFetch<any>(
-  () => `${config.public.apiBase}/patient-gallery?lang=${locale.value}`,
+  () => `${config.public.apiProxyBase}/patient-gallery?lang=${locale.value}`,
 )
 </script>

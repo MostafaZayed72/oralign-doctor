@@ -7,7 +7,7 @@ export const useAuth = () => {
 
   const login = async (credentials: { email: string; password: string }) => {
     try {
-      const response: any = await $fetch(`${config.public.apiBase}/login`, {
+      const response: any = await $fetch(`${config.public.apiProxyBase}/login`, {
         method: 'POST',
         body: credentials,
       })
@@ -28,7 +28,7 @@ export const useAuth = () => {
   const fetchUser = async () => {
     if (!token.value) return
     try {
-      const response: any = await $fetch(`${config.public.apiBase}/me`, {
+      const response: any = await $fetch(`${config.public.apiProxyBase}/me`, {
         headers: { Authorization: `Bearer ${token.value}` },
       })
       if (response?.success) {
@@ -44,7 +44,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       if (token.value) {
-        await $fetch(`${config.public.apiBase}/logout`, {
+        await $fetch(`${config.public.apiProxyBase}/logout`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token.value}` },
         })

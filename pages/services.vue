@@ -43,6 +43,6 @@ const localePath = useLocalePath()
 const isRtl = computed(() => locale.value === 'ar')
 
 const { data } = await useFetch<any>(
-  () => `${config.public.apiBase}/services?lang=${locale.value}`,
+  () => `${config.public.apiProxyBase}/services?lang=${locale.value}`,
 )
 </script>

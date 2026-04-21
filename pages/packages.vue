@@ -44,6 +44,6 @@ const { locale } = useI18n()
 const localePath = useLocalePath()
 
 const { data } = await useFetch<any>(
-  () => `${config.public.apiBase}/packages?lang=${locale.value}`,
+  () => `${config.public.apiProxyBase}/packages?lang=${locale.value}`,
 )
 </script>
