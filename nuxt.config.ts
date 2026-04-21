@@ -44,9 +44,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // Use our new custom server proxy route
       apiProxyBase: '/api/p',
     },
+  },
+
+  routeRules: {
+    '/api/p/**': { proxy: 'https://doctors.oralign.co/api/website/**' }
   },
 
   compatibilityDate: '2024-11-01',
