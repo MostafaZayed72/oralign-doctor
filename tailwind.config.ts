@@ -21,7 +21,7 @@ export default {
         accent: '#f0a500',
       },
       fontFamily: {
-        sans: ['Cairo', 'sans-serif'],
+        sans: ['Tajawal', 'sans-serif'],
       },
     },
   },

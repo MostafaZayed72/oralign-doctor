@@ -333,17 +333,29 @@ const steps = [
 // ─── Dynamic Blogs from API ──────────────────────────────
 const fixUrl = (url: string) => {
   if (!url) return ''
-  return url.replace('https://127.0.0.1:8000', 'https://doctors.oralign.co')
-    .replace('http://127.0.0.1:8000', 'https://doctors.oralign.co')
+  return url.replace(/https?:\/\/127\.0\.0\.1:8000/g, 'https://doctors.oralign.co')
+    .replace(/https?:\/\/localhost:8000/g, 'https://doctors.oralign.co')
 }
 
-const { data: rawData } = await useFetch<any>(
-  () => `${config.public.apiBase}/home?lang=${locale.value}`,
-)
+// Ensure apiBase ends without slash then add it if needed
+const apiEndpoint = computed(() => {
+  const base = config.public.apiBase || 'https://doctors.oralign.co/api/website'
+  return `${base.replace(/\/$/, '')}/home?lang=${locale.value}`
+})
+
+const { data: rawData, error } = await useFetch<any>(apiEndpoint, {
+  key: `home-data-${locale.value}`,
+  server: true,
+  lazy: false
+})
+
+if (error.value) {
+  console.error('Fetch error:', error.value)
+}
 
 const blogs = computed(() => {
-  if (!rawData.value?.blogs) return []
-  return rawData.value.blogs.map((b: any) => ({
+  const list = rawData.value?.blogs || []
+  return list.map((b: any) => ({
     ...b,
     image: fixUrl(b.image)
   }))
