@@ -1,0 +1,23 @@
+{
+  "name": "doctor-dash-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/color-mode": "3.5.2",
+    "@nuxtjs/i18n": "^10.2.4",
+    "nuxt": "^3.13.2",
+    "vue": "^3.5.11",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "typescript": "^5.6.3"
+  }
+}

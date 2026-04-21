@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #1a6da8;
+    --color-primary-light: #2a8dd4;
+    --color-primary-dark: #0d4d7a;
+    --color-accent: #f0a500;
+  }
+
+  html {
+    font-family: 'Tajawal', sans-serif;
+    scroll-behavior: smooth;
+    font-size: 18px;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-white dark:bg-[#121212] text-gray-800 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold transition hover:bg-primary-dark;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2;
+  }
+
+  .section-subtitle {
+    @apply text-primary font-bold uppercase tracking-widest text-base mb-3;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Reveal Animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  .reveal.active {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  .reveal-left.active {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  .reveal-right.active {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+
+  .prose h1, .prose h2, .prose h3 {
+    @apply dark:text-white !important;
+  }
+
+  /* Particle Background */
+  .particles-bg {
+    @apply fixed inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-1000;
+    opacity: 0.5; /* Always visible but subtle */
+  }
+
+  .particle {
+    @apply absolute rounded-full;
+    background-color: theme('colors.primary' / 10%);
+    animation: float var(--duration) ease-in-out infinite alternate;
+    left: var(--left);
+    top: var(--top);
+    width: var(--size);
+    height: var(--size);
+  }
+
+  .dark .particle {
+    @apply bg-white/10;
+  }
+
+  @keyframes float {
+    from { transform: translate(0, 0) rotate(0deg) scale(1); }
+    to { transform: translate(var(--x), var(--y)) rotate(180deg) scale(1.5); }
+  }
+
+  p, li {
+    @apply text-base md:text-lg;
+  }
+}
+
+@layer utilities {
+  .delay-100 { transition-delay: 100ms; }
+  .delay-200 { transition-delay: 200ms; }
+  .delay-300 { transition-delay: 300ms; }
+  .delay-500 { transition-delay: 500ms; }
+}
