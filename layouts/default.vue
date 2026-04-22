@@ -5,17 +5,7 @@
       <Link v-if="settings?.configration?.fav_icon" rel="icon" :href="settings.configration.fav_icon" />
     </Head>
 
-    <!-- Particle Background for Dark Mode -->
-    <div class="particles-bg">
-      <div v-for="i in 30" :key="i" class="particle" :style="{
-        '--left': `${Math.random() * 100}%`,
-        '--top': `${Math.random() * 100}%`,
-        '--size': `${Math.random() * 20 + 10}px`,
-        '--duration': `${Math.random() * 5 + 5}s`,
-        '--x': `${Math.random() * 100 - 50}px`,
-        '--y': `${Math.random() * 100 - 50}px`
-      }"></div>
-    </div>
+
 
     <AppHeader />
 

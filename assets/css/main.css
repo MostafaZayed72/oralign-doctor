@@ -93,33 +93,6 @@
     @apply dark:text-white !important;
   }
 
-  /* Particle Background */
-  .particles-bg {
-    @apply fixed inset-0 z-[50] pointer-events-none overflow-hidden transition-opacity duration-1000;
-  }
-
-  .particle {
-    @apply absolute rounded-full;
-    background-color: #034a41; /* Green for light mode */
-    opacity: 0.3;
-    animation: float var(--duration) ease-in-out infinite alternate;
-    left: var(--left);
-    top: var(--top);
-    width: var(--size);
-    height: var(--size);
-    filter: blur(2px);
-  }
-
-  .dark .particle {
-    background-color: #e1c469; /* Yellow/Gold for dark mode */
-    opacity: 0.25;
-  }
-
-  @keyframes float {
-    from { transform: translate(0, 0) rotate(0deg) scale(1); }
-    to { transform: translate(var(--x), var(--y)) rotate(180deg) scale(1.6); }
-  }
-
   p, li {
     @apply text-base md:text-lg;
   }
