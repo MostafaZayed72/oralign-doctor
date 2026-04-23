@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/api/p/**': { proxy: 'https://doctors.oralign.co/api/website/**' }
+    '/api/p/**': { proxy: 'https://doctors.oralign.co/api/website/**' },
   },
 
   compatibilityDate: '2024-11-01',
