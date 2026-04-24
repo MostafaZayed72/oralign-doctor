@@ -61,6 +61,16 @@
         </button>
       </div>
     </div>
+
+    <!-- Confirm Dialog -->
+    <AdminConfirmDialog 
+      :is-open="showLogoutDialog"
+      :title="t('logout')"
+      :message="t('logout_confirm')"
+      icon="fas fa-sign-out-alt"
+      @confirm="handleLogout"
+      @cancel="showLogoutDialog = false"
+    />
   </aside>
 
   <!-- Mobile Overlay -->
@@ -114,10 +124,15 @@ const toggleCollapse = () => {
   localStorage.setItem('sidebar_is_collapsed', isCollapsed.value)
 }
 
-const logout = async () => {
-  if (confirm(t('logout') + '?')) {
-    await authLogout()
-  }
+const showLogoutDialog = ref(false)
+
+const logout = () => {
+  showLogoutDialog.value = true
+}
+
+const handleLogout = async () => {
+  showLogoutDialog.value = false
+  await authLogout()
 }
 
 const localePath = useLocalePath()

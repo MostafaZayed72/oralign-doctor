@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-bold text-slate-900 dark:text-white">إدارة الأقسام</h1>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">إضافة وتعديل الأقسام الرئيسية والفرعية للحالات</p>
         </div>
-        <button @click="openMainModal()" class="px-5 py-2.5 bg-brand-primary hover:bg-brand-primary/90 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-brand-primary/20">
+        <button @click="openMainModal()" class="px-5 py-2.5 bg-[#063c31] hover:bg-[#063c31]/90 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-[#063c31]/20">
             <i class="fas fa-plus"></i> إضافة قسم رئيسي جديد
         </button>
     </div>

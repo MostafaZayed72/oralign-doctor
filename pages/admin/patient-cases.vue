@@ -10,7 +10,7 @@
         <div class="relative min-w-[220px]">
           <select 
             v-model="activeFilter"
-            class="w-full pl-4 pr-10 py-2.5 text-sm font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all cursor-pointer appearance-none shadow-inner"
+            class="w-full pl-4 pr-10 py-2.5 text-sm font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-#063c31 focus:border-transparent outline-none transition-all cursor-pointer appearance-none shadow-inner"
           >
             <option v-for="filter in filters" :key="filter" :value="filter">
               {{ filter === 'All Cases' ? t('all_cases') : t(filter) }}
@@ -31,7 +31,7 @@
         <div class="relative min-w-[200px]">
           <select 
             v-model="activeCategoryFilter"
-            class="w-full pl-4 pr-10 py-2.5 text-sm font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all cursor-pointer appearance-none shadow-inner"
+            class="w-full pl-4 pr-10 py-2.5 text-sm font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-#063c31 focus:border-transparent outline-none transition-all cursor-pointer appearance-none shadow-inner"
           >
             <option value="All Categories">{{ t('all_categories') }}</option>
             <option v-for="cat in allCategories" :key="cat.id" :value="cat.id">{{ cat.name_ar }}</option>
@@ -45,13 +45,13 @@
       <!-- Date Filter -->
       <div class="flex items-center gap-3">
         <label class="text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-          <i class="fas fa-calendar-alt text-brand-gold mr-1 rtl:ml-1"></i>
+          <i class="fas fa-calendar-alt text-#d1b06b mr-1 rtl:ml-1"></i>
           {{ t('filter_by_date') }}:
         </label>
         <div class="relative min-w-[200px]">
           <select 
             v-model="activeDateFilter"
-            class="w-full pl-4 pr-10 py-2.5 text-sm font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none transition-all cursor-pointer appearance-none shadow-inner"
+            class="w-full pl-4 pr-10 py-2.5 text-sm font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-#d1b06b focus:border-transparent outline-none transition-all cursor-pointer appearance-none shadow-inner"
           >
             <option value="All Time">{{ t('all_time') }}</option>
             <option value="Last Day">{{ t('last_day') }}</option>
@@ -74,7 +74,7 @@
             <input 
               type="date" 
               v-model="customStartDate"
-              class="pl-3 pr-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-gold transition-all shadow-sm"
+              class="pl-3 pr-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-#d1b06b transition-all shadow-sm"
               :placeholder="t('from_date')"
             >
           </div>
@@ -83,7 +83,7 @@
             <input 
               type="date" 
               v-model="customEndDate"
-              class="pl-3 pr-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-gold transition-all shadow-sm"
+              class="pl-3 pr-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-#d1b06b transition-all shadow-sm"
               :placeholder="t('to_date')"
             >
           </div>
@@ -146,7 +146,7 @@
           <thead>
             <tr :class="getGroupHeaderClass(activeGroup)" class="text-[11px] uppercase tracking-wider font-bold">
               <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 w-10 text-center">
-                <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="rounded border-slate-300 text-brand-primary focus:ring-brand-primary w-4 h-4 cursor-pointer">
+                <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="rounded border-slate-300 text-#063c31 focus:ring-#063c31 w-4 h-4 cursor-pointer">
               </th>
               
               <!-- Virtual Planning Group (Reordered) -->
@@ -200,7 +200,7 @@
                 :class="getRowClass(item)">
               <td class="p-0 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 0)">
                 <div class="w-full h-full min-h-[65px] flex items-center justify-center p-4">
-                  <input type="checkbox" v-model="selectedCases" :value="item.id" class="rounded border-slate-300 text-brand-primary focus:ring-brand-primary w-4 h-4 cursor-pointer">
+                  <input type="checkbox" v-model="selectedCases" :value="item.id" class="rounded border-slate-300 text-#063c31 focus:ring-#063c31 w-4 h-4 cursor-pointer">
                 </div>
               </td>
 
@@ -864,7 +864,7 @@
           <div class="p-6 space-y-4 overflow-y-auto max-h-[60vh] custom-scroll">
             <div v-if="paginatedHistory.length > 0" v-for="(log, idx) in paginatedHistory" :key="idx" class="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 group hover:border-teal-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-black text-brand-primary dark:text-brand-gold uppercase tracking-wider">{{ log.date }}</span>
+                <span class="text-xs font-black text-#063c31 dark:text-#d1b06b uppercase tracking-wider">{{ log.date }}</span>
                 <span class="h-1.5 w-1.5 rounded-full bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.6)]"></span>
               </div>
               <span class="text-sm font-bold text-slate-700 dark:text-slate-300 block leading-relaxed">{{ log.action }}</span>
@@ -899,7 +899,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800 relative" @click.stop>
           <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
             <h3 class="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 text-[18px]" style="font-family: 'Fira Code', monospace;">
-              <i class="fas fa-comment-dots text-brand-primary"></i> {{ activeNoteTitle }}
+              <i class="fas fa-comment-dots text-#063c31"></i> {{ activeNoteTitle }}
             </h3>
             <button @click="isNoteModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors ltr:ml-auto rtl:mr-auto">
               <i class="fas fa-times text-xl"></i>

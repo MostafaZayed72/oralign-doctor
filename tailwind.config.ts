@@ -18,6 +18,8 @@ export default {
           light: '#2a8dd4',
           dark: '#0d4d7a',
         },
+        'brand-primary': '#063c31',
+        'brand-gold': '#d1b06b',
         accent: '#f0a500',
       },
       fontFamily: {

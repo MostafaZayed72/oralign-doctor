@@ -43,10 +43,10 @@
                 <span class="font-medium">{{ $t('retainer') }}</span>
               </NuxtLink>
               <div class="h-px bg-gray-100 dark:bg-gray-700 my-1"></div>
-              <button class="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-gray-700 dark:text-gray-200 text-start">
+              <NuxtLink :to="localePath('/refinement-submission')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-gray-700 dark:text-gray-200 text-start">
                 <i class="fas fa-layer-group text-primary w-5 text-center"></i>
                 <span class="font-medium">{{ $t('refinement') }}</span>
-              </button>
+              </NuxtLink>
             </div>
           </transition>
         </div>
@@ -128,10 +128,14 @@
             <tbody>
               <tr v-for="c in filteredCases" :key="c.id" class="case-row">
                 <td class="dashboard-td">
-                  <a :href="`https://doctors.oralign.co/doctor/case-details/${c.id}`" class="text-primary font-bold text-sm hover:underline cell-content">Oralign-{{ c.id }}</a>
+                  <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-primary font-bold text-sm hover:underline cell-content">
+                    {{ c.uuid || `Oralign-${c.id}` }}
+                  </NuxtLink>
                 </td>
                 <td class="dashboard-td">
-                  <a :href="`https://doctors.oralign.co/doctor/case-details/${c.id}`" class="text-gray-800 dark:text-gray-200 font-semibold text-sm hover:text-primary transition-colors cell-content">{{ c.patient_name }}</a>
+                  <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-gray-800 dark:text-gray-200 font-semibold text-sm hover:text-primary transition-colors cell-content">
+                    {{ c.patient_name }}
+                  </NuxtLink>
                 </td>
                 <td class="dashboard-td text-gray-600 dark:text-gray-300 text-sm capitalize">
                   <span class="cell-content">{{ c.case_type }}</span>
@@ -160,9 +164,9 @@
                 </td>
                 <td class="dashboard-td">
                   <div class="flex items-center justify-center gap-3 cell-content">
-                    <button @click.prevent="editCase(c.id)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('edit') || 'تعديل'">
+                    <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('edit') || 'تعديل'">
                       <i class="fas fa-edit text-lg"></i>
-                    </button>
+                    </NuxtLink>
                     <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" :title="$t('refinement') || 'Refinement'">
                       <i class="fas fa-layer-group text-lg"></i>
                     </button>
@@ -253,12 +257,7 @@ const editCase = (id: number) => {
 }
 
 const refineCase = (id: number) => {
-  Swal.fire({
-    title: 'Refinement',
-    text: `Refinement for case: ${id}`,
-    icon: 'info',
-    confirmButtonColor: '#10b981'
-  })
+  navigateTo(localePath({ path: '/refinement-submission', query: { caseId: id } }))
 }
 
 const deleteCase = async (id: number) => {
