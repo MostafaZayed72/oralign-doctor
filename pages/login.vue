@@ -58,7 +58,12 @@ const handleLogin = async () => {
   const result = await login(form)
   
   if (result.success) {
-    router.push(localePath('/dashboard'))
+    const role = useAuth().user.value?.role
+    if (role === 'admin') {
+      router.push(localePath('/admin/patient-cases'))
+    } else {
+      router.push(localePath('/dashboard'))
+    }
   } else {
     error.value = result.message || 'حدث خطأ أثناء تسجيل الدخول. يرجى التأكد من البيانات والمحاولة مجدداً.'
   }

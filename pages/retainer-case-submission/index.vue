@@ -44,6 +44,7 @@
           <component 
             :is="currentStepComponent" 
             :form-data="formData" 
+            :is-submitting="isSubmitting"
             @update="updateFormData"
             @next="nextStep"
             @prev="prevStep"
@@ -64,9 +65,11 @@ import { useAuth } from '~/composables/useAuth'
 import StepOne from '~/components/cases/retainer/StepOne.vue'
 import StepTwo from '~/components/cases/retainer/StepTwo.vue'
 import StepThree from '~/components/cases/retainer/StepThree.vue'
+import Swal from 'sweetalert2'
 
 const { token } = useAuth()
 const currentStep = ref(0)
+const isSubmitting = ref(false)
 
 const steps = [
   { title: 'Patient Information', component: StepOne },
@@ -115,9 +118,16 @@ const prevStep = () => {
 
 const submitCase = async () => {
   if (!token.value) {
-    alert('You are not logged in. Please login first.')
+    Swal.fire({
+      title: 'Error!',
+      text: 'You are not logged in. Please login first.',
+      icon: 'error',
+      confirmButtonColor: '#10b981'
+    })
     return
   }
+
+  isSubmitting.value = true
 
   try {
     const response = await $fetch('/api/doctor/retainers', {
@@ -129,11 +139,24 @@ const submitCase = async () => {
       body: formData.value
     })
 
-    alert('Retainer Case submitted successfully!')
-    navigateTo('/dashboard')
+    Swal.fire({
+      title: 'Success!',
+      text: 'Retainer Case submitted successfully!',
+      icon: 'success',
+      confirmButtonColor: '#10b981'
+    }).then(() => {
+      navigateTo('/dashboard')
+    })
   } catch (e: any) {
     console.error('Submit error:', e)
-    alert(e?.data?.message || e?.message || 'Error submitting case')
+    Swal.fire({
+      title: 'Error!',
+      text: e?.data?.message || e?.message || 'Error submitting case',
+      icon: 'error',
+      confirmButtonColor: '#10b981'
+    })
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>

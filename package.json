@@ -12,7 +12,10 @@
   "dependencies": {
     "@nuxtjs/color-mode": "3.5.2",
     "@nuxtjs/i18n": "^10.2.4",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "nuxt": "^3.13.2",
+    "sweetalert2": "^11.26.24",
     "vue": "^3.5.11",
     "vue-router": "^4.4.5"
   },

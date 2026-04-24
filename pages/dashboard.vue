@@ -122,6 +122,7 @@
                 <th class="dashboard-th">{{ $t('col_tp1') }}</th>
                 <th class="dashboard-th">{{ $t('col_tp2') }}</th>
                 <th class="dashboard-th">{{ $t('col_pdf') }}</th>
+                <th class="dashboard-th">{{ $t('col_actions') || 'الإجراءات' }}</th>
               </tr>
             </thead>
             <tbody>
@@ -156,6 +157,19 @@
                   <a :href="`https://doctors.oralign.co/doctor/case-pdf/${c.id}`" target="_blank" class="text-white font-bold flex items-center justify-center hover:underline cell-content">
                     <i class="fas fa-file-pdf mr-1"></i> PDF
                   </a>
+                </td>
+                <td class="dashboard-td">
+                  <div class="flex items-center justify-center gap-3 cell-content">
+                    <button @click.prevent="editCase(c.id)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('edit') || 'تعديل'">
+                      <i class="fas fa-edit text-lg"></i>
+                    </button>
+                    <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" :title="$t('refinement') || 'Refinement'">
+                      <i class="fas fa-layer-group text-lg"></i>
+                    </button>
+                    <button @click.prevent="deleteCase(c.id)" class="text-red-500 hover:text-red-700 transition-colors transform hover:scale-110" :title="$t('delete') || 'حذف'">
+                      <i class="fas fa-trash text-lg"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -229,6 +243,61 @@ const vClickOutside = {
   unmounted(el: any) {
     document.body.removeEventListener("click", el.__clickOutside)
   },
+}
+
+import Swal from 'sweetalert2'
+
+// Action Handlers
+const editCase = (id: number) => {
+  window.location.href = `https://doctors.oralign.co/doctor/case-details/${id}`
+}
+
+const refineCase = (id: number) => {
+  Swal.fire({
+    title: 'Refinement',
+    text: `Refinement for case: ${id}`,
+    icon: 'info',
+    confirmButtonColor: '#10b981'
+  })
+}
+
+const deleteCase = async (id: number) => {
+  const result = await Swal.fire({
+    title: useNuxtApp().$i18n.t('confirm_delete_title') || 'Are you sure?',
+    text: useNuxtApp().$i18n.t('confirm_delete') || "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#10b981',
+    cancelButtonColor: '#ef4444',
+    confirmButtonText: useNuxtApp().$i18n.t('yes_delete') || 'Yes, delete it!',
+    cancelButtonText: useNuxtApp().$i18n.t('cancel') || 'Cancel'
+  })
+
+  if (result.isConfirmed) {
+    try {
+      await $fetch(`/api/doctor/cases/${id}`, { 
+        method: 'DELETE', 
+        headers: { Authorization: `Bearer ${token.value}` } 
+      })
+      
+      allCases.value = allCases.value.filter(c => c.id !== id)
+      
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Case has been deleted.',
+        icon: 'success',
+        confirmButtonColor: '#10b981'
+      })
+    } catch (e) {
+      console.error(e)
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to delete case.',
+        icon: 'error',
+        confirmButtonColor: '#10b981'
+      })
+    }
+  }
 }
 
 onMounted(() => loadCases())

@@ -73,7 +73,8 @@
     <div class="flex justify-between pt-6 mt-8 border-t border-gray-100 dark:border-gray-800">
       <button 
         @click="$emit('prev')"
-        class="bg-white dark:bg-[#252525] hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center gap-2"
+        :disabled="isSubmitting"
+        class="bg-white dark:bg-[#252525] hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="fas fa-arrow-left text-sm"></i>
         <span>Back</span>
@@ -81,10 +82,12 @@
       
       <button 
         @click="$emit('submit')"
-        class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-10 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 shadow-lg shadow-emerald-500/30 min-w-[140px] whitespace-nowrap"
+        :disabled="isSubmitting"
+        class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-10 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 shadow-lg shadow-emerald-500/30 min-w-[140px] whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:-translate-y-0"
       >
-        <i class="fas fa-paper-plane text-sm"></i>
-        <span>Submit Case</span>
+        <i v-if="isSubmitting" class="fas fa-spinner fa-spin text-sm"></i>
+        <i v-else class="fas fa-paper-plane text-sm"></i>
+        <span>{{ isSubmitting ? 'Submitting...' : 'Submit Case' }}</span>
       </button>
     </div>
   </div>
@@ -94,7 +97,8 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  formData: { type: Object, required: true }
+  formData: { type: Object, required: true },
+  isSubmitting: { type: Boolean, default: false }
 })
 defineEmits(['prev', 'submit'])
 
