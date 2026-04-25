@@ -3,38 +3,47 @@
     <div class="container mx-auto px-4 max-w-5xl">
       
       <!-- Page Header -->
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">{{ $t('refinement_submission') || 'Refinement Submission' }}</h2>
-        <p class="text-gray-500 dark:text-gray-400">
-          {{ $t('refinement_subtitle') || 'Please provide new records for the existing case to adjust the treatment plan.' }}
-          <span v-if="parentCase" class="block mt-2 font-semibold text-emerald-600 dark:text-emerald-400">
-            Case: {{ parentCase.patient_name }} ({{ parentCase.uuid }})
-          </span>
-        </p>
+      <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-black text-gray-800 dark:text-gray-100 mb-2">
+            Refinement Submission
+          </h2>
+          <p class="text-gray-500 dark:text-gray-400">
+            Adjust the treatment plan for an existing case by providing new clinical information.
+          </p>
+        </div>
+        <div class="flex items-center space-x-3 bg-white dark:bg-[#1a1a1a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+            <i class="fas fa-layer-group"></i>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Current Step</div>
+            <div class="text-sm font-bold text-gray-800 dark:text-gray-100">
+              {{ currentStep + 1 }}. {{ steps[currentStep].title }}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Stepper / Progress -->
-      <div class="mb-8">
-        <div class="flex items-center justify-between relative">
-          <!-- Background Line -->
-          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full z-0"></div>
-          <!-- Progress Line -->
-          <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-emerald-500 rounded-full z-0 transition-all duration-500" :style="{ width: progressWidth }"></div>
+      <!-- Stepper -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between relative px-2">
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full z-0"></div>
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-emerald-500 rounded-full z-0 transition-all duration-700 ease-in-out" :style="{ width: progressWidth }"></div>
 
-          <!-- Step Indicators -->
           <div v-for="(step, index) in steps" :key="index" class="relative z-10 flex flex-col items-center group">
             <div 
-              class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-md"
+              class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-500 shadow-lg"
               :class="[
-                currentStep > index ? 'bg-emerald-500 text-white border-2 border-emerald-500' : 
-                currentStep === index ? 'bg-white dark:bg-[#1a1a1a] text-emerald-500 border-2 border-emerald-500 scale-110' : 
-                'bg-white dark:bg-[#252525] text-gray-400 border-2 border-gray-200 dark:border-gray-700'
+                currentStep > index ? 'bg-emerald-500 text-white rotate-[360deg]' : 
+                currentStep === index ? 'bg-white dark:bg-[#1a1a1a] text-emerald-500 ring-4 ring-emerald-500/20 scale-110 shadow-emerald-500/20' : 
+                'bg-white dark:bg-[#252525] text-gray-400 grayscale border border-gray-100 dark:border-gray-800'
               ]"
             >
-              <i v-if="currentStep > index" class="fas fa-check"></i>
-              <span v-else>{{ index + 1 }}</span>
+              <i v-if="currentStep > index" class="fas fa-check text-lg"></i>
+              <i v-else :class="step.icon" class="text-lg"></i>
             </div>
-            <div class="mt-3 text-xs font-semibold whitespace-nowrap transition-colors duration-300"
+            <div class="mt-4 text-[10px] md:text-xs font-black uppercase tracking-tighter transition-all duration-300 hidden md:block"
                  :class="currentStep >= index ? 'text-gray-800 dark:text-gray-200' : 'text-gray-400'">
               {{ step.title }}
             </div>
@@ -42,27 +51,19 @@
         </div>
       </div>
 
-      <!-- Form Card -->
-      <div class="bg-white dark:bg-[#1a1a1a] rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 p-6 md:p-8 overflow-hidden transition-all duration-500 min-h-[400px] relative">
-        
+      <!-- Main Form Card -->
+      <div class="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 p-6 md:p-10 transition-all duration-500 min-h-[500px] relative">
         <transition name="slide-fade" mode="out-in">
-          <div v-if="isLoadingParent" class="flex flex-col items-center justify-center py-20">
-             <i class="fas fa-circle-notch fa-spin text-4xl text-emerald-500 mb-4"></i>
-             <p class="text-gray-500">Loading case details...</p>
-          </div>
           <component 
-            v-else
             :is="currentStepComponent" 
             :form-data="formData" 
             :is-submitting="isSubmitting"
-            :is-refinement="true"
             @update="updateFormData"
             @next="nextStep"
             @prev="prevStep"
             @submit="submitRefinement"
           />
         </transition>
-
       </div>
 
     </div>
@@ -71,26 +72,33 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-const { token } = useAuth()
-import StepOne from '~/components/cases/StepOne.vue'
-import StepTwo from '~/components/cases/StepTwo.vue'
-import StepThree from '~/components/cases/StepThree.vue'
-import StepFour from '~/components/cases/StepFour.vue'
 import Swal from 'sweetalert2'
 
-const route = useRoute()
-const parentId = route.query.caseId
-const parentCase = ref<any>(null)
-const isLoadingParent = ref(!!parentId)
+// Import components
+import StepZero from '~/components/cases/StepZero.vue'
+import StepOne from '~/components/cases/StepOne.vue'
+import StepThree from '~/components/cases/StepThree.vue'
+import StepScan from '~/components/cases/StepScan.vue'
+import StepTwo from '~/components/cases/StepTwo.vue'
+import StepDetailedPlan from '~/components/cases/StepDetailedPlan.vue'
+import StepFour from '~/components/cases/StepFour.vue'
 
-const currentStep = ref(0)
+const { token } = useAuth()
+const route = useRoute()
+
+// If caseId is in URL, skip Step 0
+const parentIdFromUrl = route.query.caseId
+const currentStep = ref(parentIdFromUrl ? 1 : 0)
 const isSubmitting = ref(false)
 
 const steps = [
-  { title: 'Patient Info', component: StepOne },
-  { title: 'Clinical Details', component: StepTwo },
-  { title: 'Photos & X-Rays', component: StepThree },
-  { title: 'Summary', component: StepFour }
+  { title: 'Select Case', icon: 'fas fa-search', component: StepZero },
+  { title: 'Patient Info', icon: 'fas fa-user-circle', component: StepOne },
+  { title: 'Records', icon: 'fas fa-camera-retro', component: StepThree },
+  { title: '3D Scan', icon: 'fas fa-cube', component: StepScan },
+  { title: 'Plan', icon: 'fas fa-clipboard-list', component: StepTwo },
+  { title: 'Detailed Plan', icon: 'fas fa-tooth', component: StepDetailedPlan },
+  { title: 'Summary', icon: 'fas fa-flag-checkered', component: StepFour }
 ]
 
 const progressWidth = computed(() => {
@@ -99,54 +107,80 @@ const progressWidth = computed(() => {
 
 const currentStepComponent = computed(() => steps[currentStep.value].component)
 
-// Shared State
+// Initialize Form Data (Same structure as Add New Case)
 const formData = ref({
-  parent_id: parentId,
-  // Step 1
-  firstName: '',
-  lastName: '',
+  parent_id: parentIdFromUrl || null,
+  // Step 1: Patient
+  first_name: '',
+  last_name: '',
   gender: '',
   dob: '',
-  chiefComplaint: '',
+  chief_complaint: '',
+  treatment_arch: 'Both',
   
-  // Step 2
-  treatmentArch: 'Both',
-  midline: 'Maintain',
-  overjet: 'Improve',
-  overbite: 'Improve',
-  ipr: 'If Needed',
-  extraction: 'None',
-  additionalInstructions: '',
+  // Step 2: Files
+  recordFiles: {}, // { frontal: File, ... }
+  
+  // Step 3: Scan
+  impression_type: 'upload',
+  stl_links: '',
+  pickup_address: '',
+  stlFiles: { upper: null, lower: null },
 
-  // Step 3 (Files)
-  photos: [],
-  xrays: []
+  // Step 4: Plan Options
+  package_id: 1,
+  has_primary_teeth: '0',
+  detailed_plan: {
+    crowdingSpacing: {},
+    transverseDiscrepancy: {},
+    verticalDiscrepancy: {},
+    apDiscrepancy: {},
+    attachments: {},
+    pontics: {},
+    biteRamps: {},
+    elastics: {},
+    ipr: {},
+    extraction: {},
+    archExpansion: {},
+    toothSizeDiscrepancy: {},
+    overcorrection: {},
+    passiveAligner: {},
+    movementRestrictions: {},
+    eruptionSpace: {}
+  }
 })
 
 onMounted(async () => {
-  if (parentId) {
+  if (parentIdFromUrl) {
     try {
-      const response: any = await $fetch(`/api/doctor/case-details/${parentId}`, {
+      const response: any = await $fetch(`/api/doctor/case-details/${parentIdFromUrl}`, {
         headers: { Authorization: `Bearer ${token.value}` }
       })
       if (response?.success) {
-        parentCase.value = response.data.case
-        // Pre-fill patient name
-        const names = parentCase.value.patient_name.split(' ')
-        formData.value.firstName = names[0] || ''
-        formData.value.lastName = names.slice(1).join(' ') || ''
-        formData.value.dob = parentCase.value.dob
+        const c = response.data.case
+        const names = c.patient_name?.split(' ') || []
+        formData.value.first_name = names[0] || ''
+        formData.value.last_name = names.slice(1).join(' ') || ''
+        formData.value.dob = c.dob
+        formData.value.gender = c.gender
       }
     } catch (e) {
       console.error('Failed to load parent case:', e)
-    } finally {
-      isLoadingParent.value = false
     }
   }
 })
 
 const updateFormData = (key: string, value: any) => {
-  formData.value[key] = value
+  if (key.includes('.')) {
+    const parts = key.split('.')
+    let target = formData.value
+    for (let i = 0; i < parts.length - 1; i++) {
+      target = target[parts[i]]
+    }
+    target[parts[parts.length - 1]] = value
+  } else {
+    formData.value[key] = value
+  }
 }
 
 const nextStep = () => {
@@ -164,66 +198,94 @@ const prevStep = () => {
 }
 
 const submitRefinement = async () => {
-  if (!token.value) {
-    Swal.fire({
-      title: 'Error!',
-      text: 'You are not logged in. Please login first.',
-      icon: 'error',
-      confirmButtonColor: '#10b981'
-    })
-    return
-  }
-
+  if (isSubmitting.value) return
   isSubmitting.value = true
 
   try {
-    const body = new FormData()
-    body.append('parent_id', formData.value.parent_id)
-    body.append('firstName', formData.value.firstName)
-    body.append('lastName', formData.value.lastName)
-    body.append('patientName', `${formData.value.firstName} ${formData.value.lastName}`)
-    body.append('dob', formData.value.dob)
-    body.append('chiefComplaint', formData.value.chiefComplaint)
-    body.append('treatmentArch', formData.value.treatmentArch)
-    body.append('additionalInstructions', formData.value.additionalInstructions)
-
-    // Map photos to specific keys for backend compatibility
-    // The frontend sends a list, we'll map them to the 8 expected keys
-    const photoKeys = ['frontal', 'right_buccal', 'left_buccal', 'panoramic', 'upper_occlusal', 'lower_occlusal', 'front_smiling', 'cephalometric']
-    if (formData.value.photos && formData.value.photos.length > 0) {
-      formData.value.photos.forEach((file, index) => {
-        if (index < photoKeys.length) {
-          body.append(photoKeys[index], file)
-        }
-      })
+    // Stage 1: Send Data (JSON)
+    const payload = {
+      parent_id: formData.value.parent_id,
+      first_name: formData.value.first_name,
+      last_name: formData.value.last_name,
+      patient_name: `${formData.value.first_name} ${formData.value.last_name}`,
+      gender: formData.value.gender,
+      dob: formData.value.dob,
+      chief_complaint: formData.value.chief_complaint,
+      treatment_arch: formData.value.treatment_arch,
+      impression_type: formData.value.impression_type,
+      stl_links: formData.value.stl_links,
+      pickup_address: formData.value.pickup_address,
+      package_id: formData.value.package_id,
+      has_primary_teeth: formData.value.has_primary_teeth,
+      detailed_plan: JSON.stringify(formData.value.detailed_plan)
     }
 
-    const response: any = await $fetch('/api/doctor/store-refinement', {
+    const dataResponse: any = await $fetch('/api/doctor/store-refinement', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-        Accept: 'application/json'
-      },
-      body
+      headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+      body: payload
     })
 
-    if (response?.success) {
-      Swal.fire({
-        title: 'Success!',
-        text: 'Refinement case submitted successfully!',
-        icon: 'success',
-        confirmButtonColor: '#10b981'
-      }).then(() => {
-        navigateTo('/dashboard')
+    if (!dataResponse.success) throw new Error(dataResponse.message)
+    const caseId = dataResponse.case_id
+
+    // Stage 2: Upload Files ONE BY ONE
+    // 1. Photos
+    if (formData.value.recordFiles) {
+      for (const key in formData.value.recordFiles) {
+        const file = formData.value.recordFiles[key]
+        if (file) {
+          const photoBody = new FormData()
+          photoBody.append('case_id', caseId)
+          photoBody.append(key, file)
+          await $fetch('/api/doctor/case-file-upload-direct', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+            body: photoBody
+          })
+        }
+      }
+    }
+    
+    // 2. STLs
+    if (formData.value.stlFiles.upper) {
+      const upperBody = new FormData()
+      upperBody.append('case_id', caseId)
+      upperBody.append('stl_upper', formData.value.stlFiles.upper)
+      await $fetch('/api/doctor/case-file-upload-direct', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+        body: upperBody
       })
     }
-  } catch (e: any) {
-    console.error('Submit error:', e)
+
+    if (formData.value.stlFiles.lower) {
+      const lowerBody = new FormData()
+      lowerBody.append('case_id', caseId)
+      lowerBody.append('stl_lower', formData.value.stlFiles.lower)
+      await $fetch('/api/doctor/case-file-upload-direct', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+        body: lowerBody
+      })
+    }
+
     Swal.fire({
-      title: 'Error!',
-      text: e?.data?.message || e?.message || 'Error submitting refinement',
-      icon: 'error',
+      icon: 'success',
+      title: 'Refinement Submitted!',
+      text: 'The refinement case and all records have been uploaded successfully.',
       confirmButtonColor: '#10b981'
+    }).then(() => {
+      navigateTo('/dashboard')
+    })
+
+  } catch (error: any) {
+    console.error('Submit error:', error)
+    Swal.fire({
+      icon: 'error',
+      title: 'Submission Failed',
+      text: error.data?.message || error.message || 'An error occurred',
+      confirmButtonColor: '#ef4444'
     })
   } finally {
     isSubmitting.value = false

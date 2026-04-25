@@ -125,6 +125,7 @@ definePageMeta({
   layout: 'admin'
 })
 import { ref } from 'vue'
+import Swal from 'sweetalert2'
 
 const config = useRuntimeConfig()
 const { token } = useAuth()
@@ -168,7 +169,17 @@ const saveMain = async () => {
 }
 
 const deleteMain = async (id) => {
-    if (!confirm('هل أنت متأكد من حذف هذا القسم وكل الأقسام الفرعية التابعة له؟')) return
+    const result = await Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: 'سيتم حذف هذا القسم وكل الأقسام الفرعية التابعة له!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'نعم، احذف',
+        cancelButtonText: 'إلغاء'
+    })
+    if (!result.isConfirmed) return
     try {
         await $fetch(`${config.public.apiBase}/categories/main/${id}/delete`, { method: 'POST', headers: headers.value })
         refresh()
@@ -201,7 +212,17 @@ const saveSub = async () => {
 }
 
 const deleteSub = async (id) => {
-    if (!confirm('حذف القسم الفرعي؟')) return
+    const result = await Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: 'حذف القسم الفرعي؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'نعم، احذف',
+        cancelButtonText: 'إلغاء'
+    })
+    if (!result.isConfirmed) return
     try {
         await $fetch(`${config.public.apiBase}/categories/sub/${id}/delete`, { method: 'POST', headers: headers.value })
         refresh()

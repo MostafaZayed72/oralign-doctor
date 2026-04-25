@@ -928,6 +928,7 @@ definePageMeta({
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
+import Swal from 'sweetalert2'
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -1390,7 +1391,16 @@ const toggleSelectAll = (e) => {
 }
 
 const deleteSelected = async () => {
-    if(!confirm(t('delete') + '?')) return
+    const result = await Swal.fire({
+        title: t('confirm') || 'Confirm',
+        text: t('delete_confirm') || 'Are you sure you want to delete?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: t('yes_delete') || 'Yes, delete it!'
+    })
+    if(!result.isConfirmed) return
     try {
         await $fetch(`${config.public.apiBase}/admin/patient-cases/delete`, {
             method: 'POST', body: { ids: selectedCases.value }
@@ -1401,7 +1411,16 @@ const deleteSelected = async () => {
 }
 
 const deleteSingleRow = async (id) => {
-    if(!confirm(t('delete') + '?')) return
+    const result = await Swal.fire({
+        title: t('confirm') || 'Confirm',
+        text: t('delete_confirm') || 'Are you sure you want to delete?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: t('yes_delete') || 'Yes, delete it!'
+    })
+    if(!result.isConfirmed) return
     try {
         await $fetch(`${config.public.apiBase}/admin/patient-cases/delete`, {
             method: 'POST', body: { ids: [id] }
@@ -1645,7 +1664,12 @@ const saveEdit = async () => {
         await refresh()
     } catch(e) {
         console.error('Save failed', e)
-        alert('حدث خطأ أثناء الحفظ')
+        Swal.fire({
+            title: t('error') || 'Error',
+            text: t('save_failed') || 'حدث خطأ أثناء الحفظ',
+            icon: 'error',
+            confirmButtonColor: '#10b981'
+        })
     } finally {
         isSaving.value = false
         closeModal()

@@ -3,10 +3,15 @@ export default defineEventHandler(async (event) => {
   const targetBase = 'https://doctors.oralign.co/api/doctor'
   const targetUrl = `${targetBase}/${path}`
   const method = getMethod(event)
-  const query = getQuery(event)
+  const contentType = getRequestHeader(event, 'content-type')
 
+  // If it's a file upload (multipart), proxy the request directly to preserve boundaries
+  if (contentType?.includes('multipart/form-data')) {
+    return proxyRequest(event, targetUrl)
+  }
+
+  const query = getQuery(event)
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
   }
   const authHeader = getRequestHeader(event, 'authorization')
@@ -14,7 +19,11 @@ export default defineEventHandler(async (event) => {
 
   let body: any = undefined
   if (['POST', 'PUT', 'PATCH'].includes(method)) {
-    body = await readBody(event)
+    try {
+      body = await readBody(event)
+    } catch (e) {
+      // Body might be empty
+    }
   }
 
   try {
@@ -22,7 +31,10 @@ export default defineEventHandler(async (event) => {
       method,
       body: body !== undefined ? JSON.stringify(body) : undefined,
       params: query,
-      headers,
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+      },
     })
     setResponseStatus(event, response.status)
     return response._data

@@ -64,6 +64,8 @@ const { token } = useAuth()
 import StepOne from '~/components/cases/StepOne.vue'
 import StepTwo from '~/components/cases/StepTwo.vue'
 import StepThree from '~/components/cases/StepThree.vue'
+import JawScans from '~/components/cases/JawScans.vue'
+import ChiefComplaint from '~/components/cases/ChiefComplaint.vue'
 import StepFour from '~/components/cases/StepFour.vue'
 import Swal from 'sweetalert2'
 
@@ -71,10 +73,12 @@ const currentStep = ref(0)
 const isSubmitting = ref(false)
 
 const steps = [
-  { title: 'Patient Info', component: StepOne },
-  { title: 'Clinical Details', component: StepTwo },
-  { title: 'Photos & X-Rays', component: StepThree },
-  { title: 'Summary', component: StepFour }
+  { title: 'Patient Information', component: StepOne },
+  { title: 'Patient Records', component: StepThree },
+  { title: 'Jaw Scans', component: JawScans },
+  { title: 'Chief Complaint', component: ChiefComplaint },
+  { title: 'Detailed Plan', component: StepTwo },
+  { title: 'Case Summary', component: StepFour }
 ]
 
 const progressWidth = computed(() => {
@@ -85,25 +89,48 @@ const currentStepComponent = computed(() => steps[currentStep.value].component)
 
 // Shared State
 const formData = ref({
-  // Step 1
-  firstName: '',
-  lastName: '',
+  // Step 1: Patient Information
+  first_name: '',
+  last_name: '',
   gender: '',
   dob: '',
-  chiefComplaint: '',
   
-  // Step 2
-  treatmentArch: 'Both',
-  midline: 'Maintain',
-  overjet: 'Improve',
-  overbite: 'Improve',
-  ipr: 'If Needed',
-  extraction: 'None',
-  additionalInstructions: '',
+  // Step 2: Patient Records
+  recordFiles: {},
 
-  // Step 3 (Files)
-  photos: [],
-  xrays: []
+  // Step 3: Jaw Scans
+  impressionType: 'upload', // 'upload', 'link', 'pickup'
+  stlFiles: { lower: null, upper: null },
+  stlLinks: '',
+  pickupAddress: '',
+
+  // Step 4: Chief Complaint & Package
+  chiefComplaint: '',
+  additionalNotes: '',
+  packageType: 'Basic', // 'Basic', 'Plus', 'Pro'
+  hasPrimaryTeeth: false,
+  treatmentArch: 'Both', // 'Both', 'Upper', 'Lower'
+
+  // Step 5: Detailed Plan
+  detailedPlan: {
+    apDiscrepancy: {},
+    verticalDiscrepancy: {},
+    transverseDiscrepancy: {},
+    crowdingSpacing: {},
+    elastics: { selectedTeeth: [], notes: '' },
+    biteRamps: { group: '', selectedTeeth: [], notes: '' },
+    pontics: { selectedTeeth: [], notes: '' },
+    attachments: { selectedTeeth: [], beforeStep: '' },
+    toothSizeDiscrepancy: { option: '', notes: '' },
+    archExpansion: { group: '', selectedTeeth: [], notes: '' },
+    extraction: { selectedTeeth: [] },
+    ipr: { selectedTeeth: [], notes: '' },
+    eruptionSpace: {},
+    movementRestrictions: {},
+    passiveAligner: {},
+    overcorrection: {}
+  },
+  additionalInstructions: '',
 })
 
 const updateFormData = (key: string, value: any) => {
@@ -136,50 +163,96 @@ const submitCase = async () => {
   }
 
   isSubmitting.value = true
+  Swal.fire({ title: 'Submitting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() })
 
   try {
-    const body = new FormData()
-    body.append('firstName', formData.value.firstName)
-    body.append('lastName', formData.value.lastName)
-    body.append('dob', formData.value.dob)
-    body.append('chiefComplaint', formData.value.chiefComplaint)
-    body.append('treatmentArch', formData.value.treatmentArch)
-    body.append('additionalInstructions', formData.value.additionalInstructions)
+    // Stage 1: Send Text Data (JSON is more reliable for text fields)
+    const dataResponse: any = await $fetch('/api/doctor/cases', {
+      method: 'POST',
+      headers: { 
+        Authorization: `Bearer ${token.value}`, 
+        Accept: 'application/json' 
+      },
+      body: {
+        first_name: formData.value.first_name,
+        last_name: formData.value.last_name,
+        gender: formData.value.gender,
+        dob: formData.value.dob,
+        chief_complaint: formData.value.chiefComplaint,
+        treatment_arch: formData.value.treatmentArch,
+        additional_instructions: formData.value.additionalNotes,
+        package_id: formData.value.packageType === 'Pro' ? 3 : (formData.value.packageType === 'Plus' ? 2 : 1),
+        has_primary_teeth: formData.value.hasPrimaryTeeth ? '1' : '0',
+        impression_type: formData.value.impressionType,
+        stl_links: formData.value.stlLinks,
+        pickup_address: formData.value.pickupAddress,
+        detailed_plan: JSON.stringify(formData.value.detailedPlan)
+      }
+    })
 
-    // Map photos to specific keys for backend compatibility
-    const photoKeys = ['frontal', 'right_buccal', 'left_buccal', 'panoramic', 'upper_occlusal', 'lower_occlusal', 'front_smiling', 'cephalometric']
-    if (formData.value.photos && formData.value.photos.length > 0) {
-      formData.value.photos.forEach((file, index) => {
-        if (index < photoKeys.length) {
-          body.append(photoKeys[index], file)
+    const caseId = dataResponse.case_id
+
+    // Stage 2: Upload Files ONE BY ONE (to bypass server payload limits)
+    
+    // 1. Upload Clinical Photos
+    if (formData.value.recordFiles) {
+      for (const key in formData.value.recordFiles) {
+        const file = formData.value.recordFiles[key]
+        if (file) {
+          const photoBody = new FormData()
+          photoBody.append('case_id', caseId)
+          photoBody.append(key, file)
+
+          await $fetch('/api/doctor/case-file-upload-direct', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+            body: photoBody
+          })
         }
+      }
+    }
+    
+    // 2. Upload STL Files
+    if (formData.value.stlFiles.upper) {
+      const upperBody = new FormData()
+      upperBody.append('case_id', caseId)
+      upperBody.append('stl_upper', formData.value.stlFiles.upper)
+      await $fetch('/api/doctor/case-file-upload-direct', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+        body: upperBody
       })
     }
 
-    const response = await $fetch('/api/doctor/cases', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-        Accept: 'application/json'
-      },
-      body
-    })
+    if (formData.value.stlFiles.lower) {
+      const lowerBody = new FormData()
+      lowerBody.append('case_id', caseId)
+      lowerBody.append('stl_lower', formData.value.stlFiles.lower)
+      await $fetch('/api/doctor/case-file-upload-direct', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+        body: lowerBody
+      })
+    }
 
     Swal.fire({
-      title: 'Success!',
-      text: 'Case submitted successfully!',
       icon: 'success',
+      title: 'Case Submitted!',
+      text: 'The case and files have been successfully uploaded.',
       confirmButtonColor: '#10b981'
     }).then(() => {
       navigateTo('/dashboard')
     })
-  } catch (e: any) {
-    console.error('Submit error:', e)
+
+  } catch (error: any) {
+    console.error('Submit error:', error)
+    const errorMsg = error.data?.message || 'An error occurred while submitting the case.'
+    
     Swal.fire({
-      title: 'Error!',
-      text: e?.data?.message || e?.message || 'Error submitting case',
       icon: 'error',
-      confirmButtonColor: '#10b981'
+      title: 'Error!',
+      text: error.status === 413 ? 'The files are too large for the server. Please try smaller files or contact support.' : errorMsg,
+      confirmButtonColor: '#ef4444'
     })
   } finally {
     isSubmitting.value = false

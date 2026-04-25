@@ -98,6 +98,7 @@
 </template>
 
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 const props = defineProps({
   formData: { type: Object, required: true }
 })
@@ -105,7 +106,12 @@ const emit = defineEmits(['update', 'next', 'prev'])
 
 const validateAndNext = () => {
   if (props.formData.impressionType === 'other' && !props.formData.stlFilesLink) {
-    alert("Please provide the STL files link.")
+    Swal.fire({
+      title: 'Error!',
+      text: 'Please provide the STL files link.',
+      icon: 'error',
+      confirmButtonColor: '#10b981'
+    })
     return
   }
   emit('next')

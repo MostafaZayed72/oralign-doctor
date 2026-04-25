@@ -1,102 +1,190 @@
 <template>
-  <div class="space-y-6">
-    <div class="border-b border-gray-100 dark:border-gray-800 pb-4 mb-6">
-      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-        <i class="fas fa-clipboard-check text-primary"></i> Summary & Review
-      </h3>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Review the details below before submitting the case.</p>
+  <div class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <!-- Header -->
+    <div class="border-b border-slate-100 dark:border-slate-800 pb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+            <i class="fas fa-clipboard-check text-brand-primary"></i> Summary & Review
+          </h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 font-medium">Please review all details carefully before submitting the case to our orthodontists.</p>
+        </div>
+        <div class="hidden md:block">
+           <span class="px-6 py-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-black uppercase tracking-widest border border-brand-primary/20">
+             Final Step
+           </span>
+        </div>
+      </div>
     </div>
 
-    <!-- Summary Grid -->
-    <div class="bg-gray-50 dark:bg-[#252525] rounded-2xl p-6 border border-gray-100 dark:border-gray-800 space-y-6">
+    <!-- Summary Sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      <!-- Patient Section -->
-      <div>
-        <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Patient Information</h4>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <span class="block text-xs text-gray-500">First Name</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.firstName || '—' }}</span>
+      <!-- Left Column: Core Info -->
+      <div class="lg:col-span-4 space-y-8">
+        <!-- Patient Card -->
+        <div class="p-8 rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20">
+          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary mb-6">Patient Information</h4>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-3 border-b border-slate-50 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-400">First Name</span>
+              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.first_name || '—' }}</span>
+            </div>
+            <div class="flex justify-between items-center py-3 border-b border-slate-50 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-400">Last Name</span>
+              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.last_name || '—' }}</span>
+            </div>
+            <div class="flex justify-between items-center py-3 border-b border-slate-50 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-400">Gender</span>
+              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.gender || '—' }}</span>
+            </div>
+            <div class="flex justify-between items-center py-3">
+              <span class="text-xs font-bold text-slate-400">Date of Birth</span>
+              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.dob || '—' }}</span>
+            </div>
           </div>
-          <div>
-            <span class="block text-xs text-gray-500">Last Name</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.lastName || '—' }}</span>
-          </div>
-          <div>
-            <span class="block text-xs text-gray-500">Gender</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.gender || '—' }}</span>
-          </div>
-          <div>
-            <span class="block text-xs text-gray-500">DOB</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.dob || '—' }}</span>
+        </div>
+
+        <!-- Records Card -->
+        <div class="p-8 rounded-[2.5rem] bg-[#063c31] text-white shadow-xl shadow-[#063c31]/20">
+          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-6">Records & Scans</h4>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-2 border-b border-white/10">
+              <span class="text-xs font-bold opacity-70">Clinical Photos</span>
+              <span class="text-sm font-black">{{ Object.keys(formData.recordFiles || {}).length }} Files</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-white/10">
+              <span class="text-xs font-bold opacity-70">Impression Type</span>
+              <span class="text-sm font-black capitalize">{{ formData.impressionType }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <span class="text-xs font-bold opacity-70">Treatment Arch</span>
+              <span class="text-sm font-black text-emerald-400">{{ formData.treatmentArch }}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="h-px w-full bg-gray-200 dark:bg-gray-700"></div>
+      <!-- Right Column: Detailed Plan Summary -->
+      <div class="lg:col-span-8 space-y-8">
+        <div class="p-8 md:p-10 rounded-[3rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20">
+          <div class="flex items-center justify-between mb-8">
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary">Detailed Treatment Plan</h4>
+            <div class="w-10 h-10 rounded-xl bg-brand-primary/5 flex items-center justify-center">
+              <i class="fas fa-magic text-brand-primary text-sm"></i>
+            </div>
+          </div>
 
-      <!-- Clinical Section -->
-      <div>
-        <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Clinical Preferences</h4>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <span class="block text-xs text-gray-500">Arch</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.treatmentArch }}</span>
+          <!-- 16 Categories Preview Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div 
+              v-for="cat in clinicalCategories" 
+              :key="cat.id"
+              class="p-4 rounded-2xl border transition-all"
+              :class="isCategoryActive(cat.id) ? 'border-brand-primary/30 bg-brand-primary/[0.02]' : 'border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20'"
+            >
+              <div class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="isCategoryActive(cat.id) ? 'bg-brand-primary/10 text-brand-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
+                  <i :class="cat.icon" class="text-xs"></i>
+                </div>
+                <div>
+                  <h5 class="text-[11px] font-black uppercase tracking-widest" :class="isCategoryActive(cat.id) ? 'text-brand-primary' : 'text-slate-400'">{{ cat.label }}</h5>
+                  <p class="text-[10px] mt-1 font-medium" :class="isCategoryActive(cat.id) ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 italic'">
+                    {{ getCategorySummary(cat.id) }}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <span class="block text-xs text-gray-500">Midline</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.midline }}</span>
+
+          <!-- Chief Complaint & Notes -->
+          <div class="mt-10 pt-10 border-t border-slate-50 dark:border-slate-800 space-y-6">
+            <div class="space-y-3">
+              <h5 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Chief Complaint</h5>
+              <div class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800 text-sm font-medium text-slate-600 dark:text-slate-300 italic border border-slate-100 dark:border-slate-700">
+                "{{ formData.chiefComplaint || 'No specific complaint entered.' }}"
+              </div>
+            </div>
           </div>
-          <div>
-            <span class="block text-xs text-gray-500">Overjet</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.overjet }}</span>
+        </div>
+
+        <!-- Final Confirmation Notice -->
+        <div class="p-6 rounded-3xl bg-brand-primary/5 border border-brand-primary/10 flex gap-5 items-center">
+          <div class="w-12 h-12 rounded-2xl bg-brand-primary/10 flex items-center justify-center shrink-0">
+            <i class="fas fa-shield-alt text-brand-primary"></i>
           </div>
-          <div>
-            <span class="block text-xs text-gray-500">Overbite</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200">{{ formData.overbite }}</span>
-          </div>
+          <p class="text-xs font-medium text-slate-600 dark:text-slate-400 leading-relaxed">
+            By clicking "Submit Case", you confirm that all provided information is accurate and you agree to the <span class="text-brand-primary font-bold">Oralign Terms of Service</span>.
+          </p>
         </div>
       </div>
 
-    </div>
-
-    <!-- Important Notice -->
-    <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-4">
-      <i class="fas fa-info-circle text-amber-500 text-xl mt-0.5"></i>
-      <div>
-        <h4 class="font-bold text-amber-800 dark:text-amber-500 text-sm">Please Note</h4>
-        <p class="text-amber-700 dark:text-amber-600 text-xs mt-1">Once submitted, this case will be reviewed by our orthodontists. You will be notified when the treatment plan is ready for your approval.</p>
-      </div>
     </div>
 
     <!-- Actions -->
-    <div class="flex justify-between pt-6 mt-8 border-t border-gray-100 dark:border-gray-800">
+    <div class="flex justify-between items-center pt-10 mt-10 border-t border-slate-100 dark:border-slate-800">
       <button 
         @click="$emit('prev')"
         :disabled="isSubmitting"
-        class="bg-white dark:bg-[#252525] hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="group px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all disabled:opacity-50"
       >
-        <i class="fas fa-arrow-left text-sm"></i>
-        <span>Back</span>
+        <i class="fas fa-chevron-left transition-transform group-hover:-translate-x-1"></i>
+        Previous
       </button>
       
       <button 
         @click="$emit('submit')"
         :disabled="isSubmitting"
-        class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-10 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 shadow-lg shadow-emerald-500/30 min-w-[140px] whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:-translate-y-0"
+        class="group relative px-12 py-5 bg-[#063c31] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-[#063c31]/30 hover:scale-105 hover:shadow-[#063c31]/50 active:scale-95 transition-all duration-300 flex items-center gap-4 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        <i v-if="isSubmitting" class="fas fa-spinner fa-spin text-sm"></i>
-        <i v-else class="fas fa-paper-plane text-sm"></i>
-        <span>{{ isSubmitting ? 'Submitting...' : 'Submit Case' }}</span>
+        <i v-if="isSubmitting" class="fas fa-spinner fa-spin"></i>
+        <i v-else class="fas fa-paper-plane"></i>
+        <span>{{ isSubmitting ? 'Processing Case...' : 'Submit Final Case' }}</span>
+        <div class="absolute inset-0 w-1/2 h-full bg-white/10 -skew-x-[45deg] -translate-x-[200%] group-hover:translate-x-[300%] transition-transform duration-1000"></div>
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   formData: { type: Object, required: true },
   isSubmitting: { type: Boolean, default: false }
 })
 defineEmits(['prev', 'submit'])
+
+const clinicalCategories = [
+  { id: 'crowdingSpacing', label: 'Crowding / Spacing', icon: 'fas fa-arrows-alt-h' },
+  { id: 'transverseDiscrepancy', label: 'Transverse', icon: 'fas fa-expand-alt' },
+  { id: 'verticalDiscrepancy', label: 'Vertical', icon: 'fas fa-arrows-alt-v' },
+  { id: 'apDiscrepancy', label: 'A-P Discrepancy', icon: 'fas fa-exchange-alt' },
+  { id: 'elastics', label: 'Elastics', icon: 'fas fa-link' },
+  { id: 'biteRamps', label: 'Bite Ramps', icon: 'fas fa-mountain' },
+  { id: 'pontics', label: 'Pontics', icon: 'fas fa-fill-drip' },
+  { id: 'attachments', label: 'Attachments', icon: 'fas fa-thumbtack' },
+  { id: 'toothSizeDiscrepancy', label: 'Tooth size', icon: 'fas fa-ruler-combined' },
+  { id: 'archExpansion', label: 'Arch expansion', icon: 'fas fa-compress-arrows-alt' },
+  { id: 'extraction', label: 'Extraction', icon: 'fas fa-minus-circle' },
+  { id: 'ipr', label: 'IPR', icon: 'fas fa-cut' },
+  { id: 'eruptionSpace', label: 'Eruption Space', icon: 'fas fa-external-link-alt' },
+  { id: 'movementRestrictions', label: 'Restrictions', icon: 'fas fa-ban' },
+  { id: 'passiveAligner', label: 'Passive Aligner', icon: 'fas fa-check-double' },
+  { id: 'overcorrection', label: 'Overcorrection', icon: 'fas fa-plus-circle' }
+]
+
+const isCategoryActive = (id: string) => {
+  const cat = props.formData.detailedPlan[id]
+  if (!cat) return false
+  return Object.keys(cat).length > 0 && (cat.selectedTeeth?.length > 0 || cat.option || cat.group || cat.notes)
+}
+
+const getCategorySummary = (id: string) => {
+  const cat = props.formData.detailedPlan[id]
+  if (!isCategoryActive(id)) return 'Not specified'
+  
+  if (cat.selectedTeeth?.length > 0) return `${cat.selectedTeeth.length} Teeth selected`
+  if (cat.option) return cat.option
+  if (cat.group) return cat.group
+  return 'Specified with notes'
+}
 </script>

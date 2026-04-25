@@ -153,5 +153,9 @@
   "no_plans_yet": "No plans yet",
   "error_occurred": "An error occurred",
   "loading_case_data": "Loading patient data...",
-  "case_history": "Case History"
+  "case_history": "Case History",
+  "new_case_submission": "Submit New Case",
+  "case_submission_subtitle": "Please fill in the details below to submit a new aligner case.",
+  "yes": "Yes",
+  "no": "No"
 }

@@ -74,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 const props = defineProps({
   formData: { type: Object, required: true }
 })
@@ -81,7 +82,12 @@ const emit = defineEmits(['update', 'next'])
 
 const validateAndNext = () => {
   if (!props.formData.patientName) {
-    alert("Please enter the Patient Name.")
+    Swal.fire({
+      title: 'Error!',
+      text: 'Please enter the Patient Name.',
+      icon: 'error',
+      confirmButtonColor: '#10b981'
+    })
     return
   }
   emit('next')

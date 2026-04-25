@@ -13,8 +13,8 @@
         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name <span class="text-red-500">*</span></label>
         <input 
           type="text" 
-          :value="formData.firstName"
-          @input="$emit('update', 'firstName', $event.target.value)"
+          :value="formData.first_name"
+          @input="$emit('update', 'first_name', $event.target.value)"
           class="w-full bg-gray-50 dark:bg-[#252525] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
           placeholder="Enter first name"
         >
@@ -25,8 +25,8 @@
         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Name <span class="text-red-500">*</span></label>
         <input 
           type="text" 
-          :value="formData.lastName"
-          @input="$emit('update', 'lastName', $event.target.value)"
+          :value="formData.last_name"
+          @input="$emit('update', 'last_name', $event.target.value)"
           class="w-full bg-gray-50 dark:bg-[#252525] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
           placeholder="Enter last name"
         >
@@ -34,7 +34,7 @@
 
       <!-- Gender -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Gender <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Gender (optional)</label>
         <select 
           :value="formData.gender"
           @change="$emit('update', 'gender', $event.target.value)"
@@ -48,7 +48,7 @@
 
       <!-- Date of Birth -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Date of Birth <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Date of Birth (optional)</label>
         <input 
           type="date" 
           :value="formData.dob"
@@ -57,17 +57,6 @@
         >
       </div>
       
-      <!-- Chief Complaint -->
-      <div class="col-span-1 md:col-span-2">
-        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Chief Complaint <span class="text-red-500">*</span></label>
-        <textarea 
-          :value="formData.chiefComplaint"
-          @input="$emit('update', 'chiefComplaint', $event.target.value)"
-          rows="4"
-          class="w-full bg-gray-50 dark:bg-[#252525] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-none"
-          placeholder="Describe the main reason the patient is seeking aligner treatment..."
-        ></textarea>
-      </div>
     </div>
 
     <!-- Actions -->
@@ -84,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 const props = defineProps({
   formData: { type: Object, required: true }
 })
@@ -91,8 +81,13 @@ const emit = defineEmits(['update', 'next'])
 
 const validateAndNext = () => {
   // basic validation logic can go here
-  if (!props.formData.firstName || !props.formData.lastName || !props.formData.gender) {
-    alert("Please fill in the required fields.")
+  if (!props.formData.first_name || !props.formData.last_name) {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Please fill in the required fields.',
+      icon: 'error',
+      confirmButtonColor: '#10b981'
+    })
     return
   }
   emit('next')
