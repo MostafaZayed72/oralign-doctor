@@ -1,6 +1,7 @@
 export default defineEventHandler(async (event) => {
   const path = event.context.params?.path || ''
-  const targetUrl = `https://doctors.oralign.co/api/doctor/${path}`
+  const targetBase = 'https://doctors.oralign.co/api/doctor'
+  const targetUrl = `${targetBase}/${path}`
   const method = getMethod(event)
   const query = getQuery(event)
 

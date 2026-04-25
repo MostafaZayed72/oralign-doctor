@@ -138,13 +138,31 @@ const submitCase = async () => {
   isSubmitting.value = true
 
   try {
+    const body = new FormData()
+    body.append('firstName', formData.value.firstName)
+    body.append('lastName', formData.value.lastName)
+    body.append('dob', formData.value.dob)
+    body.append('chiefComplaint', formData.value.chiefComplaint)
+    body.append('treatmentArch', formData.value.treatmentArch)
+    body.append('additionalInstructions', formData.value.additionalInstructions)
+
+    // Map photos to specific keys for backend compatibility
+    const photoKeys = ['frontal', 'right_buccal', 'left_buccal', 'panoramic', 'upper_occlusal', 'lower_occlusal', 'front_smiling', 'cephalometric']
+    if (formData.value.photos && formData.value.photos.length > 0) {
+      formData.value.photos.forEach((file, index) => {
+        if (index < photoKeys.length) {
+          body.append(photoKeys[index], file)
+        }
+      })
+    }
+
     const response = await $fetch('/api/doctor/cases', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token.value}`,
         Accept: 'application/json'
       },
-      body: formData.value
+      body
     })
 
     Swal.fire({

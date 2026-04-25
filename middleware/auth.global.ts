@@ -1,5 +1,10 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-  const { isAuthenticated, user } = useAuth()
+export default defineNuxtRouteMiddleware(async (to, from) => {
+  const { isAuthenticated, user, token, fetchUser } = useAuth()
+  
+  // Restore user session if token exists but user state is empty
+  if (token.value && !user.value) {
+    await fetchUser()
+  }
   const localePath = useLocalePath()
   
   // Public routes that don't need auth
