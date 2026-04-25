@@ -152,5 +152,6 @@
   "detailed_treatment_plan": "Detailed Treatment Plan",
   "no_plans_yet": "No plans yet",
   "error_occurred": "An error occurred",
-  "loading_case_data": "Loading patient data..."
+  "loading_case_data": "Loading patient data...",
+  "case_history": "Case History"
 }

@@ -186,7 +186,7 @@
           <div class="lg:col-span-4 space-y-8">
             
             <!-- Actions Card -->
-            <div class="bg-white dark:bg-[#1a1a1a] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl p-6">
+            <div v-if="activeTab.startsWith('plan')" class="bg-white dark:bg-[#1a1a1a] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl p-6">
               <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">Actions</h3>
               
               <div class="space-y-3">
@@ -222,18 +222,27 @@
     </div>
 
     <!-- Image Lightbox -->
-    <div v-if="showLightbox" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-sm" @click="showLightbox = false">
-      <div class="relative max-w-5xl w-full h-full flex items-center justify-center" @click.stop>
-        <button @click="showLightbox = false" class="absolute -top-12 right-0 text-white text-3xl hover:text-slate-300 transition-colors">
-          <i class="fas fa-times"></i>
+    <Transition name="fade">
+      <div v-if="showLightbox" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/95 backdrop-blur-md" @click="showLightbox = false">
+        <!-- Close Button -->
+        <button @click="showLightbox = false" class="absolute top-8 right-8 w-14 h-14 rounded-full bg-white/10 hover:bg-red-500 hover:scale-110 text-white flex items-center justify-center transition-all duration-300 backdrop-blur-xl border border-white/20 shadow-2xl group">
+          <i class="fas fa-times text-2xl group-hover:rotate-90 transition-transform duration-300"></i>
         </button>
-        <img :src="selectedImage" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl shadow-black/50" alt="Medial Record">
+
+        <div class="relative max-w-7xl w-full h-full flex items-center justify-center" @click.stop>
+          <img 
+            :src="selectedImage" 
+            class="max-w-full max-h-full object-contain rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 animate-in zoom-in duration-300" 
+            alt="Medical Record"
+          >
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
+import Swal from 'sweetalert2'
 const route = useRoute()
 const config = useRuntimeConfig()
 const { token } = useAuth()
@@ -435,5 +444,15 @@ defineExpose({
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

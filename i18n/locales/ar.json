@@ -152,5 +152,6 @@
   "detailed_treatment_plan": "خطة العلاج التفصيلية",
   "no_plans_yet": "لا توجد خطط علاجية مسجلة بعد",
   "error_occurred": "حدث خطأ ما",
-  "loading_case_data": "جاري تحميل بيانات المريض..."
+  "loading_case_data": "جاري تحميل بيانات المريض...",
+  "case_history": "سجل الحالة"
 }
