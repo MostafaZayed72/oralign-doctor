@@ -78,9 +78,9 @@ import Swal from 'sweetalert2'
 import StepZero from '~/components/cases/StepZero.vue'
 import StepOne from '~/components/cases/StepOne.vue'
 import StepThree from '~/components/cases/StepThree.vue'
-import StepScan from '~/components/cases/StepScan.vue'
+import JawScans from '~/components/cases/JawScans.vue'
+import ChiefComplaint from '~/components/cases/ChiefComplaint.vue'
 import StepTwo from '~/components/cases/StepTwo.vue'
-import StepDetailedPlan from '~/components/cases/StepDetailedPlan.vue'
 import StepFour from '~/components/cases/StepFour.vue'
 
 const { token } = useAuth()
@@ -95,9 +95,9 @@ const steps = [
   { title: 'Select Case', icon: 'fas fa-search', component: StepZero },
   { title: 'Patient Info', icon: 'fas fa-user-circle', component: StepOne },
   { title: 'Records', icon: 'fas fa-camera-retro', component: StepThree },
-  { title: '3D Scan', icon: 'fas fa-cube', component: StepScan },
-  { title: 'Plan', icon: 'fas fa-clipboard-list', component: StepTwo },
-  { title: 'Detailed Plan', icon: 'fas fa-tooth', component: StepDetailedPlan },
+  { title: '3D Scan', icon: 'fas fa-cube', component: JawScans },
+  { title: 'Plan', icon: 'fas fa-clipboard-list', component: ChiefComplaint },
+  { title: 'Detailed Plan', icon: 'fas fa-tooth', component: StepTwo },
   { title: 'Summary', icon: 'fas fa-flag-checkered', component: StepFour }
 ]
 
@@ -107,7 +107,7 @@ const progressWidth = computed(() => {
 
 const currentStepComponent = computed(() => steps[currentStep.value].component)
 
-// Initialize Form Data (Same structure as Add New Case)
+// Initialize Form Data (Using camelCase for consistency with components)
 const formData = ref({
   parent_id: parentIdFromUrl || null,
   // Step 1: Patient
@@ -115,22 +115,25 @@ const formData = ref({
   last_name: '',
   gender: '',
   dob: '',
-  chief_complaint: '',
-  treatment_arch: 'Both',
   
-  // Step 2: Files
-  recordFiles: {}, // { frontal: File, ... }
-  
+  // Step 2: Records (Photos)
+  recordFiles: {}, 
+
   // Step 3: Scan
-  impression_type: 'upload',
-  stl_links: '',
-  pickup_address: '',
+  impressionType: 'upload',
+  stlLinks: '',
+  pickupAddress: '',
   stlFiles: { upper: null, lower: null },
 
-  // Step 4: Plan Options
-  package_id: 1,
-  has_primary_teeth: '0',
-  detailed_plan: {
+  // Step 4: Plan Options (Chief Complaint & Package)
+  chiefComplaint: '',
+  additionalNotes: '',
+  packageType: 'Basic',
+  hasPrimaryTeeth: false,
+  treatmentArch: 'Both',
+
+  // Step 5: Detailed Plan
+  detailedPlan: {
     crowdingSpacing: {},
     transverseDiscrepancy: {},
     verticalDiscrepancy: {},
@@ -210,14 +213,14 @@ const submitRefinement = async () => {
       patient_name: `${formData.value.first_name} ${formData.value.last_name}`,
       gender: formData.value.gender,
       dob: formData.value.dob,
-      chief_complaint: formData.value.chief_complaint,
-      treatment_arch: formData.value.treatment_arch,
-      impression_type: formData.value.impression_type,
-      stl_links: formData.value.stl_links,
-      pickup_address: formData.value.pickup_address,
-      package_id: formData.value.package_id,
-      has_primary_teeth: formData.value.has_primary_teeth,
-      detailed_plan: JSON.stringify(formData.value.detailed_plan)
+      chief_complaint: formData.value.chiefComplaint,
+      treatment_arch: formData.value.treatmentArch,
+      impression_type: formData.value.impressionType,
+      stl_links: formData.value.stlLinks,
+      pickup_address: formData.value.pickupAddress,
+      package_id: formData.value.packageType === 'Basic' ? 1 : (formData.value.packageType === 'Plus' ? 2 : 3),
+      has_primary_teeth: formData.value.hasPrimaryTeeth ? '1' : '0',
+      detailed_plan: JSON.stringify(formData.value.detailedPlan)
     }
 
     const dataResponse: any = await $fetch('/api/doctor/store-refinement', {
