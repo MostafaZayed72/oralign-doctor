@@ -1402,8 +1402,9 @@ const deleteSelected = async () => {
     })
     if(!result.isConfirmed) return
     try {
-        await $fetch(`${config.public.apiBase}/admin/patient-cases/delete`, {
-            method: 'POST', body: { ids: selectedCases.value }
+        await $fetch(`${config.public.apiBase}/patient-cases/delete`, {
+            method: 'POST', body: { ids: selectedCases.value },
+            headers: headers.value
         })
         selectedCases.value = []
         await refresh()
@@ -1422,8 +1423,9 @@ const deleteSingleRow = async (id) => {
     })
     if(!result.isConfirmed) return
     try {
-        await $fetch(`${config.public.apiBase}/admin/patient-cases/delete`, {
-            method: 'POST', body: { ids: [id] }
+        await $fetch(`${config.public.apiBase}/patient-cases/delete`, {
+            method: 'POST', body: { ids: [id] },
+            headers: headers.value
         })
         await refresh()
     } catch(e) { console.error('Delete failed', e) }
@@ -1531,7 +1533,10 @@ const openModal = async (item) => {
             const sourceCase = cases.value.find(c => c.id === item.id)
              if (sourceCase) sourceCase.is_admin_read = 1
             
-            await $fetch(`${config.public.apiBase}/admin/patient-cases/${item.id}/read`, { method: 'POST' })
+            await $fetch(`${config.public.apiBase}/patient-cases/${item.id}/read`, { 
+                method: 'POST',
+                headers: headers.value
+            })
         } catch (e) {
             console.error('Failed to mark as read', e)
         }
@@ -1656,8 +1661,10 @@ const saveEdit = async () => {
     formData.append('accessories_notes', editForm.value.accessories_notes || '')
 
     try {
-        const res = await $fetch(`${config.public.apiBase}/admin/patient-cases/${editForm.value.id}/update`, {
-            method: 'POST', body: formData
+        const res = await $fetch(`${config.public.apiBase}/patient-cases/${editForm.value.id}/update`, {
+            method: 'POST', 
+            body: formData,
+            headers: headers.value
         })
         
         // Refresh data from API to get the correct modified dates and file URLs

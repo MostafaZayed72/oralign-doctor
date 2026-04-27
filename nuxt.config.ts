@@ -51,6 +51,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/api/p/**': { proxy: 'https://doctors.oralign.co/api/website/**' },
+    '/api/admin-proxy/**': { proxy: 'https://doctors.oralign.co/api/admin/**' },
   },
 
   compatibilityDate: '2024-11-01',
