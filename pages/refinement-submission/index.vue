@@ -161,11 +161,19 @@ onMounted(async () => {
       })
       if (response?.success) {
         const c = response.data.case
+        const p = response.data.prescription
         const names = c.patient_name?.split(' ') || []
         formData.value.first_name = names[0] || ''
         formData.value.last_name = names.slice(1).join(' ') || ''
         formData.value.dob = c.dob
         formData.value.gender = c.gender
+        
+        if (p) {
+          formData.value.chiefComplaint = p.chief_complaint || ''
+          formData.value.treatmentArch = p.arch || 'Both'
+          formData.value.hasPrimaryTeeth = p.has_primary_teeth === '1' || p.has_primary_teeth === true
+          formData.value.packageType = p.package_id == 2 ? 'Plus' : (p.package_id == 3 ? 'Pro' : 'Basic')
+        }
       }
     } catch (e) {
       console.error('Failed to load parent case:', e)

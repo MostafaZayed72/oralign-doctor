@@ -36,7 +36,7 @@
               <h1 class="text-3xl font-black text-slate-900 dark:text-white mb-1 uppercase">{{ caseData.case.patient_name }}</h1>
               <div class="flex flex-wrap items-center gap-3">
                 <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-black tracking-widest uppercase border border-slate-200 dark:border-slate-700">
-                  UUID: {{ caseData.case.uuid }}
+                  UUID: {{ caseData.case.uuid || ('#CASE-' + caseData.case.id) }}
                 </span>
                 <span :class="getStatusClass(caseData.case.status)" class="px-3 py-1 rounded-full text-white text-xs font-black tracking-widest uppercase">
                   {{ caseData.case.status }}
@@ -103,7 +103,7 @@
                 </h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                   <div v-for="(img, key) in recordImages" :key="key" class="group relative aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                    <img v-if="img" :src="`https://doctors.oralign.co/impressions/xraysphotos/${img}`" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <img v-if="img" :src="fixFileUrl(img)" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                     <div v-else class="w-full h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600">
                       <i class="fas fa-image text-3xl mb-2"></i>
                       <span class="text-[10px] font-black uppercase tracking-tighter">{{ key }}</span>
@@ -278,7 +278,7 @@ const detailedInfo = computed(() => {
   const c = caseData.value.case
   return {
     'Patient Name': c.patient_name,
-    'UUID': c.uuid,
+    'UUID': c.uuid || ('#CASE-' + c.id),
     'Case Type': c.case_type,
     'Case Status': c.status,
     'Date of Birth': c.dob,
@@ -317,9 +317,16 @@ const currentPlanStatus = computed(() => {
 })
 
 const viewImage = (img) => {
-  if (!img) return
-  selectedImage.value = `https://doctors.oralign.co/impressions/xraysphotos/${img}`
+  selectedImage.value = fixFileUrl(img)
   showLightbox.value = true
+}
+
+const fixFileUrl = (url) => {
+  if (!url) return url
+  if (url.includes('test-api.oralign.co/uploads')) {
+    return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+  }
+  return url.startsWith('http') ? url : `https://doctors.oralign.co/public/impressions/xraysphotos/${url}`
 }
 
 const handlePlanAction = async (action) => {

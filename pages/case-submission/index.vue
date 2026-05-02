@@ -176,6 +176,7 @@ const submitCase = async () => {
       body: {
         first_name: formData.value.first_name,
         last_name: formData.value.last_name,
+        patient_name: `${formData.value.first_name} ${formData.value.last_name}`,
         gender: formData.value.gender,
         dob: formData.value.dob,
         chief_complaint: formData.value.chiefComplaint,

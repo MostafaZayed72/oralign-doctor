@@ -164,11 +164,11 @@
                 </td>
                 <td class="dashboard-td">
                   <div class="flex items-center justify-center gap-3 cell-content">
-                    <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('edit') || 'تعديل'">
-                      <i class="fas fa-edit text-lg"></i>
+                    <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('view') || 'عرض'">
+                      <i class="fas fa-eye text-lg"></i>
                     </NuxtLink>
-                    <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" :title="$t('refinement') || 'Refinement'">
-                      <i class="fas fa-layer-group text-lg"></i>
+                    <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" title="Edit">
+                      <i class="fas fa-edit text-lg"></i>
                     </button>
                     <button @click.prevent="deleteCase(c.id)" class="text-red-500 hover:text-red-700 transition-colors transform hover:scale-110" :title="$t('delete') || 'حذف'">
                       <i class="fas fa-trash text-lg"></i>
