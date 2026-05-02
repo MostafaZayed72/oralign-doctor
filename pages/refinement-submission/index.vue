@@ -156,17 +156,31 @@ const formData = ref({
 onMounted(async () => {
   if (parentIdFromUrl) {
     try {
-      const response: any = await $fetch(`/api/doctor/case-details/${parentIdFromUrl}`, {
+      console.log('Fetching parent case details for ID:', parentIdFromUrl)
+      const response: any = await $fetch(`/api/doctor/case-profile/${parentIdFromUrl}`, {
         headers: { Authorization: `Bearer ${token.value}` }
       })
-      if (response?.success) {
+      
+      if (response?.success && response.data?.case) {
         const c = response.data.case
         const p = response.data.prescription
-        const names = c.patient_name?.split(' ') || []
-        formData.value.first_name = names[0] || ''
-        formData.value.last_name = names.slice(1).join(' ') || ''
-        formData.value.dob = c.dob
-        formData.value.gender = c.gender
+        
+        // Robust name parsing
+        if (c.patient_name) {
+          const names = c.patient_name.trim().split(/\s+/)
+          formData.value.first_name = names[0] || ''
+          formData.value.last_name = names.slice(1).join(' ') || ''
+        }
+        
+        formData.value.dob = c.dob || ''
+        
+        // Normalize gender to match StepOne options (Male/Female)
+        if (c.gender) {
+          const g = c.gender.toLowerCase()
+          if (g === 'male' || g === 'm') formData.value.gender = 'Male'
+          else if (g === 'female' || g === 'f') formData.value.gender = 'Female'
+          else formData.value.gender = c.gender
+        }
         
         if (p) {
           formData.value.chiefComplaint = p.chief_complaint || ''
@@ -174,9 +188,13 @@ onMounted(async () => {
           formData.value.hasPrimaryTeeth = p.has_primary_teeth === '1' || p.has_primary_teeth === true
           formData.value.packageType = p.package_id == 2 ? 'Plus' : (p.package_id == 3 ? 'Pro' : 'Basic')
         }
+        
+        console.log('Successfully synced refinement data:', formData.value)
+      } else {
+        console.warn('Failed to sync refinement data: success was false or data missing', response)
       }
     } catch (e) {
-      console.error('Failed to load parent case:', e)
+      console.error('Failed to load parent case for refinement:', e)
     }
   }
 })
