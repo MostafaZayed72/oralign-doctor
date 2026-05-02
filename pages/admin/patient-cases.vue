@@ -208,7 +208,7 @@
               <template v-if="activeGroup === 'Virtual Planning'">
                 <!-- Patient Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
+                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="item.is_admin_read === 0 
                          ? 'bg-blue-600 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110' 
                          : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'">
@@ -217,7 +217,7 @@
                           :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
                       {{ item.patient }}
                     </span>
-                  </div>
+                  </NuxtLink>
                 </td>
 
                 <!-- Doctor Block -->
@@ -298,7 +298,7 @@
               <template v-else-if="activeGroup === 'Finance'">
                 <!-- Patient Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
+                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="item.is_admin_read === 0 
                          ? 'bg-blue-600 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110' 
                          : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'">
@@ -307,7 +307,7 @@
                           :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
                       {{ item.patient }}
                     </span>
-                  </div>
+                  </NuxtLink>
                 </td>
 
                 <!-- Doctor Block -->
@@ -354,7 +354,7 @@
               <template v-else-if="activeGroup === 'Laboratory'">
                 <!-- Patient Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
+                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="item.is_admin_read === 0 
                          ? 'bg-blue-600 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110' 
                          : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'">
@@ -363,7 +363,7 @@
                           :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
                       {{ item.patient }}
                     </span>
-                  </div>
+                  </NuxtLink>
                 </td>
 
                 <!-- Doctor Block -->
@@ -931,6 +931,7 @@ import { saveAs } from 'file-saver'
 import Swal from 'sweetalert2'
 
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { token } = useAuth()
 const headers = computed(() => ({
