@@ -53,6 +53,18 @@
 
       <!-- Main Form Card -->
       <div class="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 p-6 md:p-10 transition-all duration-500 min-h-[500px] relative">
+        <!-- Quick Submit Button (Floating/Fixed) -->
+        <div v-if="currentStep >= 1 && currentStep < steps.length - 1" class="absolute top-6 right-6 z-30">
+          <button 
+            @click="submitRefinement"
+            :disabled="isSubmitting"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50"
+          >
+            <i class="fas fa-save"></i>
+            <span>{{ isSubmitting ? 'Saving...' : 'Submit Now' }}</span>
+          </button>
+        </div>
+
         <transition name="slide-fade" mode="out-in">
           <component 
             :is="currentStepComponent" 
