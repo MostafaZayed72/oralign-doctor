@@ -19,7 +19,7 @@
           <div>
             <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Current Step</div>
             <div class="text-sm font-bold text-gray-800 dark:text-gray-100">
-              {{ currentStep + 1 }}. {{ steps[currentStep].title }}
+              {{ currentStep + 1 }}. {{ steps[currentStep].title }} {{ formData.isEdit ? '(Editing Mode)' : '' }}
             </div>
           </div>
         </div>
@@ -83,8 +83,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
 import Swal from 'sweetalert2'
+
+const { t } = useI18n()
 
 // Import components
 import StepZero from '~/components/cases/StepZero.vue'
@@ -145,6 +146,7 @@ const formData = ref({
   treatmentArch: 'Both',
 
   // Step 5: Detailed Plan
+  isEdit: route.query.mode === 'edit',
   detailedPlan: {
     crowdingSpacing: {},
     transverseDiscrepancy: {},
@@ -258,6 +260,7 @@ const submitRefinement = async () => {
       pickup_address: formData.value.pickupAddress,
       package_id: formData.value.packageType === 'Basic' ? 1 : (formData.value.packageType === 'Plus' ? 2 : 3),
       has_primary_teeth: formData.value.hasPrimaryTeeth ? '1' : '0',
+      is_edit: formData.value.isEdit,
       detailed_plan: JSON.stringify(formData.value.detailedPlan)
     }
 
@@ -313,18 +316,18 @@ const submitRefinement = async () => {
 
     Swal.fire({
       icon: 'success',
-      title: 'Refinement Submitted!',
-      text: 'The refinement case and all records have been uploaded successfully.',
+      title: t('saved') || 'Refinement Submitted!',
+      text: t('save_success_msg') || 'The refinement case and all records have been uploaded successfully.',
       confirmButtonColor: '#10b981'
     }).then(() => {
-      navigateTo('/dashboard')
+      navigateTo(localePath('/dashboard'))
     })
 
   } catch (error: any) {
     console.error('Submit error:', error)
     Swal.fire({
       icon: 'error',
-      title: 'Submission Failed',
+      title: t('error') || 'Submission Failed',
       text: error.data?.message || error.message || 'An error occurred',
       confirmButtonColor: '#ef4444'
     })

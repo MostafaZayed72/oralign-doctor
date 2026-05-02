@@ -167,7 +167,7 @@
                     <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('view') || 'عرض'">
                       <i class="fas fa-eye text-lg"></i>
                     </NuxtLink>
-                    <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" title="Edit">
+                    <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" :title="$t('edit')">
                       <i class="fas fa-edit text-lg"></i>
                     </button>
                     <button @click.prevent="deleteCase(c.id)" class="text-red-500 hover:text-red-700 transition-colors transform hover:scale-110" :title="$t('delete') || 'حذف'">
@@ -186,6 +186,9 @@
 </template>
 
 <script setup lang="ts">
+import Swal from 'sweetalert2'
+
+const { t } = useI18n()
 const localePath = useLocalePath()
 const { token, user: authUser } = useAuth()
 
@@ -249,27 +252,25 @@ const vClickOutside = {
   },
 }
 
-import Swal from 'sweetalert2'
-
 // Action Handlers
 const editCase = (id: number) => {
   window.location.href = `https://doctors.oralign.co/doctor/case-details/${id}`
 }
 
 const refineCase = (id: number) => {
-  navigateTo(localePath({ path: '/refinement-submission', query: { caseId: id } }))
+  navigateTo(localePath({ path: '/refinement-submission', query: { caseId: id, mode: 'edit' } }))
 }
 
 const deleteCase = async (id: number) => {
   const result = await Swal.fire({
-    title: useNuxtApp().$i18n.t('confirm_delete_title') || 'Are you sure?',
-    text: useNuxtApp().$i18n.t('confirm_delete') || "You won't be able to revert this!",
+    title: t('confirm_delete_title') || 'Are you sure?',
+    text: t('confirm_delete') || "You won't be able to revert this!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#10b981',
     cancelButtonColor: '#ef4444',
-    confirmButtonText: useNuxtApp().$i18n.t('yes_delete') || 'Yes, delete it!',
-    cancelButtonText: useNuxtApp().$i18n.t('cancel') || 'Cancel'
+    confirmButtonText: t('yes_delete') || 'Yes, delete it!',
+    cancelButtonText: t('cancel') || 'Cancel'
   })
 
   if (result.isConfirmed) {
@@ -282,16 +283,16 @@ const deleteCase = async (id: number) => {
       allCases.value = allCases.value.filter(c => c.id !== id)
       
       Swal.fire({
-        title: 'Deleted!',
-        text: 'Case has been deleted.',
+        title: t('deleted') || 'Deleted!',
+        text: t('case_deleted_msg') || 'The case has been deleted.',
         icon: 'success',
         confirmButtonColor: '#10b981'
       })
     } catch (e) {
       console.error(e)
       Swal.fire({
-        title: 'Error!',
-        text: 'Failed to delete case.',
+        title: t('error') || 'Error!',
+        text: t('delete_failed_msg') || 'Failed to delete case.',
         icon: 'error',
         confirmButtonColor: '#10b981'
       })

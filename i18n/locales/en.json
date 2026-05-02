@@ -194,5 +194,21 @@
   "add_plan_notes_placeholder": "Write plan notes here...",
   "plan_url": "Plan URL",
   "view_link_hint": "Link to 3D Viewer",
-  "treatment_plan_2": "Treatment Plan 2"
+  "treatment_plan_2": "Treatment Plan 2",
+  "confirm_delete_title": "Are you sure?",
+  "confirm_delete": "You won't be able to revert this!",
+  "yes_delete": "Yes, delete it!",
+  "view": "View",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "update": "Update",
+  "col_actions": "Actions",
+  "deleted": "Deleted!",
+  "case_deleted_msg": "Case has been deleted successfully.",
+  "error": "Error!",
+  "delete_failed_msg": "Failed to delete case.",
+  "saved": "Saved!",
+  "save_success_msg": "Changes saved successfully.",
+  "save_failed_msg": "Failed to save changes."
 }

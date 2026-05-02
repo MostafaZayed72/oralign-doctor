@@ -194,5 +194,21 @@
   "add_plan_notes_placeholder": "اكتب ملاحظات الخطة هنا...",
   "plan_url": "رابط الخطة",
   "view_link_hint": "رابط المشاهد ثلاثي الأبعاد",
-  "treatment_plan_2": "خطة العلاج الثانية"
+  "treatment_plan_2": "خطة العلاج الثانية",
+  "confirm_delete_title": "هل أنت متأكد؟",
+  "confirm_delete": "لن تتمكن من التراجع عن هذا الإجراء!",
+  "yes_delete": "نعم، احذف!",
+  "view": "عرض",
+  "edit": "تعديل",
+  "delete": "حذف",
+  "save": "حفظ",
+  "update": "تحديث",
+  "col_actions": "الإجراءات",
+  "deleted": "تم الحذف!",
+  "case_deleted_msg": "تم حذف الحالة بنجاح.",
+  "error": "خطأ!",
+  "delete_failed_msg": "فشل حذف الحالة.",
+  "saved": "تم الحفظ!",
+  "save_success_msg": "تم حفظ التغييرات بنجاح.",
+  "save_failed_msg": "فشل حفظ التغييرات."
 }
