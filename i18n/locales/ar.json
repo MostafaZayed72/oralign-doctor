@@ -157,5 +157,16 @@
   "new_case_submission": "تقديم حالة جديدة",
   "case_submission_subtitle": "يرجى تعبئة التفاصيل أدناه لتقديم حالة تقويم جديدة.",
   "yes": "نعم",
-  "no": "لا"
+  "no": "لا",
+  "edit_case_data": "تعديل بيانات الحالة",
+  "general_status": "الحالة العامة",
+  "lab_status_label": "حالة المعمل",
+  "not_specified": "غير محدد",
+  "case_classification": "تصنيف الحالة",
+  "main_category": "القسم الرئيسي",
+  "sub_category": "القسم الفرعي",
+  "select_category": "اختر القسم",
+  "select_sub_category": "اختر القسم الفرعي",
+  "save_changes": "حفظ التغييرات",
+  "cancel_modal": "إلغاء"
 }

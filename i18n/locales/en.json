@@ -157,5 +157,16 @@
   "new_case_submission": "Submit New Case",
   "case_submission_subtitle": "Please fill in the details below to submit a new aligner case.",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "edit_case_data": "Edit Case Data",
+  "general_status": "General Status",
+  "lab_status_label": "Lab Status",
+  "not_specified": "Not Specified",
+  "case_classification": "Case Classification",
+  "main_category": "Main Category",
+  "sub_category": "Sub Category",
+  "select_category": "Select Category",
+  "select_sub_category": "Select Sub Category",
+  "save_changes": "Save Changes",
+  "cancel_modal": "Cancel"
 }
