@@ -149,12 +149,12 @@
                 <td class="dashboard-td" :class="getStatusClass(c.status)">
                   <span class="text-white font-bold capitalize cell-content">{{ c.status }}</span>
                 </td>
-                <td class="dashboard-td" :class="c.treatment_plan1_status ? getTpClass(c.treatment_plan1_status) : ''">
-                  <span v-if="c.treatment_plan1_status" class="text-white font-bold capitalize cell-content">{{ c.treatment_plan1_status }}</span>
+                <td class="dashboard-td" :class="c.treatment_plan1_status && c.treatment_plan1_status !== 'N/A' && c.treatment_plan1_status !== 'مرفق ملف' ? getTpClass(c.treatment_plan1_status) : ''">
+                  <span v-if="c.treatment_plan1_status && c.treatment_plan1_status !== 'N/A' && c.treatment_plan1_status !== 'مرفق ملف'" class="text-white font-bold capitalize cell-content">{{ c.treatment_plan1_status }}</span>
                   <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold cell-content">—</span>
                 </td>
-                <td class="dashboard-td" :class="c.treatment_plan2_status ? getTpClass(c.treatment_plan2_status) : ''">
-                  <span v-if="c.treatment_plan2_status" class="text-white font-bold capitalize cell-content">{{ c.treatment_plan2_status }}</span>
+                <td class="dashboard-td" :class="c.treatment_plan2_status && c.treatment_plan2_status !== 'N/A' && c.treatment_plan2_status !== 'مرفق ملف' ? getTpClass(c.treatment_plan2_status) : ''">
+                  <span v-if="c.treatment_plan2_status && c.treatment_plan2_status !== 'N/A' && c.treatment_plan2_status !== 'مرفق ملف'" class="text-white font-bold capitalize cell-content">{{ c.treatment_plan2_status }}</span>
                   <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold cell-content">—</span>
                 </td>
                 <td class="dashboard-td bg-red-500">

@@ -283,8 +283,8 @@ const detailedInfo = computed(() => {
     'Case Status': c.status,
     'Date of Birth': c.dob,
     'Gender': c.gender || 'Not specified',
-    'Treatment Plan 1': c.treatment_plan1_status || '—',
-    'Treatment Plan 2': c.treatment_plan2_status || '—',
+    'Treatment Plan 1': (c.treatment_plan1_status && c.treatment_plan1_status !== 'N/A' && c.treatment_plan1_status !== 'مرفق ملف') ? c.treatment_plan1_status : '—',
+    'Treatment Plan 2': (c.treatment_plan2_status && c.treatment_plan2_status !== 'N/A' && c.treatment_plan2_status !== 'مرفق ملف') ? c.treatment_plan2_status : '—',
   }
 })
 

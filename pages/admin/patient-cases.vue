@@ -241,7 +241,7 @@
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan1_file" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded shadow-md hover:bg-blue-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
+                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded shadow-md hover:bg-blue-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
                                 <i class="fas fa-paperclip text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملف' : 'File' }}</span>
                             </a>
@@ -249,14 +249,15 @@
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
-                            <button @click.stop="openNoteModal(item.treatment_plan1, t('treatment_plan1'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
+                            <button v-if="item.treatment_plan1 && !checkDefault(item.treatment_plan1)" @click.stop="openNoteModal(item.treatment_plan1, t('treatment_plan1'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
                               <i class="fas fa-comment-dots text-[10px]"></i>
                               <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملاحظة' : 'Note' }}</span>
                             </button>
                         </div>
-                        <span v-if="item.treatment_plan1_status" class="text-[12px] font-black uppercase tracking-tight text-slate-800 dark:text-slate-200">
+                        <span v-if="item.treatment_plan1_status && !checkDefault(item.treatment_plan1_status)" class="text-[12px] font-black uppercase tracking-tight text-slate-800 dark:text-slate-200">
                           {{ item.treatment_plan1_status }}
                         </span>
+                        <span v-else class="text-[12px] font-black text-slate-400">—</span>
                     </div>
                 </td>
                 
@@ -264,7 +265,7 @@
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan2" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded shadow-md hover:bg-rose-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
+                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded shadow-md hover:bg-rose-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
                                 <i class="fas fa-paperclip text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملف' : 'File' }}</span>
                             </a>
@@ -272,14 +273,15 @@
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
-                            <button @click.stop="openNoteModal(item.treatment_plan2_text, t('treatment_plan2'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
+                            <button v-if="item.treatment_plan2_text && !checkDefault(item.treatment_plan2_text)" @click.stop="openNoteModal(item.treatment_plan2_text, t('treatment_plan2'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
                               <i class="fas fa-comment-dots text-[10px]"></i>
                               <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملاحظة' : 'Note' }}</span>
                             </button>
                         </div>
-                        <span v-if="item.treatment_plan2_status" class="text-[12px] font-black uppercase tracking-tight text-slate-800 dark:text-slate-200">
+                        <span v-if="item.treatment_plan2_status && !checkDefault(item.treatment_plan2_status)" class="text-[12px] font-black uppercase tracking-tight text-slate-800 dark:text-slate-200">
                           {{ item.treatment_plan2_status }}
                         </span>
+                        <span v-else class="text-[12px] font-black text-slate-400">—</span>
                     </div>
                 </td>
 
@@ -1464,13 +1466,24 @@ const editForm = ref({
     accessories_notes: ''
 })
 
-// Note Modal State
-const isNoteModalOpen = ref(false)
-const activeNoteContent = ref('')
-const activeNoteTitle = ref('')
+const checkDefault = (val) => {
+    if (!val) return false;
+    try {
+        const s = decodeURIComponent(String(val)).trim().toLowerCase();
+        // Check if string is exactly or ends with n/a, attached file, or مرفق ملف
+        return /(n[\/\s\-]*a|مرفق\s*ملف|attached\s*file)(\.[a-z0-9]+)?$/i.test(s);
+    } catch (e) {
+        const s = String(val).trim().toLowerCase();
+        return /(n[\/\s\-]*a|مرفق\s*ملف|attached\s*file)(\.[a-z0-9]+)?$/i.test(s);
+    }
+}
 
 const openNoteModal = (content, title) => {
-    activeNoteContent.value = content || ''
+    if (checkDefault(content)) {
+        activeNoteContent.value = ''
+    } else {
+        activeNoteContent.value = content || ''
+    }
     activeNoteTitle.value = title || t('treatment_plan')
     isNoteModalOpen.value = true
 }
@@ -1543,6 +1556,15 @@ const openModal = async (item) => {
         }
     }
 
+
+
+    const isDefaultTp1Status = checkDefault(item.treatment_plan1_status)
+    const isDefaultTp2Status = checkDefault(item.treatment_plan2_status)
+    const isDefaultTp1 = checkDefault(item.treatment_plan1)
+    const isDefaultTp2Text = checkDefault(item.treatment_plan2_text)
+    const isDefaultTp1File = checkDefault(item.treatment_plan1_file)
+    const isDefaultTp2File = checkDefault(item.treatment_plan2)
+
     editForm.value = {
         id: item.id,
         uuid: item.uuid,
@@ -1552,14 +1574,14 @@ const openModal = async (item) => {
         aligners_upper: item.aligners_upper || null,
         aligners_lower: item.aligners_lower || null,
         accessories_data: mergeWithDefaultAccessories(item.accessories_data),
-        treatment_plan1_status: item.treatment_plan1_status || '',
-        treatment_plan2_status: item.treatment_plan2_status || '',
-        treatment_plan1: item.treatment_plan1 || '',
-        treatment_plan2_text: item.treatment_plan2_text || '',
+        treatment_plan1_status: isDefaultTp1Status ? '' : (item.treatment_plan1_status || ''),
+        treatment_plan2_status: isDefaultTp2Status ? '' : (item.treatment_plan2_status || ''),
+        treatment_plan1: isDefaultTp1 ? '' : (item.treatment_plan1 || ''),
+        treatment_plan2_text: isDefaultTp2Text ? '' : (item.treatment_plan2_text || ''),
         selectedFile1: null,
         selectedFile2: null,
-        treatment_plan1_file_url: item.treatment_plan1_file || '',
-        treatment_plan2_file_url: item.treatment_plan2 || '',
+        treatment_plan1_file_url: isDefaultTp1File ? '' : (item.treatment_plan1_file || ''),
+        treatment_plan2_file_url: isDefaultTp2File ? '' : (item.treatment_plan2 || ''),
         treatment_plan1_url: item.treatment_plan1_url || '',
         treatment_plan2_url: item.treatment_plan2_url || '',
         price_list_url: item.price_list_url || '',
