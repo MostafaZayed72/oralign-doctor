@@ -1002,7 +1002,36 @@ const handleRowClick = async (item, e) => {
 const { data: response, pending, error, refresh } = await useFetch(`${config.public.apiBase}/patient-cases`, { headers })
 const { data: catResponse } = await useFetch(`${config.public.apiBase}/categories`, { headers })
 
-const cases = computed(() => response.value?.data || [])
+const cases = computed(() => {
+    const rawData = response.value?.data || []
+    // Merge raw_case fields into each item so treatment plan fields are always available
+    const result = rawData.map(item => {
+        const rc = item.raw_case || {}
+        return {
+            ...item,
+            // Ensure treatment plan fields are available from raw_case if not in top-level
+            treatment_plan1_status: item.treatment_plan1_status || rc.treatment_plan1_status || null,
+            treatment_plan1_file: item.treatment_plan1_file || rc.treatment_plan1_file || null,
+            treatment_plan1_url: item.treatment_plan1_url || rc.treatment_plan1_url || null,
+            treatment_plan1: item.treatment_plan1 ?? rc.treatment_plan1 ?? null,
+            treatment_plan2_status: item.treatment_plan2_status || rc.treatment_plan2_status || null,
+            treatment_plan2: item.treatment_plan2 ?? rc.treatment_plan2 ?? null,
+            treatment_plan2_url: item.treatment_plan2_url || rc.treatment_plan2_url || null,
+            treatment_plan2_text: item.treatment_plan2_text ?? rc.treatment_plan2_text ?? null,
+            // Finance fields
+            price_list_url: item.price_list_url || rc.price_list_url || null,
+            receipt_url: item.receipt_url || rc.receipt_url || null,
+            // Lab fields
+            lab_status: item.lab_status || rc.lab_status || null,
+            aligners_upper: item.aligners_upper ?? rc.aligners_upper ?? null,
+            aligners_lower: item.aligners_lower ?? rc.aligners_lower ?? null,
+            accessories_data: item.accessories_data || rc.accessories_data || null,
+            aligners_notes: item.aligners_notes || rc.aligners_notes || null,
+            accessories_notes: item.accessories_notes || rc.accessories_notes || null,
+        }
+    })
+    return result
+})
 const allCategories = computed(() => catResponse.value?.data || [])
 
 const filteredSubCategories = computed(() => {
@@ -1669,11 +1698,11 @@ const saveEdit = async () => {
     if (editForm.value.treatment_plan1 && editForm.value.treatment_plan1.trim()) formData.append('treatment_plan1', editForm.value.treatment_plan1)
     if (editForm.value.treatment_plan2_text && editForm.value.treatment_plan2_text.trim()) formData.append('treatment_plan2_text', editForm.value.treatment_plan2_text)
     
-    // Only send URLs if they look like actual URLs (not localhost or empty)
-    if (editForm.value.treatment_plan1_url && editForm.value.treatment_plan1_url.startsWith('http') && !editForm.value.treatment_plan1_url.includes('localhost')) {
+    // URLs - simplified (just send if not empty)
+    if (editForm.value.treatment_plan1_url && editForm.value.treatment_plan1_url.trim()) {
         formData.append('treatment_plan1_url', editForm.value.treatment_plan1_url)
     }
-    if (editForm.value.treatment_plan2_url && editForm.value.treatment_plan2_url.startsWith('http') && !editForm.value.treatment_plan2_url.includes('localhost')) {
+    if (editForm.value.treatment_plan2_url && editForm.value.treatment_plan2_url.trim()) {
         formData.append('treatment_plan2_url', editForm.value.treatment_plan2_url)
     }
     
