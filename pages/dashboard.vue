@@ -151,46 +151,46 @@
                 </td>
                 <td class="dashboard-td">
                   <div class="flex flex-col items-stretch justify-center gap-2 w-full cell-content">
-                      <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                          <a v-if="c.treatment_plan1_file && !checkDefault(c.treatment_plan1_file)" :href="fixFileUrl(c.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded shadow-md hover:bg-blue-600 transition-all gap-2 px-2" :title="$t('view_attachment')">
-                              <i class="fas fa-paperclip text-[10px]"></i>
-                              <span class="text-[10px] font-bold">{{ $t('file') || 'ملف' }}</span>
+                      <div class="flex flex-col items-stretch justify-center gap-1.5 w-full">
+                          <a v-if="c.treatment_plan1_file && !checkDefault(c.treatment_plan1_file)" :href="fixFileUrl(c.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded-lg shadow-sm hover:bg-blue-600 transition-all gap-2 px-2 border-b-2 border-blue-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_attachment')">
+                              <i class="fas fa-file-alt text-[10px]"></i>
+                              <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('file') || 'ملف' }}</span>
                           </a>
-                          <a v-if="c.treatment_plan1_url" :href="c.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="$t('view_link')">
-                              <i class="fas fa-external-link-alt text-[10px]"></i>
-                              <span class="text-[10px] font-bold">{{ $t('link') || 'رابط' }}</span>
+                          <a v-if="c.treatment_plan1_url" :href="c.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 transition-all gap-2 px-2 border-b-2 border-teal-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_link')">
+                              <i class="fas fa-link text-[10px]"></i>
+                              <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('link') || 'رابط' }}</span>
                           </a>
-                          <button v-if="c.treatment_plan1 && !checkDefault(c.treatment_plan1)" @click.stop="openNoteModal(c.treatment_plan1, $t('treatment_plan1'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
-                            <i class="fas fa-comment-dots text-[10px]"></i>
-                            <span class="text-[10px] font-bold">{{ $t('note') || 'ملاحظة' }}</span>
+                          <button v-if="c.treatment_plan1 && !checkDefault(c.treatment_plan1)" @click.stop="openNoteModal(c.treatment_plan1, $t('treatment_plan1'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded-lg shadow-sm hover:bg-slate-600 transition-all gap-2 px-2 border-b-2 border-slate-700 active:border-b-0 active:translate-y-0.5">
+                            <i class="fas fa-sticky-note text-[10px]"></i>
+                            <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('note') || 'ملاحظة' }}</span>
                           </button>
                       </div>
-                      <div v-if="c.treatment_plan1_status && !checkDefault(c.treatment_plan1_status)" :class="getTpClass(c.treatment_plan1_status)" class="px-2 py-1 rounded text-[11px] text-white font-bold capitalize">
+                      <div v-if="c.treatment_plan1_status && !checkDefault(c.treatment_plan1_status)" :class="getTpClass(c.treatment_plan1_status)" class="px-2 py-1 rounded-md text-[10px] text-white font-black uppercase tracking-tight shadow-sm">
                         {{ c.treatment_plan1_status }}
                       </div>
-                      <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
+                      <span v-else-if="!(c.treatment_plan1_file && !checkDefault(c.treatment_plan1_file)) && !c.treatment_plan1_url && !(c.treatment_plan1 && !checkDefault(c.treatment_plan1))" class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
                   </div>
                 </td>
                 <td class="dashboard-td">
                   <div class="flex flex-col items-stretch justify-center gap-2 w-full cell-content">
-                      <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                          <a v-if="c.treatment_plan2 && !checkDefault(c.treatment_plan2)" :href="fixFileUrl(c.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded shadow-md hover:bg-rose-600 transition-all gap-2 px-2" :title="$t('view_attachment')">
-                              <i class="fas fa-paperclip text-[10px]"></i>
-                              <span class="text-[10px] font-bold">{{ $t('file') || 'ملف' }}</span>
+                      <div class="flex flex-col items-stretch justify-center gap-1.5 w-full">
+                          <a v-if="c.treatment_plan2 && !checkDefault(c.treatment_plan2)" :href="fixFileUrl(c.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded-lg shadow-sm hover:bg-rose-600 transition-all gap-2 px-2 border-b-2 border-rose-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_attachment')">
+                              <i class="fas fa-file-alt text-[10px]"></i>
+                              <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('file') || 'ملف' }}</span>
                           </a>
-                          <a v-if="c.treatment_plan2_url" :href="c.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="$t('view_link')">
-                              <i class="fas fa-external-link-alt text-[10px]"></i>
-                              <span class="text-[10px] font-bold">{{ $t('link') || 'رابط' }}</span>
+                          <a v-if="c.treatment_plan2_url" :href="c.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 transition-all gap-2 px-2 border-b-2 border-teal-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_link')">
+                              <i class="fas fa-link text-[10px]"></i>
+                              <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('link') || 'رابط' }}</span>
                           </a>
-                          <button v-if="c.treatment_plan2_text && !checkDefault(c.treatment_plan2_text)" @click.stop="openNoteModal(c.treatment_plan2_text, $t('treatment_plan2'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
-                            <i class="fas fa-comment-dots text-[10px]"></i>
-                            <span class="text-[10px] font-bold">{{ $t('note') || 'ملاحظة' }}</span>
+                          <button v-if="c.treatment_plan2_text && !checkDefault(c.treatment_plan2_text)" @click.stop="openNoteModal(c.treatment_plan2_text, $t('treatment_plan2'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded-lg shadow-sm hover:bg-slate-600 transition-all gap-2 px-2 border-b-2 border-slate-700 active:border-b-0 active:translate-y-0.5">
+                            <i class="fas fa-sticky-note text-[10px]"></i>
+                            <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('note') || 'ملاحظة' }}</span>
                           </button>
                       </div>
-                      <div v-if="c.treatment_plan2_status && !checkDefault(c.treatment_plan2_status)" :class="getTpClass(c.treatment_plan2_status)" class="px-2 py-1 rounded text-[11px] text-white font-bold capitalize">
+                      <div v-if="c.treatment_plan2_status && !checkDefault(c.treatment_plan2_status)" :class="getTpClass(c.treatment_plan2_status)" class="px-2 py-1 rounded-md text-[10px] text-white font-black uppercase tracking-tight shadow-sm">
                         {{ c.treatment_plan2_status }}
                       </div>
-                      <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
+                      <span v-else-if="!(c.treatment_plan2 && !checkDefault(c.treatment_plan2)) && !c.treatment_plan2_url && !(c.treatment_plan2_text && !checkDefault(c.treatment_plan2_text))" class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
                   </div>
                 </td>
                 <td class="dashboard-td bg-red-500">
