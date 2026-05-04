@@ -121,7 +121,6 @@
                 <th class="dashboard-th">{{ $t('col_status') }}</th>
                 <th class="dashboard-th">{{ $t('col_tp1') }}</th>
                 <th class="dashboard-th">{{ $t('col_tp2') }}</th>
-                <th class="dashboard-th">{{ $t('col_pdf') }}</th>
                 <th class="dashboard-th">{{ $t('col_actions') || 'الإجراءات' }}</th>
               </tr>
             </thead>
@@ -150,8 +149,8 @@
                   <span class="text-white font-bold capitalize cell-content">{{ c.status }}</span>
                 </td>
                 <td class="dashboard-td">
-                  <div class="flex flex-col items-stretch justify-center gap-2 w-full cell-content">
-                      <div class="flex flex-col items-stretch justify-center gap-1.5 w-full">
+                  <div class="flex flex-col items-stretch justify-center gap-3 w-full cell-content">
+                      <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                           <a v-if="c.treatment_plan1_file && !checkDefault(c.treatment_plan1_file)" :href="fixFileUrl(c.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded-lg shadow-sm hover:bg-blue-600 transition-all gap-2 px-2 border-b-2 border-blue-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_attachment')">
                               <i class="fas fa-file-alt text-[10px]"></i>
                               <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('file') || 'ملف' }}</span>
@@ -172,8 +171,8 @@
                   </div>
                 </td>
                 <td class="dashboard-td">
-                  <div class="flex flex-col items-stretch justify-center gap-2 w-full cell-content">
-                      <div class="flex flex-col items-stretch justify-center gap-1.5 w-full">
+                  <div class="flex flex-col items-stretch justify-center gap-3 w-full cell-content">
+                      <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                           <a v-if="c.treatment_plan2 && !checkDefault(c.treatment_plan2)" :href="fixFileUrl(c.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded-lg shadow-sm hover:bg-rose-600 transition-all gap-2 px-2 border-b-2 border-rose-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_attachment')">
                               <i class="fas fa-file-alt text-[10px]"></i>
                               <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('file') || 'ملف' }}</span>
@@ -192,11 +191,6 @@
                       </div>
                       <span v-else-if="!(c.treatment_plan2 && !checkDefault(c.treatment_plan2)) && !c.treatment_plan2_url && !(c.treatment_plan2_text && !checkDefault(c.treatment_plan2_text))" class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
                   </div>
-                </td>
-                <td class="dashboard-td bg-red-500">
-                  <a :href="`https://doctors.oralign.co/doctor/case-pdf/${c.id}`" target="_blank" class="text-white font-bold flex items-center justify-center hover:underline cell-content">
-                    <i class="fas fa-file-pdf mr-1"></i> PDF
-                  </a>
                 </td>
                 <td class="dashboard-td">
                   <div class="flex items-center justify-center gap-3 cell-content">
