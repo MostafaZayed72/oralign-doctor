@@ -149,13 +149,49 @@
                 <td class="dashboard-td" :class="getStatusClass(c.status)">
                   <span class="text-white font-bold capitalize cell-content">{{ c.status }}</span>
                 </td>
-                <td class="dashboard-td" :class="c.treatment_plan1_status && c.treatment_plan1_status !== 'N/A' && c.treatment_plan1_status !== 'مرفق ملف' ? getTpClass(c.treatment_plan1_status) : ''">
-                  <span v-if="c.treatment_plan1_status && c.treatment_plan1_status !== 'N/A' && c.treatment_plan1_status !== 'مرفق ملف'" class="text-white font-bold capitalize cell-content">{{ c.treatment_plan1_status }}</span>
-                  <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold cell-content">—</span>
+                <td class="dashboard-td">
+                  <div class="flex flex-col items-stretch justify-center gap-2 w-full cell-content">
+                      <div class="flex flex-col items-stretch justify-center gap-1 w-full">
+                          <a v-if="c.treatment_plan1_file && !checkDefault(c.treatment_plan1_file)" :href="fixFileUrl(c.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded shadow-md hover:bg-blue-600 transition-all gap-2 px-2" :title="$t('view_attachment')">
+                              <i class="fas fa-paperclip text-[10px]"></i>
+                              <span class="text-[10px] font-bold">{{ $t('file') || 'ملف' }}</span>
+                          </a>
+                          <a v-if="c.treatment_plan1_url" :href="c.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="$t('view_link')">
+                              <i class="fas fa-external-link-alt text-[10px]"></i>
+                              <span class="text-[10px] font-bold">{{ $t('link') || 'رابط' }}</span>
+                          </a>
+                          <button v-if="c.treatment_plan1 && !checkDefault(c.treatment_plan1)" @click.stop="openNoteModal(c.treatment_plan1, $t('treatment_plan1'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
+                            <i class="fas fa-comment-dots text-[10px]"></i>
+                            <span class="text-[10px] font-bold">{{ $t('note') || 'ملاحظة' }}</span>
+                          </button>
+                      </div>
+                      <div v-if="c.treatment_plan1_status && !checkDefault(c.treatment_plan1_status)" :class="getTpClass(c.treatment_plan1_status)" class="px-2 py-1 rounded text-[11px] text-white font-bold capitalize">
+                        {{ c.treatment_plan1_status }}
+                      </div>
+                      <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
+                  </div>
                 </td>
-                <td class="dashboard-td" :class="c.treatment_plan2_status && c.treatment_plan2_status !== 'N/A' && c.treatment_plan2_status !== 'مرفق ملف' ? getTpClass(c.treatment_plan2_status) : ''">
-                  <span v-if="c.treatment_plan2_status && c.treatment_plan2_status !== 'N/A' && c.treatment_plan2_status !== 'مرفق ملف'" class="text-white font-bold capitalize cell-content">{{ c.treatment_plan2_status }}</span>
-                  <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold cell-content">—</span>
+                <td class="dashboard-td">
+                  <div class="flex flex-col items-stretch justify-center gap-2 w-full cell-content">
+                      <div class="flex flex-col items-stretch justify-center gap-1 w-full">
+                          <a v-if="c.treatment_plan2 && !checkDefault(c.treatment_plan2)" :href="fixFileUrl(c.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded shadow-md hover:bg-rose-600 transition-all gap-2 px-2" :title="$t('view_attachment')">
+                              <i class="fas fa-paperclip text-[10px]"></i>
+                              <span class="text-[10px] font-bold">{{ $t('file') || 'ملف' }}</span>
+                          </a>
+                          <a v-if="c.treatment_plan2_url" :href="c.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="$t('view_link')">
+                              <i class="fas fa-external-link-alt text-[10px]"></i>
+                              <span class="text-[10px] font-bold">{{ $t('link') || 'رابط' }}</span>
+                          </a>
+                          <button v-if="c.treatment_plan2_text && !checkDefault(c.treatment_plan2_text)" @click.stop="openNoteModal(c.treatment_plan2_text, $t('treatment_plan2'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
+                            <i class="fas fa-comment-dots text-[10px]"></i>
+                            <span class="text-[10px] font-bold">{{ $t('note') || 'ملاحظة' }}</span>
+                          </button>
+                      </div>
+                      <div v-if="c.treatment_plan2_status && !checkDefault(c.treatment_plan2_status)" :class="getTpClass(c.treatment_plan2_status)" class="px-2 py-1 rounded text-[11px] text-white font-bold capitalize">
+                        {{ c.treatment_plan2_status }}
+                      </div>
+                      <span v-else class="text-gray-400 dark:text-gray-600 text-sm font-bold">—</span>
+                  </div>
                 </td>
                 <td class="dashboard-td bg-red-500">
                   <a :href="`https://doctors.oralign.co/doctor/case-pdf/${c.id}`" target="_blank" class="text-white font-bold flex items-center justify-center hover:underline cell-content">
@@ -181,7 +217,32 @@
         </div>
       </div>
 
-    </div>
+    <!-- Note Modal Dialog -->
+    <transition name="fade">
+      <div v-if="isNoteModalOpen" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" :dir="$i18n.locale === 'ar' ? 'rtl' : 'ltr'" @click.stop="isNoteModalOpen = false">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800 relative" @click.stop>
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+            <h3 class="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 text-[18px]" style="font-family: 'Fira Code', monospace;">
+              <i class="fas fa-comment-dots text-emerald-500"></i> {{ activeNoteTitle }}
+            </h3>
+            <button @click="isNoteModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors ltr:ml-auto rtl:mr-auto">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner min-h-[140px] text-slate-900 dark:text-slate-100 whitespace-pre-wrap leading-relaxed text-[16px] font-bold" style="font-family: 'Fira Code', monospace;">
+                {{ activeNoteContent || $t('no_notes_available') || 'لا توجد ملاحظات متاحة' }}
+            </div>
+          </div>
+          <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+            <button @click="isNoteModalOpen = false" class="px-8 py-2.5 rounded-xl bg-gradient-to-b from-slate-100 to-slate-200 text-slate-700 font-black shadow-[0_4px_0_rgb(148,163,184),0_8px_15px_rgba(0,0,0,0.1)] border-t-2 border-white active:translate-y-1 active:shadow-none transition-all">
+                {{ $i18n.locale === 'ar' ? 'إغلاق' : 'Close' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -197,6 +258,42 @@ const statusFilter = ref("All Cases")
 const allCases = ref<any[]>([])
 const pending = ref(false)
 const fetchError = ref("")
+
+// Fix file URLs from cPanel server that are missing /public in the path
+const fixFileUrl = (url) => {
+  if (!url) return url
+  // If URL is from production (cPanel) and missing /public, add it
+  if (url.includes('test-api.oralign.co/uploads')) {
+    return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+  }
+  return url
+}
+
+const checkDefault = (val) => {
+    if (!val) return false;
+    try {
+        const s = decodeURIComponent(String(val)).trim().toLowerCase();
+        // Check if string is exactly or ends with n/a, attached file, or مرفق ملف
+        return /(n[\/\s\-]*a|مرفق\s*ملف|attached\s*file)(\.[a-z0-9]+)?$/i.test(s);
+    } catch (e) {
+        const s = String(val).trim().toLowerCase();
+        return /(n[\/\s\-]*a|مرفق\s*ملف|attached\s*file)(\.[a-z0-9]+)?$/i.test(s);
+    }
+}
+
+const isNoteModalOpen = ref(false)
+const activeNoteTitle = ref('')
+const activeNoteContent = ref('')
+
+const openNoteModal = (content, title) => {
+    if (checkDefault(content)) {
+        activeNoteContent.value = ''
+    } else {
+        activeNoteContent.value = content || ''
+    }
+    activeNoteTitle.value = title || t('treatment_plan')
+    isNoteModalOpen.value = true
+}
 
 const loadCases = async () => {
   if (!token.value) return
