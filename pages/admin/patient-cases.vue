@@ -1434,6 +1434,11 @@ const deleteSingleRow = async (id) => {
     } catch(e) { console.error('Delete failed', e) }
 }
 
+// Note Modal State
+const isNoteModalOpen = ref(false)
+const activeNoteContent = ref('')
+const activeNoteTitle = ref('')
+
 // Modal Dialog Logic
 const isModalOpen = ref(false)
 const isSaving = ref(false)
@@ -1656,53 +1661,80 @@ const saveEdit = async () => {
     isSaving.value = true
     const formData = new FormData()
     if (editForm.value.status) formData.append('status', editForm.value.status)
-    if (editForm.value.lab_status !== undefined) formData.append('lab_status', editForm.value.lab_status)
-    if (editForm.value.aligners_upper !== null) formData.append('aligners_upper', editForm.value.aligners_upper)
-    if (editForm.value.aligners_lower !== null) formData.append('aligners_lower', editForm.value.aligners_lower)
-    if (editForm.value.accessories_data) formData.append('accessories_data', JSON.stringify(editForm.value.accessories_data))
     if (editForm.value.patient) formData.append('patient_name', editForm.value.patient)
     if (editForm.value.treatment_plan1_status) formData.append('treatment_plan1_status', editForm.value.treatment_plan1_status)
     if (editForm.value.treatment_plan2_status) formData.append('treatment_plan2_status', editForm.value.treatment_plan2_status)
-    if (editForm.value.treatment_plan1 !== undefined) formData.append('treatment_plan1', editForm.value.treatment_plan1)
-    if (editForm.value.treatment_plan2_text !== undefined) formData.append('treatment_plan2_text', editForm.value.treatment_plan2_text)
     
-    if (editForm.value.treatment_plan1_url !== undefined) formData.append('treatment_plan1_url', editForm.value.treatment_plan1_url)
-    if (editForm.value.treatment_plan2_url !== undefined) formData.append('treatment_plan2_url', editForm.value.treatment_plan2_url)
+    // Only send text notes if they have actual content
+    if (editForm.value.treatment_plan1 && editForm.value.treatment_plan1.trim()) formData.append('treatment_plan1', editForm.value.treatment_plan1)
+    if (editForm.value.treatment_plan2_text && editForm.value.treatment_plan2_text.trim()) formData.append('treatment_plan2_text', editForm.value.treatment_plan2_text)
+    
+    // Only send URLs if they look like actual URLs (not localhost or empty)
+    if (editForm.value.treatment_plan1_url && editForm.value.treatment_plan1_url.startsWith('http') && !editForm.value.treatment_plan1_url.includes('localhost')) {
+        formData.append('treatment_plan1_url', editForm.value.treatment_plan1_url)
+    }
+    if (editForm.value.treatment_plan2_url && editForm.value.treatment_plan2_url.startsWith('http') && !editForm.value.treatment_plan2_url.includes('localhost')) {
+        formData.append('treatment_plan2_url', editForm.value.treatment_plan2_url)
+    }
+    
+    // Files
     if (editForm.value.selectedFile1) formData.append('treatment_plan1_file', editForm.value.selectedFile1)
     if (editForm.value.selectedFile2) formData.append('treatment_plan2', editForm.value.selectedFile2)
     if (editForm.value.remove_attachment1) formData.append('delete_treatment_plan1_file', 'true')
     if (editForm.value.remove_attachment2) formData.append('delete_treatment_plan2', 'true')
     
-    // New Documents
+    // Documents
     if (editForm.value.price_list_file) formData.append('price_list_file', editForm.value.price_list_file)
     if (editForm.value.receipt_file) formData.append('receipt_file', editForm.value.receipt_file)
     if (editForm.value.remove_price_list) formData.append('delete_price_list', 'true')
     if (editForm.value.remove_receipt) formData.append('delete_receipt', 'true')
     
     formData.append('sub_category_id', editForm.value.sub_category_id || 'null')
-    formData.append('aligners_notes', editForm.value.aligners_notes || '')
-    formData.append('accessories_notes', editForm.value.accessories_notes || '')
+    
+    // Only send optional fields if they have actual values
+    if (editForm.value.aligners_notes && editForm.value.aligners_notes.trim()) formData.append('aligners_notes', editForm.value.aligners_notes)
+    if (editForm.value.accessories_notes && editForm.value.accessories_notes.trim()) formData.append('accessories_notes', editForm.value.accessories_notes)
+    if (editForm.value.aligners_upper !== null && editForm.value.aligners_upper !== '') formData.append('aligners_upper', editForm.value.aligners_upper)
+    if (editForm.value.aligners_lower !== null && editForm.value.aligners_lower !== '') formData.append('aligners_lower', editForm.value.aligners_lower)
+    if (editForm.value.accessories_data) formData.append('accessories_data', JSON.stringify(editForm.value.accessories_data))
+    if (editForm.value.lab_status && editForm.value.lab_status.trim()) formData.append('lab_status', editForm.value.lab_status)
 
     try {
         const res = await $fetch(`${config.public.apiBase}/patient-cases/${editForm.value.id}/update`, {
             method: 'POST', 
             body: formData,
-            headers: headers.value
+            headers: {
+                Authorization: `Bearer ${token.value}`
+            }
         })
         
         // Refresh data from API to get the correct modified dates and file URLs
         await refresh()
+        
+        // Close modal first
+        closeModal()
+        isSaving.value = false
+        
+        // Show success message
+        Swal.fire({
+            title: locale.value === 'ar' ? 'تم الحفظ بنجاح!' : 'Saved Successfully!',
+            text: locale.value === 'ar' ? 'تم تحديث بيانات الحالة' : 'Case data has been updated',
+            icon: 'success',
+            confirmButtonColor: '#10b981',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        })
     } catch(e) {
         console.error('Save failed', e)
+        isSaving.value = false
+        const errorMsg = e?.data?.message || e?.statusMessage || e?.message || t('save_failed') || 'حدث خطأ أثناء الحفظ'
         Swal.fire({
             title: t('error') || 'Error',
-            text: t('save_failed') || 'حدث خطأ أثناء الحفظ',
+            text: errorMsg,
             icon: 'error',
             confirmButtonColor: '#10b981'
         })
-    } finally {
-        isSaving.value = false
-        closeModal()
     }
 }
 </script>

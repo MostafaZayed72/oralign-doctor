@@ -243,6 +243,7 @@
       </div>
     </transition>
 
+    </div>
   </div>
 </template>
 
