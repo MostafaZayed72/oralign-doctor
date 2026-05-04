@@ -257,7 +257,7 @@
                         <span v-if="item.treatment_plan1_status && !checkDefault(item.treatment_plan1_status)" class="text-[12px] font-black uppercase tracking-tight text-slate-800 dark:text-slate-200">
                           {{ item.treatment_plan1_status }}
                         </span>
-                        <span v-else class="text-[12px] font-black text-slate-400">—</span>
+                        <span v-else-if="!(item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)) && !item.treatment_plan1_url && !(item.treatment_plan1 && !checkDefault(item.treatment_plan1))" class="text-[12px] font-black text-slate-400">—</span>
                     </div>
                 </td>
                 
@@ -281,7 +281,7 @@
                         <span v-if="item.treatment_plan2_status && !checkDefault(item.treatment_plan2_status)" class="text-[12px] font-black uppercase tracking-tight text-slate-800 dark:text-slate-200">
                           {{ item.treatment_plan2_status }}
                         </span>
-                        <span v-else class="text-[12px] font-black text-slate-400">—</span>
+                        <span v-else-if="!(item.treatment_plan2 && !checkDefault(item.treatment_plan2)) && !item.treatment_plan2_url && !(item.treatment_plan2_text && !checkDefault(item.treatment_plan2_text))" class="text-[12px] font-black text-slate-400">—</span>
                     </div>
                 </td>
 
@@ -700,7 +700,7 @@
                           <input type="file" accept=".pdf,image/*" @change="onFileSelected1" class="hidden" />
                       </label>
                       <div v-if="editForm.treatment_plan1_file_url && !editForm.selectedFile1" class="flex items-center gap-3 w-full">
-                        <a :href="editForm.treatment_plan1_file_url" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-6 py-4 text-base font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-blue-600 hover:text-blue-700 hover:bg-slate-50 dark:text-blue-400 dark:hover:bg-slate-700 transition-all shadow-md">
+                        <a :href="fixFileUrl(editForm.treatment_plan1_file_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-6 py-4 text-base font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-blue-600 hover:text-blue-700 hover:bg-slate-50 dark:text-blue-400 dark:hover:bg-slate-700 transition-all shadow-md">
                             <i class="fas fa-external-link-alt text-lg"></i> {{ t('browse_current') }}
                         </a>
                         <button @click.prevent="removeAttachment1" class="h-14 w-14 flex items-center justify-center text-xl font-bold bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-500/20 dark:hover:bg-red-500/30 dark:text-red-400 border-2 border-red-200 dark:border-red-500/30 rounded-2xl transition-all shadow-md" :title="t('delete_permanent')">
@@ -755,7 +755,7 @@
                           <input type="file" accept=".pdf,image/*" @change="onFileSelected2" class="hidden" />
                       </label>
                       <div v-if="editForm.treatment_plan2_file_url && !editForm.selectedFile2" class="flex items-center gap-3 w-full">
-                        <a :href="editForm.treatment_plan2_file_url" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-6 py-4 text-base font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-purple-600 hover:text-purple-700 hover:bg-slate-50 dark:text-purple-400 dark:hover:bg-slate-700 transition-all shadow-md">
+                        <a :href="fixFileUrl(editForm.treatment_plan2_file_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-6 py-4 text-base font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-purple-600 hover:text-purple-700 hover:bg-slate-50 dark:text-purple-400 dark:hover:bg-slate-700 transition-all shadow-md">
                             <i class="fas fa-external-link-alt text-lg"></i> {{ t('browse_current') }}
                         </a>
                         <button @click.prevent="removeAttachment2" class="h-14 w-14 flex items-center justify-center text-xl font-bold bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-500/20 dark:hover:bg-red-500/30 dark:text-red-400 border-2 border-red-200 dark:border-red-500/30 rounded-2xl transition-all shadow-md" :title="t('delete_permanent')">
@@ -798,7 +798,7 @@
                           <input type="file" accept=".pdf,image/*" @change="onPriceListSelected" class="hidden" />
                       </label>
                       <div v-if="editForm.price_list_url && !editForm.price_list_file" class="flex items-center gap-3 w-full">
-                        <a :href="editForm.price_list_url" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-4 py-3 text-sm font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-blue-600 hover:text-blue-700 shadow-md">
+                        <a :href="fixFileUrl(editForm.price_list_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-4 py-3 text-sm font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-blue-600 hover:text-blue-700 shadow-md">
                             <i class="fas fa-download"></i> {{ t('browse_current') }}
                         </a>
                         <button @click.prevent="removePriceList" class="h-12 w-12 flex items-center justify-center text-red-600 bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 rounded-2xl shadow-md transition-all">
@@ -821,7 +821,7 @@
                           <input type="file" accept=".pdf,image/*" @change="onReceiptSelected" class="hidden" />
                       </label>
                       <div v-if="editForm.receipt_url && !editForm.receipt_file" class="flex items-center gap-3 w-full">
-                        <a :href="editForm.receipt_url" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-4 py-3 text-sm font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-emerald-600 hover:text-emerald-700 shadow-md">
+                        <a :href="fixFileUrl(editForm.receipt_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-4 py-3 text-sm font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-emerald-600 hover:text-emerald-700 shadow-md">
                             <i class="fas fa-download"></i> {{ t('browse_current') }}
                         </a>
                         <button @click.prevent="removeReceipt" class="h-12 w-12 flex items-center justify-center text-red-600 bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 rounded-2xl shadow-md transition-all">
@@ -943,13 +943,30 @@ const headers = computed(() => ({
 
 const activeGroup = ref('Virtual Planning')
 
-// Fix file URLs from cPanel server that are missing /public in the path
+// Fix file URLs from cPanel server
 const fixFileUrl = (url) => {
   if (!url) return url
-  // If URL is from production (cPanel) and missing /public, add it
-  if (url.includes('test-api.oralign.co/uploads')) {
-    return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+  
+  // If it's already a full URL, just clean it if needed
+  if (url.startsWith('http')) {
+    if (url.includes('test-api.oralign.co/uploads')) {
+      return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+    }
+    return url
   }
+  
+  // If it's just a filename (doesn't contain slashes or starts with patient_cases), 
+  // point it to the production impressions folder
+  const baseUrl = 'https://doctors.oralign.co/public/impressions'
+  if (!url.includes('/')) {
+     return `${baseUrl}/patient_cases/files/${url}`
+  }
+  
+  // If it's a relative path starting with patient_cases/
+  if (url.startsWith('patient_cases/')) {
+    return `${baseUrl}/${url.replace('patient_cases/', 'patient_cases/files/')}`
+  }
+  
   return url
 }
 
