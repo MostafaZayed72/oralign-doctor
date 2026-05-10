@@ -52,7 +52,7 @@
       <!-- Additional Instructions -->
       <div class="w-full xl:w-72 shrink-0">
         <div class="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-6 border border-slate-100 dark:border-slate-800 h-full flex flex-col">
-          <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 px-1 flex items-center gap-2">
+          <label class="block text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 mb-3 px-1 flex items-center gap-2">
             <i class="fas fa-edit text-brand-primary"></i> Instructions
           </label>
           <textarea 
@@ -77,10 +77,10 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 w-16">#</th>
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Plan Option</th>
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Details</th>
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 w-16">#</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Plan Option</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Details</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -289,7 +289,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.elastics?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('elastics', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the elastics</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the elastics</label>
                       <textarea :value="formData.detailedPlan.elastics?.notes" @input="setSingleOpt('elastics', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -308,7 +308,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.biteRamps?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('biteRamps', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the Bite ramps</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Bite ramps</label>
                       <textarea :value="formData.detailedPlan.biteRamps?.notes" @input="setSingleOpt('biteRamps', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -333,7 +333,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.attachments?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('attachments', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Perform attachments before</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Perform attachments before</label>
                       <input :value="formData.detailedPlan.attachments?.beforeStep" @input="setSingleOpt('attachments', 'beforeStep', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Write Step Numbers Separated by..." />
                     </div>
                   </div>
@@ -354,7 +354,7 @@
                       </div>
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the Tooth Size Discrepancy</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Tooth Size Discrepancy</label>
                       <textarea :value="formData.detailedPlan.toothSizeDiscrepancy?.notes" @input="setSingleOpt('toothSizeDiscrepancy', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -373,7 +373,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.archExpansion?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('archExpansion', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the Arch Expansion</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Arch Expansion</label>
                       <textarea :value="formData.detailedPlan.archExpansion?.notes" @input="setSingleOpt('archExpansion', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -450,7 +450,7 @@
                       </div>
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the Passive aligners</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Passive aligners</label>
                       <textarea :value="formData.detailedPlan.passiveAligner?.notes" @input="setSingleOpt('passiveAligner', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -467,7 +467,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.overcorrection?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('overcorrection', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the overcorrection</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the overcorrection</label>
                       <textarea :value="formData.detailedPlan.overcorrection?.notes" @input="setSingleOpt('overcorrection', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
