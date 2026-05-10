@@ -77,8 +77,8 @@
         <!-- Main Layout Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          <!-- Left Column: Tab Content -->
-          <div class="lg:col-span-8 space-y-8">
+          <!-- Main Column: Tab Content -->
+          <div :class="activeTab === 'detailed_plan' ? 'lg:col-span-12' : 'lg:col-span-8'" class="space-y-8">
             <div class="bg-white dark:bg-[#1a1a1a] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl p-8 min-h-[500px]">
               
               <!-- Details Tab -->
@@ -222,8 +222,8 @@
             </div>
           </div>
 
-          <!-- Right Column: Patient Stats & Actions -->
-          <div class="lg:col-span-4 space-y-8">
+          <!-- Right Column: Patient Stats & Actions (Hidden for Detailed Plan to allow full width) -->
+          <div v-if="activeTab !== 'detailed_plan'" class="lg:col-span-4 space-y-8">
             
             <!-- Actions Card -->
             <div v-if="activeTab.startsWith('plan')" class="bg-white dark:bg-[#1a1a1a] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl p-6">
@@ -256,6 +256,17 @@
             </div>
           </div>
 
+        </div>
+
+        <!-- Bottom Section for Detailed Plan -->
+        <div v-if="activeTab === 'detailed_plan'" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div class="lg:col-span-12">
+            <!-- Notes Card moved to bottom for detailed plan -->
+            <div class="bg-white dark:bg-[#1a1a1a] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl p-6">
+               <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6">Internal Notes</h3>
+               <textarea readonly class="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-2xl p-4 text-sm text-slate-600 dark:text-slate-400 font-medium" rows="4" placeholder="No notes available..."></textarea>
+            </div>
+          </div>
         </div>
 
       </div>

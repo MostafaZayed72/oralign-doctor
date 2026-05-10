@@ -96,7 +96,7 @@
                 class="hidden lg:inline-flex items-center gap-2 bg-[#d6b25c] text-[#063d37] hover:bg-[#f2d98b] text-[13px] font-bold px-5 py-2 rounded-full transition-all duration-200 shadow-lg shadow-black/20"
               >
                 <i class="fas fa-columns text-[11px]" />
-                لوحة التحكم
+                {{ $t('dashboard') }}
               </NuxtLink>
               <button
                 @click="logout"
@@ -200,7 +200,7 @@
                 @click="mobileOpen = false"
               >
                 <i class="fas fa-columns text-[11px]" />
-                لوحة التحكم
+                {{ $t('dashboard') }}
               </NuxtLink>
               <button
                 @click="() => { logout(); mobileOpen = false }"

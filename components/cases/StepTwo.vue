@@ -18,25 +18,30 @@
     </div>
 
     <!-- Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       <button 
         v-for="cat in categories" 
         :key="cat.id"
         @click="openCategory(cat)"
-        class="group relative p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 hover:border-brand-primary hover:scale-[1.02] active:scale-95 transition-all duration-300 text-center space-y-3 overflow-hidden"
+        class="group relative p-5 rounded-[2rem] border-2 transition-all duration-300 text-center space-y-2 overflow-hidden flex flex-col items-center justify-center min-h-[110px]"
+        :class="[
+          formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0
+            ? 'bg-white dark:bg-slate-900 border-brand-primary' 
+            : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-brand-primary/50'
+        ]"
       >
-        <div class="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center mx-auto group-hover:bg-brand-primary/10 transition-colors">
-          <i :class="cat.icon" class="text-xl text-slate-400 group-hover:text-brand-primary transition-colors"></i>
-        </div>
-        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors">{{ cat.label }}</h4>
+        <!-- Background Accent -->
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
         
-        <!-- Status Indicator -->
-        <div v-if="formData.detailedPlan[cat.id]" class="absolute top-3 right-3">
-           <div class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></div>
+        <h4 class="text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors z-10">{{ cat.label }}</h4>
+        
+        <!-- Selection Marker -->
+        <div v-if="formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0" class="mt-2">
+           <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary text-[8px] font-black uppercase tracking-tighter">Selected</div>
         </div>
 
-        <!-- Decorative element -->
-        <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-brand-primary/5 rounded-full blur-xl group-hover:bg-brand-primary/20 transition-all"></div>
+        <!-- Decorative card corner -->
+        <div class="absolute -top-6 -right-6 w-12 h-12 rounded-full blur-xl transition-all duration-500 group-hover:scale-150" :class="cat.color || 'bg-brand-primary/20'"></div>
       </button>
     </div>
 
@@ -537,22 +542,22 @@ const openCategory = (cat: any) => {
 }
 
 const categories = [
-  { id: 'apDiscrepancy', label: 'A-P discrepancy', icon: 'fas fa-arrows-alt-h' },
-  { id: 'verticalDiscrepancy', label: 'Vertical discrepancy', icon: 'fas fa-arrows-alt-v' },
-  { id: 'transverseDiscrepancy', label: 'Transverse discrepancy', icon: 'fas fa-exchange-alt' },
-  { id: 'crowdingSpacing', label: 'Crowding/spacing', icon: 'fas fa-compress-arrows-alt' },
-  { id: 'elastics', label: 'Elastics', icon: 'fas fa-band-aid' },
-  { id: 'biteRamps', label: 'Bite Ramps', icon: 'fas fa-mountain' },
-  { id: 'pontics', label: 'Pontics', icon: 'fas fa-tooth' },
-  { id: 'attachments', label: 'Attachments', icon: 'fas fa-plus-square' },
-  { id: 'toothSizeDiscrepancy', label: 'Tooth size Discrepancy', icon: 'fas fa-ruler-horizontal' },
-  { id: 'archExpansion', label: 'Arch expansion', icon: 'fas fa-expand-alt' },
-  { id: 'extraction', label: 'Extraction', icon: 'fas fa-minus-circle' },
-  { id: 'ipr', label: 'Interproximal reduction', icon: 'fas fa-file-alt' },
-  { id: 'eruptionSpace', label: 'Eruption Space', icon: 'fas fa-star' },
-  { id: 'movementRestrictions', label: 'Teeth Movement Restrictions', icon: 'fas fa-lock' },
-  { id: 'passiveAligner', label: 'Passive Aligner', icon: 'fas fa-shield-alt' },
-  { id: 'overcorrection', label: 'Overcorrection', icon: 'fas fa-check-double' }
+  { id: 'apDiscrepancy', label: 'A-P discrepancy', color: 'bg-blue-500' },
+  { id: 'verticalDiscrepancy', label: 'Vertical discrepancy', color: 'bg-emerald-500' },
+  { id: 'transverseDiscrepancy', label: 'Transverse discrepancy', color: 'bg-amber-500' },
+  { id: 'crowdingSpacing', label: 'Crowding/spacing', color: 'bg-rose-500' },
+  { id: 'elastics', label: 'Elastics', color: 'bg-indigo-500' },
+  { id: 'biteRamps', label: 'Bite Ramps', color: 'bg-orange-500' },
+  { id: 'pontics', label: 'Pontics', color: 'bg-cyan-500' },
+  { id: 'attachments', label: 'Attachments', color: 'bg-purple-500' },
+  { id: 'toothSizeDiscrepancy', label: 'Tooth size Discrepancy', color: 'bg-pink-500' },
+  { id: 'archExpansion', label: 'Arch expansion', color: 'bg-sky-500' },
+  { id: 'extraction', label: 'Extraction', color: 'bg-red-500' },
+  { id: 'ipr', label: 'Interproximal reduction', color: 'bg-lime-500' },
+  { id: 'eruptionSpace', label: 'Eruption Space', color: 'bg-teal-500' },
+  { id: 'movementRestrictions', label: 'Teeth Movement Restrictions', color: 'bg-slate-500' },
+  { id: 'passiveAligner', label: 'Passive Aligner', color: 'bg-violet-500' },
+  { id: 'overcorrection', label: 'Overcorrection', color: 'bg-fuchsia-500' }
 ]
 
 </script>

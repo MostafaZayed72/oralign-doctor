@@ -1,93 +1,103 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] pt-24 pb-12 transition-colors duration-300">
-    <div class="container mx-auto px-4 max-w-5xl">
+  <div class="min-h-screen bg-gray-50 dark:bg-[#0b0b0b] flex flex-col lg:flex-row transition-colors duration-300">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="w-full lg:w-72 bg-white dark:bg-[#121212] border-r border-gray-100 dark:border-gray-800 flex flex-col lg:h-screen sticky top-0 z-40">
+      <div class="p-8 border-b border-gray-100 dark:border-gray-800">
+        <h2 class="text-xl font-black text-gray-800 dark:text-gray-100">Refinement</h2>
+        <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mt-1">Case Submission</p>
+      </div>
       
-      <!-- Page Header -->
-      <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-3xl font-black text-gray-800 dark:text-gray-100 mb-2">
-            Refinement Submission
-          </h2>
-          <p class="text-gray-500 dark:text-gray-400">
-            Adjust the treatment plan for an existing case by providing new clinical information.
-          </p>
-        </div>
-        <div class="flex items-center space-x-3 bg-white dark:bg-[#1a1a1a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+      <nav class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+        <button 
+          v-for="(step, index) in steps" 
+          :key="index"
+          @click="currentStep = index"
+          class="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left group"
+          :class="[
+            currentStep === index 
+              ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 translate-x-2' 
+              : 'hover:bg-gray-50 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400'
+          ]"
+        >
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-colors"
+               :class="currentStep === index ? 'bg-white/20' : 'bg-gray-100 dark:bg-white/5 group-hover:bg-emerald-500/10 group-hover:text-emerald-500'">
+            <i v-if="currentStep > index" class="fas fa-check text-xs"></i>
+            <i v-else :class="step.icon" class="text-xs"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] uppercase font-black tracking-widest opacity-60">Step {{ index + 1 }}</div>
+            <div class="text-sm font-bold truncate">{{ step.title }}</div>
+          </div>
+        </button>
+      </nav>
+
+      <!-- Bottom Status -->
+      <div class="p-6 bg-gray-50/50 dark:bg-white/5 border-t border-gray-100 dark:border-gray-800">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
             <i class="fas fa-layer-group"></i>
           </div>
           <div>
-            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Current Step</div>
-            <div class="text-sm font-bold text-gray-800 dark:text-gray-100">
-              {{ currentStep + 1 }}. {{ steps[currentStep].title }} {{ formData.isEdit ? '(Editing Mode)' : '' }}
-            </div>
+            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Progress</div>
+            <div class="text-sm font-bold text-gray-800 dark:text-gray-100">{{ Math.round((currentStep / (steps.length - 1)) * 100) }}% Complete</div>
           </div>
         </div>
       </div>
+    </aside>
 
-      <!-- Stepper -->
-      <div class="mb-10">
-        <div class="flex items-center justify-between relative px-2">
-          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full z-0"></div>
-          <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-emerald-500 rounded-full z-0 transition-all duration-700 ease-in-out" :style="{ width: progressWidth }"></div>
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-h-0 bg-white dark:bg-[#0b0b0b]">
+      <!-- Header Area (Compact) -->
+      <header class="p-6 lg:px-12 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-white/80 dark:bg-[#0b0b0b]/80 backdrop-blur-xl sticky top-0 z-30">
+        <div>
+          <h1 class="text-2xl font-black text-gray-900 dark:text-white">{{ steps[currentStep].title }}</h1>
+          <p class="text-xs text-gray-500 font-medium">Refinement Case #{{ formData.parent_id || 'New' }}</p>
+        </div>
+        
+        <div class="flex items-center gap-4">
+           <button 
+             @click="submitRefinement"
+             :disabled="isSubmitting"
+             class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-8 rounded-2xl shadow-xl shadow-emerald-500/20 transition-all flex items-center gap-3 hover:scale-105 active:scale-95 disabled:opacity-50"
+           >
+             <i class="fas fa-save"></i>
+             <span>{{ isSubmitting ? 'Saving...' : 'Submit Now' }}</span>
+           </button>
+        </div>
+      </header>
 
-          <div v-for="(step, index) in steps" :key="index" class="relative z-10 flex flex-col items-center group">
-            <div 
-              class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-500 shadow-lg"
-              :class="[
-                currentStep > index ? 'bg-emerald-500 text-white rotate-[360deg]' : 
-                currentStep === index ? 'bg-white dark:bg-[#1a1a1a] text-emerald-500 ring-4 ring-emerald-500/20 scale-110 shadow-emerald-500/20' : 
-                'bg-white dark:bg-[#252525] text-gray-400 grayscale border border-gray-100 dark:border-gray-800'
-              ]"
-            >
-              <i v-if="currentStep > index" class="fas fa-check text-lg"></i>
-              <i v-else :class="step.icon" class="text-lg"></i>
-            </div>
-            <div class="mt-4 text-[10px] md:text-xs font-black uppercase tracking-tighter transition-all duration-300 hidden md:block"
-                 :class="currentStep >= index ? 'text-gray-800 dark:text-gray-200' : 'text-gray-400'">
-              {{ step.title }}
-            </div>
-          </div>
+      <!-- Scrollable Content Body -->
+      <div class="flex-1 overflow-y-auto p-6 lg:p-12 custom-scrollbar relative bg-gray-50/30 dark:bg-[#0b0b0b]">
+        <div class="max-w-4xl mx-auto w-full">
+           <transition name="slide-up" mode="out-in">
+             <div :key="currentStep" class="animate-in slide-in-from-bottom-4 duration-500">
+               <component 
+                 :is="currentStepComponent" 
+                 :form-data="formData" 
+                 :is-submitting="isSubmitting"
+                 @update="updateFormData"
+                 @next="nextStep"
+                 @prev="prevStep"
+                 @submit="submitRefinement"
+               />
+             </div>
+           </transition>
         </div>
       </div>
+    </main>
 
-      <!-- Main Form Card -->
-      <div class="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 p-6 md:p-10 transition-all duration-500 min-h-[500px] relative">
-        <!-- Quick Submit Button (Floating/Fixed) -->
-        <div v-if="currentStep >= 1 && currentStep < steps.length - 1" class="absolute top-6 right-6 z-30">
-          <button 
-            @click="submitRefinement"
-            :disabled="isSubmitting"
-            class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50"
-          >
-            <i class="fas fa-save"></i>
-            <span>{{ isSubmitting ? 'Saving...' : 'Submit Now' }}</span>
-          </button>
-        </div>
-
-        <transition name="slide-fade" mode="out-in">
-          <component 
-            :is="currentStepComponent" 
-            :form-data="formData" 
-            :is-submitting="isSubmitting"
-            @update="updateFormData"
-            @next="nextStep"
-            @prev="prevStep"
-            @submit="submitRefinement"
-          />
-        </transition>
-      </div>
-
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, markRaw, onMounted } from 'vue'
 import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 
-// Import components
+// Explicit imports required for dynamic components, wrapped in markRaw to avoid Vue reactivity 
+// and Windows absolute path (protocol 'f:') SSR errors.
 import StepZero from '~/components/cases/StepZero.vue'
 import StepOne from '~/components/cases/StepOne.vue'
 import StepThree from '~/components/cases/StepThree.vue'
@@ -105,13 +115,13 @@ const currentStep = ref(parentIdFromUrl ? 1 : 0)
 const isSubmitting = ref(false)
 
 const steps = [
-  { title: 'Select Case', icon: 'fas fa-search', component: StepZero },
-  { title: 'Patient Info', icon: 'fas fa-user-circle', component: StepOne },
-  { title: 'Records', icon: 'fas fa-camera-retro', component: StepThree },
-  { title: '3D Scan', icon: 'fas fa-cube', component: JawScans },
-  { title: 'Plan', icon: 'fas fa-clipboard-list', component: ChiefComplaint },
-  { title: 'Detailed Plan', icon: 'fas fa-tooth', component: StepTwo },
-  { title: 'Summary', icon: 'fas fa-flag-checkered', component: StepFour }
+  { title: 'Select Case', icon: 'fas fa-search', component: markRaw(StepZero) },
+  { title: 'Patient Info', icon: 'fas fa-user-circle', component: markRaw(StepOne) },
+  { title: 'Records', icon: 'fas fa-camera-retro', component: markRaw(StepThree) },
+  { title: '3D Scan', icon: 'fas fa-cube', component: markRaw(JawScans) },
+  { title: 'Plan', icon: 'fas fa-clipboard-list', component: markRaw(ChiefComplaint) },
+  { title: 'Detailed Plan', icon: 'fas fa-tooth', component: markRaw(StepTwo) },
+  { title: 'Summary', icon: 'fas fa-flag-checkered', component: markRaw(StepFour) }
 ]
 
 const progressWidth = computed(() => {
@@ -236,14 +246,12 @@ const updateFormData = (key: string, value: any) => {
 const nextStep = () => {
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
 const prevStep = () => {
   if (currentStep.value > 0) {
     currentStep.value--
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 

@@ -35,10 +35,21 @@
                  class="relative aspect-video rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-brand-primary hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300 flex flex-col items-center justify-center overflow-hidden cursor-pointer group"
                >
                  <template v-if="formData.stlFiles[jaw]">
-                   <div class="text-center p-6">
-                     <i class="fas fa-file-invoice text-4xl text-brand-primary mb-3"></i>
-                     <p class="text-sm font-bold text-slate-700 dark:text-slate-200 truncate max-w-[200px]">{{ formData.stlFiles[jaw].name }}</p>
-                     <button @click.stop="removeFile(jaw)" class="mt-4 text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-red-600">Remove File</button>
+                   <div class="absolute inset-0 w-full h-full">
+                     <CasesStlViewer :file="formData.stlFiles[jaw]" />
+                     <!-- File Info Overlay -->
+                     <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                       <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-2 max-w-[70%]">
+                         <i class="fas fa-cube text-brand-primary text-[10px]"></i>
+                         <span class="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">{{ formData.stlFiles[jaw].name }}</span>
+                       </div>
+                       <button 
+                         @click.stop="removeFile(jaw)" 
+                         class="pointer-events-auto w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                       >
+                         <i class="fas fa-times text-xs"></i>
+                       </button>
+                     </div>
                    </div>
                  </template>
                  <template v-else>
