@@ -193,7 +193,7 @@
                   </div>
                 </td>
                 <td class="dashboard-td">
-                  <div class="flex items-center justify-center gap-3 cell-content">
+                  <div class="flex items-center justify-center gap-5 cell-content">
                     <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('view') || 'عرض'">
                       <i class="fas fa-eye text-lg"></i>
                     </NuxtLink>
