@@ -17,44 +17,110 @@
       </div>
     </div>
 
-    <!-- Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      <button 
-        v-for="cat in categories" 
-        :key="cat.id"
-        @click="openCategory(cat)"
-        class="group relative p-5 rounded-[2rem] border-2 transition-all duration-300 text-center space-y-2 overflow-hidden flex flex-col items-center justify-center min-h-[110px]"
-        :class="[
-          formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0
-            ? 'bg-white dark:bg-slate-900 border-brand-primary' 
-            : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-brand-primary/50'
-        ]"
-      >
-        <!-- Background Accent -->
-        <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
-        
-        <h4 class="text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors z-10">{{ cat.label }}</h4>
-        
-        <!-- Selection Marker -->
-        <div v-if="formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0" class="mt-2">
-           <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary text-[8px] font-black uppercase tracking-tighter">Selected</div>
-        </div>
+    <!-- Content Wrapper -->
+    <div class="flex flex-col xl:flex-row gap-8">
+      <!-- Grid -->
+      <div class="flex-1">
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+          <button 
+            v-for="cat in categories" 
+            :key="cat.id"
+            @click="openCategory(cat)"
+            class="group relative p-3 rounded-[1.5rem] border-2 transition-all duration-300 text-center space-y-1 overflow-hidden flex flex-col items-center justify-center min-h-[90px]"
+            :class="[
+              formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0
+                ? 'bg-white dark:bg-slate-900 border-brand-primary ring-4 ring-brand-primary/5' 
+                : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-brand-primary/50'
+            ]"
+          >
+            <!-- Background Accent -->
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
+            
+            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors z-10">{{ cat.label }}</h4>
+            
+            <!-- Selection Marker -->
+            <div v-if="formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0" class="mt-1">
+               <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary text-[7px] font-black uppercase tracking-tighter">Selected</div>
+            </div>
 
-        <!-- Decorative card corner -->
-        <div class="absolute -top-6 -right-6 w-12 h-12 rounded-full blur-xl transition-all duration-500 group-hover:scale-150" :class="cat.color || 'bg-brand-primary/20'"></div>
-      </button>
+            <!-- Decorative card corner -->
+            <div class="absolute -top-6 -right-6 w-12 h-12 rounded-full blur-xl transition-all duration-500 group-hover:scale-150" :class="cat.color || 'bg-brand-primary/20'"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Additional Instructions -->
+      <div class="w-full xl:w-72 shrink-0">
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-6 border border-slate-100 dark:border-slate-800 h-full flex flex-col">
+          <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 px-1 flex items-center gap-2">
+            <i class="fas fa-edit text-brand-primary"></i> Instructions
+          </label>
+          <textarea 
+            :value="formData.additionalInstructions"
+            @input="$emit('update', 'additionalInstructions', $event.target.value)"
+            class="flex-1 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-4 text-xs text-slate-800 dark:text-white focus:ring-2 focus:ring-brand-primary outline-none transition-all resize-none shadow-sm min-h-[150px]"
+            placeholder="Technical notes..."
+          ></textarea>
+        </div>
+      </div>
     </div>
 
-    <!-- Additional Instructions -->
-    <div class="pt-8">
-      <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 px-1">Additional Instructions</label>
-      <textarea 
-        :value="formData.additionalInstructions"
-        @input="$emit('update', 'additionalInstructions', $event.target.value)"
-        rows="4"
-        class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-[2rem] px-8 py-6 text-sm text-slate-800 dark:text-white focus:ring-2 focus:ring-brand-primary outline-none transition-all resize-none shadow-inner"
-        placeholder="Any other specific instructions for the dental technicians..."
-      ></textarea>
+    <!-- Detailed Treatment Plan Table (Summary) -->
+    <div v-if="Object.keys(formData.detailedPlan).some(k => hasSelection(k))" class="mt-8 animate-in slide-in-from-bottom-5 duration-700">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="h-px flex-1 bg-slate-100 dark:bg-slate-800"></div>
+        <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">Detailed treatment Plan</h4>
+        <div class="h-px flex-1 bg-slate-100 dark:bg-slate-800"></div>
+      </div>
+      
+      <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] overflow-hidden shadow-sm">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 w-16">#</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Plan Option</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Details</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="(cat, index) in categories" :key="cat.id">
+              <tr v-if="hasSelection(cat.id)" class="border-b border-slate-50 dark:border-slate-800/50 last:border-0 hover:bg-slate-50/30 dark:hover:bg-slate-800/20 transition-colors">
+                <td class="px-6 py-4 text-xs font-bold text-slate-400">{{ index + 1 }}</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full" :class="cat.color"></div>
+                    <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ cat.label }}</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex flex-wrap gap-1.5">
+                    <template v-for="(val, key) in formData.detailedPlan[cat.id]" :key="key">
+                      <span v-if="Array.isArray(val) && val.length > 0" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-slate-500">
+                        {{ key === 'selectedTeeth' ? val.length + ' Teeth' : val.join(', ') }}
+                      </span>
+                      <span v-else-if="val && typeof val === 'string' && key !== 'notes'" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-slate-500">
+                        {{ val }}
+                      </span>
+                      <span v-else-if="val === true" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-slate-500">
+                        {{ key }}
+                      </span>
+                    </template>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button @click="openCategory(cat)" class="text-[10px] font-black text-brand-primary uppercase tracking-widest hover:underline">Edit</button>
+                    <button @click="clearCategory(cat.id)" class="w-7 h-7 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                      <i class="fas fa-times text-[10px]"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Navigation -->
@@ -96,7 +162,7 @@
 
               <!-- Modal Content -->
               <div class="space-y-8 py-4">
-                <p class="text-sm text-slate-500 italic">Let us know how you would like to treat the {{ activeCategory.label.toLowerCase() }} in this case</p>
+                <p class="text-sm text-slate-800 dark:text-slate-200 italic font-medium">Let us know how you would like to treat the {{ activeCategory.label.toLowerCase() }} in this case</p>
                 
                 <!-- 1. Crowding/Spacing -->
                 <template v-if="activeCategory.id === 'crowdingSpacing'">
@@ -107,7 +173,7 @@
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <label v-for="opt in crowdingOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group transition-colors">
                           <input type="checkbox" :checked="isOptSelected('crowdingSpacing', 'crowding', opt)" @change="toggleOpt('crowdingSpacing', 'crowding', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -117,7 +183,7 @@
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in spacingOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group transition-colors">
                           <input type="checkbox" :checked="isOptSelected('crowdingSpacing', 'spacing', opt)" @change="toggleOpt('crowdingSpacing', 'spacing', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -133,7 +199,7 @@
                       <div class="space-y-2">
                         <label v-for="opt in crossbiteOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
                           <input type="radio" :checked="formData.detailedPlan.transverseDiscrepancy?.crossbite === opt" @change="setSingleOpt('transverseDiscrepancy', 'crossbite', opt)" class="w-4 h-4 border-slate-300 text-brand-primary focus:ring-brand-primary" name="crossbite" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -143,7 +209,7 @@
                       <div class="space-y-2">
                         <label v-for="opt in scissorOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
                           <input type="radio" :checked="formData.detailedPlan.transverseDiscrepancy?.scissor === opt" @change="setSingleOpt('transverseDiscrepancy', 'scissor', opt)" class="w-4 h-4 border-slate-300 text-brand-primary focus:ring-brand-primary" name="scissor" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -152,12 +218,12 @@
                       <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Upper Midline</h5>
                       <div class="flex gap-4">
                         <label v-for="opt in midlineOpts" :key="opt" class="flex-1 flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.transverseDiscrepancy?.midline === opt ? 'border-brand-primary bg-brand-primary/5 text-brand-primary' : 'border-slate-100 dark:border-slate-800 text-slate-500'" @click="setSingleOpt('transverseDiscrepancy', 'midline', opt)">
-                          <span class="text-xs font-bold">{{ opt }}</span>
+                          <span class="text-xs font-black text-slate-800 dark:text-slate-200">{{ opt }}</span>
                         </label>
                       </div>
                       <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
                         <input type="checkbox" :checked="formData.detailedPlan.transverseDiscrepancy?.acceptMidline" @change="setSingleOpt('transverseDiscrepancy', 'acceptMidline', $event.target.checked)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                        <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">Accept resulting midline</span>
+                        <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">Accept resulting midline</span>
                       </label>
                     </div>
                   </div>
@@ -172,7 +238,7 @@
                       <div class="space-y-2">
                         <label v-for="opt in openbiteOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
                           <input type="radio" :checked="formData.detailedPlan.verticalDiscrepancy?.openbite === opt" @change="setSingleOpt('verticalDiscrepancy', 'openbite', opt)" class="w-4 h-4 border-slate-300 text-brand-primary focus:ring-brand-primary" name="openbite" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -182,7 +248,7 @@
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in deepbiteOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
                           <input type="checkbox" :checked="isOptSelected('verticalDiscrepancy', 'deepbite', opt)" @change="toggleOpt('verticalDiscrepancy', 'deepbite', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -198,7 +264,7 @@
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in classIIOpts" :key="opt" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group transition-colors">
                           <input type="checkbox" :checked="isOptSelected('apDiscrepancy', 'classII', opt)" @change="toggleOpt('apDiscrepancy', 'classII', opt)" class="w-4 h-4 mt-0.5 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors leading-relaxed">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors leading-relaxed">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -208,7 +274,7 @@
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in classIIIOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
                           <input type="checkbox" :checked="isOptSelected('apDiscrepancy', 'classIII', opt)" @change="toggleOpt('apDiscrepancy', 'classIII', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -283,7 +349,7 @@
                           <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="formData.detailedPlan.toothSizeDiscrepancy?.option === opt ? 'border-brand-primary' : 'border-slate-300'">
                             <div v-if="formData.detailedPlan.toothSizeDiscrepancy?.option === opt" class="w-2 h-2 rounded-full bg-brand-primary"></div>
                           </div>
-                          <span class="text-xs font-bold">{{ opt }}</span>
+                          <span class="text-xs font-black text-slate-800 dark:text-slate-200">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -379,7 +445,7 @@
                           <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="formData.detailedPlan.passiveAligner?.option === opt ? 'border-brand-primary' : 'border-slate-300'">
                             <div v-if="formData.detailedPlan.passiveAligner?.option === opt" class="w-2 h-2 rounded-full bg-brand-primary"></div>
                           </div>
-                          <span class="text-xs font-bold">{{ opt }}</span>
+                          <span class="text-xs font-black text-slate-800 dark:text-slate-200">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -394,7 +460,7 @@
                 <template v-else-if="activeCategory.id === 'overcorrection'">
                   <div class="space-y-8">
                     <div class="space-y-4">
-                      <p class="text-xs text-slate-500 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <p class="text-xs text-slate-800 dark:text-slate-200 font-medium leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                         Use overcorrection to plan movements beyond the ideal teeth positions to compensate for a lag in tracking.
                       </p>
                       <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary mt-6">Select the tooth areas requiring overcorrection</h5>
@@ -412,9 +478,42 @@
                 </div>
               </div>
 
+              <!-- Selected Options Summary -->
+              <div v-if="hasSelection(activeCategory.id)" class="pt-6 border-t border-slate-100 dark:border-slate-800">
+                <h5 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 px-1">Selected Options:</h5>
+                <div class="flex flex-wrap gap-2">
+                  <template v-for="(val, key) in formData.detailedPlan[activeCategory.id]" :key="key">
+                    <template v-if="Array.isArray(val)">
+                      <div v-for="item in val" :key="item" class="flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-primary/10 rounded-full group/item">
+                        <span class="text-[10px] font-bold text-brand-primary">{{ key === 'selectedTeeth' ? 'Tooth ' + item : item }}</span>
+                        <button @click="key === 'selectedTeeth' ? toggleTooth(activeCategory.id, item) : toggleOpt(activeCategory.id, key, item)" class="text-brand-primary/40 hover:text-red-500 transition-colors">
+                          <i class="fas fa-times text-[10px]"></i>
+                        </button>
+                      </div>
+                    </template>
+                    <template v-else-if="val && typeof val === 'string' && val !== '' && key !== 'notes'">
+                      <div class="flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-primary/10 rounded-full group/item">
+                        <span class="text-[10px] font-bold text-brand-primary">{{ val }}</span>
+                        <button @click="setSingleOpt(activeCategory.id, key, null)" class="text-brand-primary/40 hover:text-red-500 transition-colors">
+                          <i class="fas fa-times text-[10px]"></i>
+                        </button>
+                      </div>
+                    </template>
+                    <template v-else-if="typeof val === 'boolean' && val === true">
+                       <div class="flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-primary/10 rounded-full group/item">
+                        <span class="text-[10px] font-bold text-brand-primary">{{ key }}</span>
+                        <button @click="setSingleOpt(activeCategory.id, key, false)" class="text-brand-primary/40 hover:text-red-500 transition-colors">
+                          <i class="fas fa-times text-[10px]"></i>
+                        </button>
+                      </div>
+                    </template>
+                  </template>
+                </div>
+              </div>
+
               <!-- Modal Footer -->
               <div class="flex justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800 sticky bottom-0 bg-white dark:bg-slate-900 z-10">
-                <button @click="activeCategory = null" class="px-6 py-3 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+                <button @click="activeCategory = null" class="px-6 py-3 rounded-xl font-bold text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancel</button>
                 <button @click="activeCategory = null" class="px-10 py-3 bg-[#063c31] text-white rounded-xl font-bold text-sm shadow-xl shadow-[#063c31]/20 hover:scale-105 active:scale-95 transition-all">Save Details</button>
               </div>
            </div>
@@ -539,6 +638,22 @@ const setSingleOpt = (catId: string, subCatId: string, value: any) => {
 
 const openCategory = (cat: any) => {
   activeCategory.value = cat
+}
+
+const hasSelection = (catId: string) => {
+  const data = props.formData.detailedPlan[catId]
+  if (!data) return false
+  return Object.values(data).some(val => {
+    if (Array.isArray(val)) return val.length > 0
+    if (typeof val === 'boolean') return val === true
+    return !!val
+  })
+}
+
+const clearCategory = (catId: string) => {
+  const plan = { ...props.formData.detailedPlan }
+  delete plan[catId]
+  emit('update', 'detailedPlan', plan)
 }
 
 const categories = [
