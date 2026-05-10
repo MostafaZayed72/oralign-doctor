@@ -202,6 +202,13 @@ onMounted(async () => {
           formData.value.hasPrimaryTeeth = p.has_primary_teeth === '1' || p.has_primary_teeth === true
           formData.value.packageType = p.package_id == 2 ? 'Plus' : (p.package_id == 3 ? 'Pro' : 'Basic')
         }
+
+        if (response.data.detailedPlan) {
+          formData.value.detailedPlan = {
+            ...formData.value.detailedPlan,
+            ...response.data.detailedPlan
+          }
+        }
         
         console.log('Successfully synced refinement data:', formData.value)
       } else {

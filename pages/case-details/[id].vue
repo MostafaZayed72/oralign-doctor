@@ -129,20 +129,60 @@
                   <i class="fas fa-list-check text-brand-primary"></i>
                   {{ $t('detailed_treatment_plan') }}
                 </h3>
-                <div class="space-y-4">
-                  <div v-for="(opt, idx) in caseData.treatmentOptions" :key="idx" class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 group hover:border-brand-primary/30 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                      <span class="px-4 py-1.5 bg-brand-primary/10 text-brand-primary rounded-xl text-xs font-black uppercase tracking-widest">
-                        {{ opt.treatmnet_option_type }}
-                      </span>
-                      <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ formatDate(opt.created_at) }}</span>
-                    </div>
-                    <p class="text-slate-700 dark:text-slate-300 font-bold leading-relaxed">{{ opt.treatmnet_option_details }}</p>
+                
+                <div v-if="caseData.treatmentOptions?.length" class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                      <thead>
+                        <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-16">#</th>
+                          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-48">{{ $t('plan_option') || 'Plan Option' }}</th>
+                          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $t('details') || 'Details' }}</th>
+                          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-32">{{ $t('date') || 'Date' }}</th>
+                          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-32">{{ $t('time') || 'Time' }}</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-50 dark:divide-slate-800/50">
+                        <tr v-for="(opt, idx) in filteredOptions" :key="idx" class="hover:bg-slate-50/30 dark:hover:bg-slate-800/20 transition-colors group">
+                          <td class="px-6 py-5 text-sm font-bold text-slate-400">{{ idx + 1 }}</td>
+                          <td class="px-6 py-5">
+                            <span class="inline-flex items-center px-3 py-1 bg-brand-primary/10 text-brand-primary rounded-lg text-[10px] font-black uppercase tracking-wider group-hover:bg-brand-primary/20 transition-colors">
+                              {{ opt.treatmnet_option_type }}
+                            </span>
+                          </td>
+                          <td class="px-6 py-5">
+                            <div class="space-y-3">
+                              <p class="text-sm font-bold text-slate-700 dark:text-slate-300 leading-relaxed">{{ opt.treatmnet_option_details }}</p>
+                              
+                              <!-- Visual Teeth Display -->
+                              <div v-if="getTeethForOption(opt.treatmnet_option_type).length" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 max-w-lg">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                  <i class="fas fa-tooth text-brand-primary"></i>
+                                  {{ $t('visual_teeth_map') || 'Visual Teeth Map' }}
+                                </p>
+                                <TeethSelector 
+                                  :selectedTeeth="getTeethForOption(opt.treatmnet_option_type)" 
+                                  readonly 
+                                  compact 
+                                />
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-6 py-5 whitespace-nowrap">
+                            <span class="text-xs font-black text-slate-500 uppercase tracking-wider">{{ formatDate(opt.created_at) }}</span>
+                          </td>
+                          <td class="px-6 py-5 whitespace-nowrap">
+                            <span class="text-xs font-black text-slate-400 uppercase tracking-wider">{{ formatTime(opt.created_at) }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <div v-if="!caseData.treatmentOptions?.length" class="text-center py-20 bg-slate-50 dark:bg-slate-900/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
-                    <i class="fas fa-clipboard-list text-4xl text-slate-300 mb-4"></i>
-                    <p class="text-slate-500 font-bold uppercase tracking-widest text-sm">{{ $t('no_plans_yet') || 'No treatment plans recorded yet' }}</p>
-                  </div>
+                </div>
+
+                <div v-else class="text-center py-20 bg-slate-50 dark:bg-slate-900/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
+                  <i class="fas fa-clipboard-list text-4xl text-slate-300 mb-4"></i>
+                  <p class="text-slate-500 font-bold uppercase tracking-widest text-sm">{{ $t('no_plans_yet') || 'No treatment plans recorded yet' }}</p>
                 </div>
               </div>
 
@@ -243,6 +283,7 @@
 
 <script setup>
 import Swal from 'sweetalert2'
+import TeethSelector from '~/components/cases/TeethSelector.vue'
 const route = useRoute()
 const config = useRuntimeConfig()
 const { token } = useAuth()
@@ -258,6 +299,55 @@ const actionLoading = ref(false)
 
 const showLightbox = ref(false)
 const selectedImage = ref("")
+
+const getTeethForOption = (type) => {
+  if (!caseData.value?.detailedPlan) return []
+  
+  const normalizedType = type?.toUpperCase().trim().replace(/\s+/g, ' ')
+  
+  const mapping = {
+    'ATTACHMENTS': 'attachments',
+    'PONTICS': 'pontics',
+    'BITE RAMPS': 'biteRamps',
+    'ELASTICS': 'elastics',
+    'IPR': 'ipr',
+    'EXTRACTION': 'extraction',
+    'ARCH EXPANSION': 'archExpansion',
+    'OVERCORRECTION': 'overcorrection',
+    'TEETH MOVEMENT RESTRICTION': 'movementRestrictions',
+    'ERUPTION SPACE': 'eruptionSpace',
+    'PASSIVE ALIGNER': 'passiveAligner',
+    'CROWDING/SPACING': 'crowdingSpacing',
+    'VERTICAL DISCREPANCY': 'verticalDiscrepancy',
+    'TRANSVERSE DISCREPANCY': 'transverseDiscrepancy',
+    'A-P DISCREPANCY': 'apDiscrepancy',
+    'TOOTH SIZE DISCREPANCY': 'toothSizeDiscrepancy'
+  }
+  
+  const key = mapping[normalizedType]
+  if (key && caseData.value.detailedPlan[key]) {
+    return caseData.value.detailedPlan[key].selectedTeeth || []
+  }
+  
+  return []
+}
+
+const filteredOptions = computed(() => {
+  if (!caseData.value?.treatmentOptions) return []
+  
+  return caseData.value.treatmentOptions.filter(opt => {
+    // Check if details contain actual data beyond headers
+    const details = opt.treatmnet_option_details || ''
+    const cleaned = details
+      .replace(/Teeth:|Notes:|Type:|Option:|Before Step:|Perform before:|\s+/g, '')
+      .replace(/\|/g, '')
+      .trim()
+    
+    const hasTeeth = getTeethForOption(opt.treatmnet_option_type).length > 0
+    
+    return cleaned.length > 0 || hasTeeth
+  })
+})
 
 const tabs = computed(() => {
   if (!caseData.value) return []
@@ -447,6 +537,15 @@ const formatDate = (date) => {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
+  })
+}
+
+const formatTime = (date) => {
+  if (!date) return '—'
+  return new Date(date).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
   })
 }
 
