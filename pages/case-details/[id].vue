@@ -46,11 +46,20 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3 relative z-10">
+            <button 
+              @click="downloadPDF" 
+              :disabled="isGeneratingPDF"
+              class="flex-1 md:flex-none px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-95 disabled:opacity-50"
+            >
+              <i v-if="isGeneratingPDF" class="fas fa-spinner fa-spin"></i>
+              <i v-else class="fas fa-file-pdf text-red-500"></i>
+              {{ isGeneratingPDF ? 'Preparing PDF...' : 'Download PDF' }}
+            </button>
             <button @click="refineCase" class="flex-1 md:flex-none px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
               <i class="fas fa-layer-group"></i>
               {{ $t('refinement') }}
             </button>
-            <button class="flex-1 md:flex-none px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+            <button class="flex-1 md:flex-none px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-black rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
               <i class="fas fa-edit"></i>
               {{ $t('edit') }}
             </button>
@@ -289,6 +298,90 @@
         </div>
       </div>
     </Transition>
+    
+    <!-- Hidden PDF Template (Rendered off-screen) -->
+    <div v-if="caseData" class="fixed -left-[9999px] top-0 pointer-events-none">
+      <div id="pdf-content" class="p-12 bg-white text-slate-900 font-sans" style="width: 800px;">
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b-4 border-[#063c31] pb-8 mb-8">
+          <div>
+            <h1 class="text-4xl font-black text-[#063c31] uppercase tracking-tighter">Oralign</h1>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mt-1">Patient Treatment Summary</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Date Generated</p>
+            <p class="text-sm font-bold">{{ new Date().toLocaleDateString() }}</p>
+          </div>
+        </div>
+
+        <!-- Patient Info Grid -->
+        <div class="grid grid-cols-2 gap-8 mb-12 bg-slate-50 p-8 rounded-3xl border border-slate-100">
+           <div>
+             <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-[#063c31] mb-4">Patient Information</h4>
+             <div class="space-y-2">
+               <p class="text-sm"><strong>Name:</strong> {{ caseData.case.patient_name }}</p>
+               <p class="text-sm"><strong>Gender:</strong> {{ caseData.case.gender }}</p>
+               <p class="text-sm"><strong>DOB:</strong> {{ caseData.case.dob }}</p>
+               <p class="text-sm"><strong>UUID:</strong> {{ caseData.case.uuid || ('#CASE-' + caseData.case.id) }}</p>
+             </div>
+           </div>
+           <div>
+             <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-[#063c31] mb-4">Case Details</h4>
+             <div class="space-y-2">
+               <p class="text-sm"><strong>Case Type:</strong> {{ caseData.case.case_type }}</p>
+               <p class="text-sm"><strong>Status:</strong> {{ caseData.case.status }}</p>
+               <p class="text-sm"><strong>Created:</strong> {{ formatDate(caseData.case.created_at) }}</p>
+             </div>
+           </div>
+        </div>
+
+        <!-- Detailed Plan Section -->
+        <div v-if="caseData.detailedPlan" class="space-y-12">
+          <h3 class="text-xl font-black text-[#063c31] border-b-2 border-slate-100 pb-2">Clinical Detailed Plan</h3>
+          
+          <div v-for="cat in clinicalCategories" :key="cat.id">
+            <div v-if="isCategoryActive(cat.id)" class="break-inside-avoid space-y-6 p-6 rounded-3xl border border-slate-100 bg-white shadow-sm">
+               <div class="flex items-center gap-4 border-b border-slate-50 pb-4">
+                 <div class="w-10 h-10 rounded-xl bg-[#063c31]/10 flex items-center justify-center text-[#063c31]">
+                   <i :class="cat.icon"></i>
+                 </div>
+                 <div>
+                   <h4 class="text-sm font-black uppercase tracking-widest text-slate-800">{{ cat.label }}</h4>
+                   <p class="text-xs font-bold text-[#063c31] mt-0.5">{{ getCategorySummary(cat.id) }}</p>
+                 </div>
+               </div>
+
+               <!-- Tooth Diagram for PDF -->
+               <div v-if="caseData.detailedPlan[cat.id]?.selectedTeeth?.length > 0" class="py-4">
+                  <TeethSelector :selected-teeth="caseData.detailedPlan[cat.id].selectedTeeth" readonly compact />
+               </div>
+
+               <!-- Category Notes -->
+               <div v-if="caseData.detailedPlan[cat.id]?.notes" class="bg-slate-50 p-4 rounded-xl border-l-4 border-[#063c31]">
+                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Clinical Notes</p>
+                 <p class="text-xs text-slate-700 leading-relaxed italic">"{{ caseData.detailedPlan[cat.id].notes }}"</p>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div v-if="caseData.history?.length" class="mt-12 break-inside-avoid">
+          <h3 class="text-xl font-black text-[#063c31] border-b-2 border-slate-100 pb-2 mb-6">Case History</h3>
+          <div class="space-y-4">
+            <div v-for="h in caseData.history" :key="h.id" class="flex justify-between items-center p-4 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="text-sm font-bold text-slate-700">{{ h.status }}</span>
+              <span class="text-xs font-black text-slate-400 uppercase tracking-widest">{{ formatDate(h.created_at) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-20 pt-8 border-t border-slate-100 text-center">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© {{ new Date().getFullYear() }} Oralign Dental Technologies. All Rights Reserved.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -307,9 +400,67 @@ const error = ref(null)
 const caseData = ref(null)
 const activeTab = ref('details')
 const actionLoading = ref(false)
+const isGeneratingPDF = ref(false)
 
 const showLightbox = ref(false)
 const selectedImage = ref("")
+
+const clinicalCategories = [
+  { id: 'crowdingSpacing', label: 'Crowding / Spacing', icon: 'fas fa-arrows-alt-h' },
+  { id: 'transverseDiscrepancy', label: 'Transverse', icon: 'fas fa-expand-alt' },
+  { id: 'verticalDiscrepancy', label: 'Vertical', icon: 'fas fa-arrows-alt-v' },
+  { id: 'apDiscrepancy', label: 'A-P Discrepancy', icon: 'fas fa-exchange-alt' },
+  { id: 'elastics', label: 'Elastics', icon: 'fas fa-link' },
+  { id: 'biteRamps', label: 'Bite Ramps', icon: 'fas fa-mountain' },
+  { id: 'pontics', label: 'Pontics', icon: 'fas fa-fill-drip' },
+  { id: 'attachments', label: 'Attachments', icon: 'fas fa-thumbtack' },
+  { id: 'toothSizeDiscrepancy', label: 'Tooth size', icon: 'fas fa-ruler-combined' },
+  { id: 'archExpansion', label: 'Arch expansion', icon: 'fas fa-compress-arrows-alt' },
+  { id: 'extraction', label: 'Extraction', icon: 'fas fa-minus-circle' },
+  { id: 'ipr', label: 'IPR', icon: 'fas fa-cut' },
+  { id: 'eruptionSpace', label: 'Eruption Space', icon: 'fas fa-external-link-alt' },
+  { id: 'movementRestrictions', label: 'Restrictions', icon: 'fas fa-ban' },
+  { id: 'passiveAligner', label: 'Passive Aligner', icon: 'fas fa-check-double' },
+  { id: 'overcorrection', label: 'Overcorrection', icon: 'fas fa-plus-circle' }
+]
+
+const isCategoryActive = (id) => {
+  if (!caseData.value?.detailedPlan) return false
+  const cat = caseData.value.detailedPlan[id]
+  if (!cat) return false
+  return Object.keys(cat).length > 0 && (cat.selectedTeeth?.length > 0 || cat.option || cat.group || cat.notes)
+}
+
+const getCategorySummary = (id) => {
+  if (!caseData.value?.detailedPlan) return 'Not specified'
+  const cat = caseData.value.detailedPlan[id]
+  if (!isCategoryActive(id)) return 'Not specified'
+  
+  if (cat.selectedTeeth?.length > 0) return `${cat.selectedTeeth.length} Teeth selected`
+  if (cat.option) return cat.option
+  if (cat.group) return cat.group
+  return 'Specified with notes'
+}
+
+const downloadPDF = async () => {
+  isGeneratingPDF.value = true
+  try {
+    const html2pdf = (await import('html2pdf.js')).default
+    const element = document.getElementById('pdf-content')
+    const opt = {
+      margin: 0,
+      filename: `Oralign_Summary_${caseData.value.case.patient_name.replace(/\s+/g, '_')}.pdf`,
+      image: { type: 'jpeg', quality: 1.0 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    }
+    await html2pdf().set(opt).from(element).save()
+  } catch (error) {
+    console.error('PDF Generation Error:', error)
+  } finally {
+    isGeneratingPDF.value = false
+  }
+}
 
 const getTeethForOption = (type) => {
   if (!caseData.value?.detailedPlan) return []
