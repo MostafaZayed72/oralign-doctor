@@ -257,10 +257,22 @@ const fetchError = ref("")
 // Fix file URLs from cPanel server that are missing /public in the path
 const fixFileUrl = (url) => {
   if (!url) return url
-  // If URL is from production (cPanel) and missing /public, add it
-  if (url.includes('test-api.oralign.co/uploads')) {
-    return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+  
+  // If it's already a full URL, just clean it if needed
+  if (url.startsWith('http')) {
+    if (url.includes('test-api.oralign.co/uploads')) {
+      return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+    }
+    return url
   }
+  
+  // If it's just a filename (doesn't contain slashes), 
+  // point it to the production impressions folder
+  const baseUrl = 'https://doctors.oralign.co/public/impressions'
+  if (!url.includes('/')) {
+     return `${baseUrl}/patient_cases/files/${url}`
+  }
+  
   return url
 }
 

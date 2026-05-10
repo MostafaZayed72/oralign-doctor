@@ -305,8 +305,8 @@ const recordImages = computed(() => {
 })
 
 const currentPlanLink = computed(() => {
-  if (activeTab.value === 'plan1') return caseData.value.case.treatment_plan1
-  if (activeTab.value === 'plan2') return caseData.value.case.treatment_plan2
+  if (activeTab.value === 'plan1') return fixFileUrl(caseData.value.case.treatment_plan1)
+  if (activeTab.value === 'plan2') return fixFileUrl(caseData.value.case.treatment_plan2)
   return null
 })
 
@@ -323,10 +323,28 @@ const viewImage = (img) => {
 
 const fixFileUrl = (url) => {
   if (!url) return url
-  if (url.includes('test-api.oralign.co/uploads')) {
-    return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+  
+  // If it's already a full URL, just clean it if needed
+  if (url.startsWith('http')) {
+    if (url.includes('test-api.oralign.co/uploads')) {
+      return url.replace('test-api.oralign.co/uploads', 'test-api.oralign.co/public/uploads')
+    }
+    return url
   }
-  return url.startsWith('http') ? url : `https://doctors.oralign.co/public/impressions/xraysphotos/${url}`
+  
+  const baseUrl = 'https://doctors.oralign.co/public/impressions'
+  
+  // If it's just a filename (no slashes)
+  if (!url.includes('/')) {
+    // PDF files are treatment plans
+    if (url.toLowerCase().endsWith('.pdf')) {
+      return `${baseUrl}/patient_cases/files/${url}`
+    }
+    // Otherwise assume it's an x-ray/photo
+    return `${baseUrl}/xraysphotos/${url}`
+  }
+  
+  return url
 }
 
 const handlePlanAction = async (action) => {
