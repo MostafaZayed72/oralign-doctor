@@ -71,7 +71,7 @@ const lowerRight = [41, 42, 43, 44, 45, 46, 47, 48]
   @apply cursor-pointer;
 }
 .tooth-num {
-  @apply text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-tighter;
+  @apply text-[8px] md:text-[9px] font-black text-[#063c31]/60 uppercase tracking-tighter;
 }
 .tooth-shape {
   @apply w-5 h-8 md:w-7 md:h-10 rounded-lg border border-slate-200 dark:border-slate-700 transition-all duration-500 relative;

@@ -4,13 +4,13 @@
     <div class="border-b border-slate-100 dark:border-slate-800 pb-6">
       <div class="flex items-center justify-between">
         <div>
-          <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <i class="fas fa-tooth text-brand-primary"></i> Detailed Plan (optional)
+          <h3 class="text-xl font-black text-[#063c31] dark:text-white flex items-center gap-2">
+            <i class="fas fa-tooth text-[#063c31]"></i> Detailed Plan (optional)
           </h3>
-          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-medium">Click on each category to specify clinical details and treatment goals.</p>
+          <p class="text-[10px] text-[#063c31]/50 dark:text-[#063c31]/40 mt-1 font-medium">Click on each category to specify clinical details and treatment goals.</p>
         </div>
         <div class="hidden md:block">
-           <span class="px-4 py-2 rounded-full bg-brand-primary/5 text-brand-primary text-xs font-bold uppercase tracking-widest border border-brand-primary/10">
+           <span class="px-4 py-2 rounded-full bg-brand-primary/5 text-[#063c31] text-xs font-bold uppercase tracking-widest border border-brand-primary/10">
              Step 5 of 6
            </span>
         </div>
@@ -36,11 +36,11 @@
             <!-- Background Accent -->
             <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
             
-            <h4 class="text-xs sm:text-sm font-black tracking-wide text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors z-10 inline-block first-letter:uppercase lowercase px-2">{{ cat.label }}</h4>
+            <h4 class="text-xs sm:text-sm font-black tracking-wide text-[#063c31]/70 dark:text-slate-200 leading-tight group-hover:text-[#063c31] transition-colors z-10 inline-block first-letter:uppercase lowercase px-2">{{ cat.label }}</h4>
             
             <!-- Selection Marker -->
             <div v-if="formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0" class="mt-1">
-               <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary text-[7px] font-black uppercase tracking-tighter">Selected</div>
+               <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-[#063c31] text-[7px] font-black uppercase tracking-tighter">Selected</div>
             </div>
 
             <!-- Decorative card corner -->
@@ -52,8 +52,8 @@
       <!-- Additional Instructions -->
       <div class="w-full xl:w-64 shrink-0">
         <div class="bg-slate-50 dark:bg-slate-800/50 rounded-[1.5rem] p-4 border border-slate-100 dark:border-slate-800 h-full flex flex-col">
-          <label class="block text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 mb-3 px-1 flex items-center gap-2">
-            <i class="fas fa-edit text-brand-primary"></i> Instructions
+          <label class="block text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300 mb-3 px-1 flex items-center gap-2">
+            <i class="fas fa-edit text-[#063c31]"></i> Instructions
           </label>
           <textarea 
             :value="formData.additionalInstructions"
@@ -69,7 +69,7 @@
     <div v-if="Object.keys(formData.detailedPlan).some(k => hasSelection(k))" class="mt-8 animate-in slide-in-from-bottom-5 duration-700">
       <div class="flex items-center gap-3 mb-4">
         <div class="h-px flex-1 bg-slate-100 dark:bg-slate-800"></div>
-        <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">Detailed treatment Plan</h4>
+        <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#063c31]">Detailed treatment Plan</h4>
         <div class="h-px flex-1 bg-slate-100 dark:bg-slate-800"></div>
       </div>
       
@@ -77,32 +77,32 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 w-16">#</th>
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Plan Option</th>
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Details</th>
-              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 text-right">Actions</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300 w-16">#</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Plan Option</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Details</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="(cat, index) in categories" :key="cat.id">
               <tr v-if="hasSelection(cat.id)" class="border-b border-slate-50 dark:border-slate-800/50 last:border-0 hover:bg-slate-50/30 dark:hover:bg-slate-800/20 transition-colors">
-                <td class="px-6 py-4 text-xs font-bold text-slate-400">{{ index + 1 }}</td>
+                <td class="px-6 py-4 text-xs font-bold text-[#063c31]/40">{{ index + 1 }}</td>
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-3">
                     <div class="w-2 h-2 rounded-full" :class="cat.color"></div>
-                    <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ cat.label }}</span>
+                    <span class="text-sm font-bold text-[#063c31]/70 dark:text-slate-200">{{ cat.label }}</span>
                   </div>
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex flex-wrap gap-1.5">
                     <template v-for="(val, key) in formData.detailedPlan[cat.id]" :key="key">
-                      <span v-if="Array.isArray(val) && val.length > 0" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-slate-500">
+                      <span v-if="Array.isArray(val) && val.length > 0" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-[#063c31]/50">
                         {{ key === 'selectedTeeth' ? val.length + ' Teeth' : val.join(', ') }}
                       </span>
-                      <span v-else-if="val && typeof val === 'string' && key !== 'notes'" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-slate-500">
+                      <span v-else-if="val && typeof val === 'string' && key !== 'notes'" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-[#063c31]/50">
                         {{ val }}
                       </span>
-                      <span v-else-if="val === true" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-slate-500">
+                      <span v-else-if="val === true" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-bold text-[#063c31]/50">
                         {{ key }}
                       </span>
                     </template>
@@ -110,7 +110,7 @@
                 </td>
                 <td class="px-6 py-4 text-right">
                   <div class="flex items-center justify-end gap-2">
-                    <button @click="openCategory(cat)" class="text-[10px] font-black text-brand-primary uppercase tracking-widest hover:underline">Edit</button>
+                    <button @click="openCategory(cat)" class="text-[10px] font-black text-[#063c31] uppercase tracking-widest hover:underline">Edit</button>
                     <button @click="clearCategory(cat.id)" class="w-7 h-7 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
                       <i class="fas fa-times text-[10px]"></i>
                     </button>
@@ -127,7 +127,7 @@
     <div class="flex justify-between items-center pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
       <button 
         @click="$emit('prev')"
-        class="group px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all"
+        class="group px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-[#063c31]/50 hover:text-[#063c31] dark:hover:text-white flex items-center gap-3 transition-all"
       >
         <i class="fas fa-chevron-left transition-transform group-hover:-translate-x-1"></i>
         Previous
@@ -146,44 +146,44 @@
     <!-- Category Modal -->
     <Transition name="modal">
       <div v-if="activeCategory" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="activeCategory = null"></div>
-        <div class="relative w-full max-w-3xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden animate-in zoom-in-95 duration-300">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" @click="activeCategory = null"></div>
+        <div class="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
            
-           <div class="p-8 space-y-6 max-h-[85vh] overflow-y-auto custom-scrollbar">
+           <div class="p-6 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
               <!-- Modal Header -->
-              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 sticky top-0 bg-white dark:bg-slate-900 z-10">
-                <h4 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                  <i :class="activeCategory.icon" class="text-brand-primary"></i> {{ activeCategory.label }}
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 sticky top-0 bg-white dark:bg-slate-900 z-10">
+                <h4 class="text-lg font-black text-[#063c31] flex items-center gap-2">
+                  <i :class="activeCategory.icon"></i> {{ activeCategory.label }}
                 </h4>
-                <button @click="activeCategory = null" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                <button @click="activeCategory = null" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-[#063c31]/40 hover:text-[#063c31] dark:hover:text-white transition-colors">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
 
               <!-- Modal Content -->
-              <div class="space-y-8 py-4">
-                <p class="text-sm text-slate-800 dark:text-slate-200 italic font-medium">Let us know how you would like to treat the {{ activeCategory.label.toLowerCase() }} in this case</p>
+              <div class="space-y-4 py-2">
+                <p class="text-xs text-[#063c31]/70 italic font-medium">Let us know how you would like to treat the {{ activeCategory.label.toLowerCase() }} in this case</p>
                 
                 <!-- 1. Crowding/Spacing -->
                 <template v-if="activeCategory.id === 'crowdingSpacing'">
                   <div class="space-y-6">
                     <!-- Crowding -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Crowding Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Crowding Treatment options</h5>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <label v-for="opt in crowdingOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group transition-colors">
-                          <input type="checkbox" :checked="isOptSelected('crowdingSpacing', 'crowding', opt)" @change="toggleOpt('crowdingSpacing', 'crowding', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{ opt }}</span>
+                          <input type="checkbox" :checked="isOptSelected('crowdingSpacing', 'crowding', opt)" @change="toggleOpt('crowdingSpacing', 'crowding', opt)" class="w-4 h-4 rounded border-slate-300 text-[#063c31] focus:ring-brand-primary" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white transition-colors">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <!-- Spacing -->
                     <div class="space-y-4 pt-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Spacing Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Spacing Treatment options</h5>
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in spacingOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group transition-colors">
-                          <input type="checkbox" :checked="isOptSelected('crowdingSpacing', 'spacing', opt)" @change="toggleOpt('crowdingSpacing', 'spacing', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{ opt }}</span>
+                          <input type="checkbox" :checked="isOptSelected('crowdingSpacing', 'spacing', opt)" @change="toggleOpt('crowdingSpacing', 'spacing', opt)" class="w-4 h-4 rounded border-slate-300 text-[#063c31] focus:ring-brand-primary" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white transition-colors">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -192,38 +192,38 @@
 
                 <!-- 2. Transverse discrepancy -->
                 <template v-else-if="activeCategory.id === 'transverseDiscrepancy'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <!-- Crossbite -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Crossbite Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Crossbite Treatment options</h5>
                       <div class="space-y-2">
                         <label v-for="opt in crossbiteOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
-                          <input type="radio" :checked="formData.detailedPlan.transverseDiscrepancy?.crossbite === opt" @change="setSingleOpt('transverseDiscrepancy', 'crossbite', opt)" class="w-4 h-4 border-slate-300 text-brand-primary focus:ring-brand-primary" name="crossbite" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <input type="radio" :checked="formData.detailedPlan.transverseDiscrepancy?.crossbite === opt" @change="setSingleOpt('transverseDiscrepancy', 'crossbite', opt)" class="w-4 h-4 border-slate-300 text-[#063c31] focus:ring-brand-primary" name="crossbite" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <!-- Scissor bite -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Scissor Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Scissor Treatment options</h5>
                       <div class="space-y-2">
                         <label v-for="opt in scissorOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
-                          <input type="radio" :checked="formData.detailedPlan.transverseDiscrepancy?.scissor === opt" @change="setSingleOpt('transverseDiscrepancy', 'scissor', opt)" class="w-4 h-4 border-slate-300 text-brand-primary focus:ring-brand-primary" name="scissor" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <input type="radio" :checked="formData.detailedPlan.transverseDiscrepancy?.scissor === opt" @change="setSingleOpt('transverseDiscrepancy', 'scissor', opt)" class="w-4 h-4 border-slate-300 text-[#063c31] focus:ring-brand-primary" name="scissor" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <!-- Midline -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Upper Midline</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Upper Midline</h5>
                       <div class="flex gap-4">
-                        <label v-for="opt in midlineOpts" :key="opt" class="flex-1 flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.transverseDiscrepancy?.midline === opt ? 'border-brand-primary bg-brand-primary/5 text-brand-primary' : 'border-slate-100 dark:border-slate-800 text-slate-500'" @click="setSingleOpt('transverseDiscrepancy', 'midline', opt)">
-                          <span class="text-xs font-black text-slate-800 dark:text-slate-200">{{ opt }}</span>
+                        <label v-for="opt in midlineOpts" :key="opt" class="flex-1 flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.transverseDiscrepancy?.midline === opt ? 'border-brand-primary bg-brand-primary/5 text-[#063c31]' : 'border-slate-100 dark:border-slate-800 text-[#063c31]/80'" @click="setSingleOpt('transverseDiscrepancy', 'midline', opt)">
+                          <span class="text-xs font-black text-[#063c31] dark:text-slate-200">{{ opt }}</span>
                         </label>
                       </div>
                       <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
-                        <input type="checkbox" :checked="formData.detailedPlan.transverseDiscrepancy?.acceptMidline" @change="setSingleOpt('transverseDiscrepancy', 'acceptMidline', $event.target.checked)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                        <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">Accept resulting midline</span>
+                        <input type="checkbox" :checked="formData.detailedPlan.transverseDiscrepancy?.acceptMidline" @change="setSingleOpt('transverseDiscrepancy', 'acceptMidline', $event.target.checked)" class="w-4 h-4 rounded border-slate-300 text-[#063c31] focus:ring-brand-primary" />
+                        <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white">Accept resulting midline</span>
                       </label>
                     </div>
                   </div>
@@ -231,24 +231,24 @@
 
                 <!-- 3. Vertical discrepancy -->
                 <template v-else-if="activeCategory.id === 'verticalDiscrepancy'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <!-- Openbite -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Openbite Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Openbite Treatment options</h5>
                       <div class="space-y-2">
                         <label v-for="opt in openbiteOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
-                          <input type="radio" :checked="formData.detailedPlan.verticalDiscrepancy?.openbite === opt" @change="setSingleOpt('verticalDiscrepancy', 'openbite', opt)" class="w-4 h-4 border-slate-300 text-brand-primary focus:ring-brand-primary" name="openbite" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <input type="radio" :checked="formData.detailedPlan.verticalDiscrepancy?.openbite === opt" @change="setSingleOpt('verticalDiscrepancy', 'openbite', opt)" class="w-4 h-4 border-slate-300 text-[#063c31] focus:ring-brand-primary" name="openbite" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <!-- Deepbite -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Deepbite Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Deepbite Treatment options</h5>
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in deepbiteOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
-                          <input type="checkbox" :checked="isOptSelected('verticalDiscrepancy', 'deepbite', opt)" @change="toggleOpt('verticalDiscrepancy', 'deepbite', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <input type="checkbox" :checked="isOptSelected('verticalDiscrepancy', 'deepbite', opt)" @change="toggleOpt('verticalDiscrepancy', 'deepbite', opt)" class="w-4 h-4 rounded border-slate-300 text-[#063c31] focus:ring-brand-primary" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -257,24 +257,24 @@
 
                 <!-- 4. A-P discrepancy -->
                 <template v-else-if="activeCategory.id === 'apDiscrepancy'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <!-- Class II -->
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Class II Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Class II Treatment options</h5>
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in classIIOpts" :key="opt" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group transition-colors">
-                          <input type="checkbox" :checked="isOptSelected('apDiscrepancy', 'classII', opt)" @change="toggleOpt('apDiscrepancy', 'classII', opt)" class="w-4 h-4 mt-0.5 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors leading-relaxed">{{ opt }}</span>
+                          <input type="checkbox" :checked="isOptSelected('apDiscrepancy', 'classII', opt)" @change="toggleOpt('apDiscrepancy', 'classII', opt)" class="w-4 h-4 mt-0.5 rounded border-slate-300 text-[#063c31] focus:ring-brand-primary" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white transition-colors leading-relaxed">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <!-- Class III -->
                     <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Class III Treatment options</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Class III Treatment options</h5>
                       <div class="grid grid-cols-1 gap-3">
                         <label v-for="opt in classIIIOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
-                          <input type="checkbox" :checked="isOptSelected('apDiscrepancy', 'classIII', opt)" @change="toggleOpt('apDiscrepancy', 'classIII', opt)" class="w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                          <span class="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{{ opt }}</span>
+                          <input type="checkbox" :checked="isOptSelected('apDiscrepancy', 'classIII', opt)" @change="toggleOpt('apDiscrepancy', 'classIII', opt)" class="w-4 h-4 rounded border-slate-300 text-[#063c31] focus:ring-brand-primary" />
+                          <span class="text-sm font-bold text-[#063c31] dark:text-slate-200 group-hover:text-[#063c31] dark:group-hover:text-white">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
@@ -283,13 +283,13 @@
 
                 <!-- 5. Elastics -->
                 <template v-else-if="activeCategory.id === 'elastics'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Select the teeth requiring buttons and precision cuts placement (cutouts)</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.elastics?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('elastics', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Select the teeth requiring buttons and precision cuts placement (cutouts)</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.elastics?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('elastics', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the elastics</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the elastics?</label>
                       <textarea :value="formData.detailedPlan.elastics?.notes" @input="setSingleOpt('elastics', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -297,18 +297,18 @@
 
                 <!-- 6. Bite Ramps -->
                 <template v-else-if="activeCategory.id === 'biteRamps'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Select the teeth group on which you want to place bite ramps</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Select the teeth group on which you want to place bite ramps</h5>
                       <div class="flex gap-4 mb-6">
-                        <label v-for="grp in biteRampGroups" :key="grp" class="flex-1 flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.biteRamps?.group === grp ? 'border-brand-primary bg-brand-primary/5 text-brand-primary' : 'border-slate-100 dark:border-slate-800 text-slate-500'" @click="setBiteRampGroup(grp)">
+                        <label v-for="grp in biteRampGroups" :key="grp" class="flex-1 flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.biteRamps?.group === grp ? 'border-brand-primary bg-brand-primary/5 text-[#063c31]' : 'border-slate-100 dark:border-slate-800 text-[#063c31]/80'" @click="setBiteRampGroup(grp)">
                           <span class="text-xs font-bold">{{ grp }}</span>
                         </label>
                       </div>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.biteRamps?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('biteRamps', tooth)" />
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.biteRamps?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('biteRamps', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Bite ramps</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the Bite ramps?</label>
                       <textarea :value="formData.detailedPlan.biteRamps?.notes" @input="setSingleOpt('biteRamps', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -316,24 +316,24 @@
 
                 <!-- 7. Pontics -->
                 <template v-else-if="activeCategory.id === 'pontics'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Select the teeth requiring pontic placement</h5>
-                      <p class="text-[10px] text-slate-400 italic">The pontics will be painted based on the patients teeth color (painting of pontics will only be applied to the anterior 8 teeth)</p>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.pontics?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('pontics', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Select the teeth requiring pontic placement</h5>
+                      <p class="text-[10px] text-[#063c31]/60 italic">The pontics will be painted based on the patients teeth color (painting of pontics will only be applied to the anterior 8 teeth)</p>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.pontics?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('pontics', tooth)" />
                     </div>
                   </div>
                 </template>
 
                 <!-- 8. Attachments -->
                 <template v-else-if="activeCategory.id === 'attachments'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Select the teeth where you dont want to place attachments</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.attachments?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('attachments', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Select the teeth where you dont want to place attachments</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.attachments?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('attachments', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Perform attachments before</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Perform attachments before</label>
                       <input :value="formData.detailedPlan.attachments?.beforeStep" @input="setSingleOpt('attachments', 'beforeStep', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Write Step Numbers Separated by..." />
                     </div>
                   </div>
@@ -341,20 +341,20 @@
 
                 <!-- 9. Tooth size Discrepancy -->
                 <template v-else-if="activeCategory.id === 'toothSizeDiscrepancy'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Increasing the arch width between</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Increasing the arch width between</h5>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <label v-for="opt in toothSizeOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.toothSizeDiscrepancy?.option === opt ? 'border-brand-primary bg-brand-primary/5 text-brand-primary' : 'border-slate-100 dark:border-slate-800 text-slate-500'" @click="setSingleOpt('toothSizeDiscrepancy', 'option', opt)">
+                        <label v-for="opt in toothSizeOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.toothSizeDiscrepancy?.option === opt ? 'border-brand-primary bg-brand-primary/5 text-[#063c31]' : 'border-slate-100 dark:border-slate-800 text-[#063c31]/80'" @click="setSingleOpt('toothSizeDiscrepancy', 'option', opt)">
                           <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="formData.detailedPlan.toothSizeDiscrepancy?.option === opt ? 'border-brand-primary' : 'border-slate-300'">
                             <div v-if="formData.detailedPlan.toothSizeDiscrepancy?.option === opt" class="w-2 h-2 rounded-full bg-brand-primary"></div>
                           </div>
-                          <span class="text-xs font-black text-slate-800 dark:text-slate-200">{{ opt }}</span>
+                          <span class="text-xs font-black text-[#063c31] dark:text-slate-200">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Tooth Size Discrepancy</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the Tooth Size Discrepancy?</label>
                       <textarea :value="formData.detailedPlan.toothSizeDiscrepancy?.notes" @input="setSingleOpt('toothSizeDiscrepancy', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -362,18 +362,18 @@
 
                 <!-- 10. Arch expansion -->
                 <template v-else-if="activeCategory.id === 'archExpansion'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Increasing the arch width between</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Increasing the arch width between</h5>
                       <div class="flex flex-wrap gap-4 mb-6">
-                        <label v-for="grp in archExpansionGroups" :key="grp" class="flex-1 min-w-[200px] flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.archExpansion?.group === grp ? 'border-brand-primary bg-brand-primary/5 text-brand-primary' : 'border-slate-100 dark:border-slate-800 text-slate-500'" @click="setArchExpansionGroup(grp)">
+                        <label v-for="grp in archExpansionGroups" :key="grp" class="flex-1 min-w-[200px] flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.archExpansion?.group === grp ? 'border-brand-primary bg-brand-primary/5 text-[#063c31]' : 'border-slate-100 dark:border-slate-800 text-[#063c31]/80'" @click="setArchExpansionGroup(grp)">
                           <span class="text-xs font-bold">{{ grp }}</span>
                         </label>
                       </div>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.archExpansion?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('archExpansion', tooth)" />
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.archExpansion?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('archExpansion', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Arch Expansion</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the Arch Expansion?</label>
                       <textarea :value="formData.detailedPlan.archExpansion?.notes" @input="setSingleOpt('archExpansion', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -381,26 +381,26 @@
 
                 <!-- 11. Extraction -->
                 <template v-else-if="activeCategory.id === 'extraction'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary">Select the teeth that need to be extracted</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.extraction?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('extraction', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31]">Select the teeth that need to be extracted</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.extraction?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('extraction', tooth)" />
                     </div>
                   </div>
                 </template>
 
                 <!-- 12. Interproximal reduction -->
                 <template v-else-if="activeCategory.id === 'ipr'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <p class="text-xs text-slate-500 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <p class="text-xs text-[#063c31]/80 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                         IPR creates space for better teeth alignment or helps reshape the contact area between neighboring teeth. Our technicians will add IPR based on what is best for the treatment, however you can add your input and choose the teeth you do not want IPR to be added and we can accommodate.
                       </p>
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary mt-6">Select the teeth you dont want IPR on</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.ipr?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('ipr', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31] mt-2">Select the teeth you dont want IPR on</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.ipr?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('ipr', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">? Do you have any notes regarding the Interproximal reduction</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/60">Do you have any notes regarding the Interproximal reduction?</label>
                       <textarea :value="formData.detailedPlan.ipr?.notes" @input="setSingleOpt('ipr', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -408,49 +408,49 @@
 
                 <!-- 13. Eruption Space -->
                 <template v-else-if="activeCategory.id === 'eruptionSpace'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <p class="text-xs text-slate-500 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <p class="text-xs text-[#063c31]/80 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                         Eruption space will provide enough clearance between the aligner and the erupting canines, and/or premolars to accommodate their eruption path throughout the aligner's treatment.
                       </p>
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary mt-6">Select eruption spaces for this case</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.eruptionSpace?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('eruptionSpace', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31] mt-2">Select eruption spaces for this case</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.eruptionSpace?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('eruptionSpace', tooth)" />
                     </div>
                   </div>
                 </template>
 
                 <!-- 14. Teeth Movement Restrictions -->
                 <template v-else-if="activeCategory.id === 'movementRestrictions'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <p class="text-xs text-slate-500 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <p class="text-xs text-[#063c31]/80 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                         Some teeth cannot be moved by aligners, like implants and bridges, please indicate those teeth below.
                       </p>
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary mt-6">Restrict the teeth that cant be moved</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.movementRestrictions?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('movementRestrictions', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31] mt-2">Restrict the teeth that cant be moved</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.movementRestrictions?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('movementRestrictions', tooth)" />
                     </div>
                   </div>
                 </template>
 
                 <!-- 15. Passive Aligner -->
                 <template v-else-if="activeCategory.id === 'passiveAligner'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <p class="text-xs text-slate-500 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <p class="text-xs text-[#063c31]/80 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                         Use passive aligners to maintain teeth position in one arch while the teeth in the opposing arch are still under treatment.
                       </p>
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary mt-6">Passive Aligners Options (Add passive aligners)</h5>
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31] mt-2">Passive Aligners Options (Add passive aligners)</h5>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <label v-for="opt in passiveAlignerOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.passiveAligner?.option === opt ? 'border-brand-primary bg-brand-primary/5 text-brand-primary' : 'border-slate-100 dark:border-slate-800 text-slate-500'" @click="setSingleOpt('passiveAligner', 'option', opt)">
+                        <label v-for="opt in passiveAlignerOpts" :key="opt" class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all" :class="formData.detailedPlan.passiveAligner?.option === opt ? 'border-brand-primary bg-brand-primary/5 text-[#063c31]' : 'border-slate-100 dark:border-slate-800 text-[#063c31]/80'" @click="setSingleOpt('passiveAligner', 'option', opt)">
                           <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="formData.detailedPlan.passiveAligner?.option === opt ? 'border-brand-primary' : 'border-slate-300'">
                             <div v-if="formData.detailedPlan.passiveAligner?.option === opt" class="w-2 h-2 rounded-full bg-brand-primary"></div>
                           </div>
-                          <span class="text-xs font-black text-slate-800 dark:text-slate-200">{{ opt }}</span>
+                          <span class="text-xs font-black text-[#063c31] dark:text-slate-200">{{ opt }}</span>
                         </label>
                       </div>
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the Passive aligners</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the Passive aligners?</label>
                       <textarea :value="formData.detailedPlan.passiveAligner?.notes" @input="setSingleOpt('passiveAligner', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -458,51 +458,51 @@
 
                 <!-- 16. Overcorrection -->
                 <template v-else-if="activeCategory.id === 'overcorrection'">
-                  <div class="space-y-8">
+                  <div class="space-y-4">
                     <div class="space-y-4">
-                      <p class="text-xs text-slate-800 dark:text-slate-200 font-medium leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <p class="text-xs text-[#063c31] dark:text-slate-200 font-medium leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                         Use overcorrection to plan movements beyond the ideal teeth positions to compensate for a lag in tracking.
                       </p>
-                      <h5 class="text-xs font-black uppercase tracking-widest text-brand-primary mt-6">Select the tooth areas requiring overcorrection</h5>
-                      <TeethSelector :selectedTeeth="formData.detailedPlan.overcorrection?.selectedTeeth || []" @toggle="(tooth) => toggleTooth('overcorrection', tooth)" />
+                      <h5 class="text-xs font-black uppercase tracking-widest text-[#063c31] mt-2">Select the tooth areas requiring overcorrection</h5>
+                      <TeethSelector :selectedTeeth="formData.detailedPlan.overcorrection?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('overcorrection', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">? Do you have any notes regarding the overcorrection</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the overcorrection?</label>
                       <textarea :value="formData.detailedPlan.overcorrection?.notes" @input="setSingleOpt('overcorrection', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
                 </template>
 
-                <div v-else class="min-h-[200px] flex items-center justify-center text-slate-400 italic">
+                <div v-else class="min-h-[200px] flex items-center justify-center text-[#063c31]/60 italic">
                   Waiting for options for {{ activeCategory.label }}...
                 </div>
               </div>
 
               <!-- Selected Options Summary -->
               <div v-if="hasSelection(activeCategory.id)" class="pt-6 border-t border-slate-100 dark:border-slate-800">
-                <h5 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 px-1">Selected Options:</h5>
+                <h5 class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/60 mb-3 px-1">Selected Options:</h5>
                 <div class="flex flex-wrap gap-2">
                   <template v-for="(val, key) in formData.detailedPlan[activeCategory.id]" :key="key">
                     <template v-if="Array.isArray(val)">
                       <div v-for="item in val" :key="item" class="flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-primary/10 rounded-full group/item">
-                        <span class="text-[10px] font-bold text-brand-primary">{{ key === 'selectedTeeth' ? 'Tooth ' + item : item }}</span>
-                        <button @click="key === 'selectedTeeth' ? toggleTooth(activeCategory.id, item) : toggleOpt(activeCategory.id, key, item)" class="text-brand-primary/40 hover:text-red-500 transition-colors">
+                        <span class="text-[10px] font-bold text-[#063c31]">{{ key === 'selectedTeeth' ? 'Tooth ' + item : item }}</span>
+                        <button @click="key === 'selectedTeeth' ? toggleTooth(activeCategory.id, item) : toggleOpt(activeCategory.id, key, item)" class="text-[#063c31]/40 hover:text-red-500 transition-colors">
                           <i class="fas fa-times text-[10px]"></i>
                         </button>
                       </div>
                     </template>
                     <template v-else-if="val && typeof val === 'string' && val !== '' && key !== 'notes'">
                       <div class="flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-primary/10 rounded-full group/item">
-                        <span class="text-[10px] font-bold text-brand-primary">{{ val }}</span>
-                        <button @click="setSingleOpt(activeCategory.id, key, null)" class="text-brand-primary/40 hover:text-red-500 transition-colors">
+                        <span class="text-[10px] font-bold text-[#063c31]">{{ val }}</span>
+                        <button @click="setSingleOpt(activeCategory.id, key, null)" class="text-[#063c31]/40 hover:text-red-500 transition-colors">
                           <i class="fas fa-times text-[10px]"></i>
                         </button>
                       </div>
                     </template>
                     <template v-else-if="typeof val === 'boolean' && val === true">
                        <div class="flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-primary/10 rounded-full group/item">
-                        <span class="text-[10px] font-bold text-brand-primary">{{ key }}</span>
-                        <button @click="setSingleOpt(activeCategory.id, key, false)" class="text-brand-primary/40 hover:text-red-500 transition-colors">
+                        <span class="text-[10px] font-bold text-[#063c31]">{{ key }}</span>
+                        <button @click="setSingleOpt(activeCategory.id, key, false)" class="text-[#063c31]/40 hover:text-red-500 transition-colors">
                           <i class="fas fa-times text-[10px]"></i>
                         </button>
                       </div>
