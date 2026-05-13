@@ -800,21 +800,42 @@
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('price_list') }}</label>
                     <div class="relative flex flex-col items-start w-full gap-4">
-                      <label class="flex flex-col items-center justify-center w-full h-32 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 group transition-all shadow-inner">
+                      <label v-if="!editForm.price_list_file && !editForm.price_list_url" class="flex flex-col items-center justify-center w-full h-36 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 group transition-all shadow-inner">
                           <div class="flex flex-col items-center justify-center pt-2 pb-3">
                                <i class="fas fa-file-pdf text-3xl text-slate-300 dark:text-slate-700 group-hover:text-blue-400 transition-all mb-2"></i>
-                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider" v-if="!editForm.price_list_file">{{ t('upload_price_list') }}</p>
-                               <p class="text-[10px] font-black text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/50 px-3 py-0.5 rounded-full" v-else>{{ editForm.price_list_file.name }}</p>
+                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider">{{ t('upload_price_list') }}</p>
                           </div>
                           <input type="file" accept=".pdf,image/*" @change="onPriceListSelected" class="hidden" />
                       </label>
-                      <div v-if="editForm.price_list_url && !editForm.price_list_file" class="flex items-center gap-3 w-full">
-                        <a :href="fixFileUrl(editForm.price_list_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-4 py-3 text-sm font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-blue-600 hover:text-blue-700 shadow-md">
-                            <i class="fas fa-download"></i> {{ t('browse_current') }}
-                        </a>
-                        <button @click.prevent="removePriceList" class="h-12 w-12 flex items-center justify-center text-red-600 bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 rounded-2xl shadow-md transition-all">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                      
+                      <!-- Preview Area -->
+                      <div v-else class="w-full relative group">
+                          <div class="w-full h-36 rounded-3xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shadow-md">
+                              <template v-if="editForm.price_list_file">
+                                  <img v-if="editForm.price_list_file.type.startsWith('image/')" :src="getFileThumbnail(editForm.price_list_file)" class="w-full h-full object-cover" />
+                                  <div v-else class="flex flex-col items-center gap-2">
+                                      <i class="fas fa-file-pdf text-4xl text-red-500"></i>
+                                      <span class="text-[10px] font-black text-slate-500 max-w-[150px] truncate">{{ editForm.price_list_file.name }}</span>
+                                  </div>
+                              </template>
+                              <template v-else-if="editForm.price_list_url">
+                                  <img v-if="editForm.price_list_url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" :src="fixFileUrl(editForm.price_list_url)" class="w-full h-full object-cover" />
+                                  <div v-else class="flex flex-col items-center gap-2">
+                                      <i class="fas fa-file-pdf text-4xl text-red-500"></i>
+                                      <span class="text-[10px] font-black text-slate-500">{{ t('pdf_document') }}</span>
+                                  </div>
+                              </template>
+                          </div>
+                          
+                          <!-- Actions Overlay -->
+                          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 rounded-3xl">
+                              <a v-if="editForm.price_list_url" :href="fixFileUrl(editForm.price_list_url)" target="_blank" class="w-12 h-12 flex items-center justify-center bg-white text-blue-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
+                                  <i class="fas fa-external-link-alt"></i>
+                              </a>
+                              <button @click.prevent="removePriceList" class="w-12 h-12 flex items-center justify-center bg-white text-red-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
+                                  <i class="fas fa-trash-alt"></i>
+                              </button>
+                          </div>
                       </div>
                     </div>
                   </div>
@@ -823,21 +844,42 @@
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('receipt') }}</label>
                     <div class="relative flex flex-col items-start w-full gap-4">
-                      <label class="flex flex-col items-center justify-center w-full h-32 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-400 group transition-all shadow-inner">
+                      <label v-if="!editForm.receipt_file && !editForm.receipt_url" class="flex flex-col items-center justify-center w-full h-36 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-400 group transition-all shadow-inner">
                           <div class="flex flex-col items-center justify-center pt-2 pb-3">
                                <i class="fas fa-receipt text-3xl text-slate-300 dark:text-slate-700 group-hover:text-emerald-400 transition-all mb-2"></i>
-                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider" v-if="!editForm.receipt_file">{{ t('upload_receipt') }}</p>
-                               <p class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/50 px-3 py-0.5 rounded-full" v-else>{{ editForm.receipt_file.name }}</p>
+                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider">{{ t('upload_receipt') }}</p>
                           </div>
                           <input type="file" accept=".pdf,image/*" @change="onReceiptSelected" class="hidden" />
                       </label>
-                      <div v-if="editForm.receipt_url && !editForm.receipt_file" class="flex items-center gap-3 w-full">
-                        <a :href="fixFileUrl(editForm.receipt_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-4 py-3 text-sm font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-emerald-600 hover:text-emerald-700 shadow-md">
-                            <i class="fas fa-download"></i> {{ t('browse_current') }}
-                        </a>
-                        <button @click.prevent="removeReceipt" class="h-12 w-12 flex items-center justify-center text-red-600 bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 rounded-2xl shadow-md transition-all">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+
+                      <!-- Preview Area -->
+                      <div v-else class="w-full relative group">
+                          <div class="w-full h-36 rounded-3xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shadow-md">
+                              <template v-if="editForm.receipt_file">
+                                  <img v-if="editForm.receipt_file.type.startsWith('image/')" :src="getFileThumbnail(editForm.receipt_file)" class="w-full h-full object-cover" />
+                                  <div v-else class="flex flex-col items-center gap-2">
+                                      <i class="fas fa-file-pdf text-4xl text-emerald-500"></i>
+                                      <span class="text-[10px] font-black text-slate-500 max-w-[150px] truncate">{{ editForm.receipt_file.name }}</span>
+                                  </div>
+                              </template>
+                              <template v-else-if="editForm.receipt_url">
+                                  <img v-if="editForm.receipt_url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" :src="fixFileUrl(editForm.receipt_url)" class="w-full h-full object-cover" />
+                                  <div v-else class="flex flex-col items-center gap-2">
+                                      <i class="fas fa-file-pdf text-4xl text-emerald-500"></i>
+                                      <span class="text-[10px] font-black text-slate-500">{{ t('pdf_document') }}</span>
+                                  </div>
+                              </template>
+                          </div>
+                          
+                          <!-- Actions Overlay -->
+                          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 rounded-3xl">
+                              <a v-if="editForm.receipt_url" :href="fixFileUrl(editForm.receipt_url)" target="_blank" class="w-12 h-12 flex items-center justify-center bg-white text-emerald-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
+                                  <i class="fas fa-external-link-alt"></i>
+                              </a>
+                              <button @click.prevent="removeReceipt" class="w-12 h-12 flex items-center justify-center bg-white text-red-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
+                                  <i class="fas fa-trash-alt"></i>
+                              </button>
+                          </div>
                       </div>
                     </div>
                   </div>
@@ -1699,7 +1741,10 @@ const closeModal = () => {
 // File Handlers for New Documents
 const onPriceListSelected = (e) => {
     const file = e.target.files[0]
-    if (file) editForm.value.price_list_file = file
+    if (file) {
+        editForm.value.price_list_file = file
+        editForm.value.remove_price_list = false
+    }
 }
 const removePriceList = () => {
     editForm.value.price_list_file = null
@@ -1709,12 +1754,23 @@ const removePriceList = () => {
 
 const onReceiptSelected = (e) => {
     const file = e.target.files[0]
-    if (file) editForm.value.receipt_file = file
+    if (file) {
+        editForm.value.receipt_file = file
+        editForm.value.remove_receipt = false
+    }
 }
 const removeReceipt = () => {
     editForm.value.receipt_file = null
     editForm.value.receipt_url = ''
     editForm.value.remove_receipt = true
+}
+
+const getFileThumbnail = (file) => {
+    if (!file) return null
+    if (file.type.startsWith('image/')) {
+        return URL.createObjectURL(file)
+    }
+    return null
 }
 
 const onFileSelected1 = (event) => {
