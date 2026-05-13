@@ -710,18 +710,6 @@
             <div class="p-8 rounded-3xl border-2 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md">
               <h4 class="text-xl font-black text-blue-800 dark:text-blue-400 flex items-center gap-3 pb-4 border-b-2 border-blue-200 dark:border-blue-800/50 uppercase tracking-widest"><i class="fas fa-file-medical-alt text-2xl"></i> {{ t('treatment_plan_1') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('update_plan_status') }}</label>
-                    <div class="relative">
-                        <select v-model="editForm.treatment_plan1_status" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-lg font-bold outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 dark:text-white shadow-sm cursor-pointer appearance-none">
-                          <option value="">{{ t('not_specified') }}</option>
-                          <option value="approved">{{ t('approved') }}</option>
-                          <option value="modify">{{ t('modify') }}</option>
-                          <option value="reject">{{ t('reject') }}</option>
-                        </select>
-                        <i class="fas fa-chevron-down absolute rtl:left-5 ltr:right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
-                    </div>
-                  </div>
                   <!-- File Upload Plan 1 -->
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('upload_attachment') }}</label>
@@ -765,18 +753,6 @@
             <div class="p-8 rounded-3xl border-2 border-purple-100 dark:border-purple-900/30 bg-purple-50/50 dark:bg-purple-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md">
               <h4 class="text-xl font-black text-purple-800 dark:text-purple-400 flex items-center gap-3 pb-4 border-b-2 border-purple-200 dark:border-purple-800/50 uppercase tracking-widest"><i class="fas fa-paperclip text-2xl"></i> {{ t('treatment_plan_2') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('update_plan_status') }}</label>
-                    <div class="relative">
-                        <select v-model="editForm.treatment_plan2_status" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-lg font-bold outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 dark:text-white shadow-sm cursor-pointer appearance-none">
-                          <option value="">{{ t('not_specified') }}</option>
-                          <option value="approved">{{ t('approved') }}</option>
-                          <option value="modify">{{ t('modify') }}</option>
-                          <option value="reject">{{ t('reject') }}</option>
-                        </select>
-                        <i class="fas fa-chevron-down absolute rtl:left-5 ltr:right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
-                    </div>
-                  </div>
                   <!-- File Upload Plan 2 -->
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('upload_attachment') }}</label>
