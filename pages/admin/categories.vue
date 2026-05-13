@@ -2,11 +2,11 @@
   <div class="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-700">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">إدارة الأقسام</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">إضافة وتعديل الأقسام الرئيسية والفرعية للحالات</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t('manage_categories') }}</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ t('manage_categories_desc') }}</p>
         </div>
         <button @click="openMainModal()" class="px-5 py-2.5 bg-[#063c31] hover:bg-[#063c31]/90 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-[#063c31]/20">
-            <i class="fas fa-plus"></i> إضافة قسم رئيسي جديد
+            <i class="fas fa-plus"></i> {{ t('add_new_main_category') }}
         </button>
     </div>
 
@@ -15,8 +15,8 @@
         <div v-for="main in categories" :key="main.id" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group">
             <div class="p-6 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-200 dark:border-slate-800">
                 <div class="flex items-center gap-4">
-                    <div class="h-12 w-12 rounded-xl bg-brand-gold/20 dark:bg-brand-primary/40 text-brand-primary dark:text-brand-gold flex items-center justify-center text-xl font-bold">
-                        {{ main.name_ar[0] }}
+                    <div class="h-12 w-12 rounded-xl bg-[#d1b06b]/20 dark:bg-[#063c31]/40 text-[#063c31] dark:text-[#d1b06b] flex items-center justify-center text-xl font-bold">
+                        {{ main.name_ar ? main.name_ar[0] : 'C' }}
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{ main.name_ar }}</h2>
@@ -36,10 +36,10 @@
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <i class="fas fa-list-ul text-brand-primary text-xs"></i> الأقسام الفرعية ({{ main.sub_categories?.length || 0 }})
+                        <i class="fas fa-list-ul text-[#063c31] text-xs"></i> {{ t('sub_categories_count') }} ({{ main.sub_categories?.length || 0 }})
                     </h3>
-                    <button @click="openSubModal(main.id)" class="text-xs font-bold text-brand-primary hover:text-brand-primary/80 dark:text-brand-gold flex items-center gap-1 transition-colors">
-                        <i class="fas fa-plus-circle"></i> إضافة قسم فرعي
+                    <button @click="openSubModal(main.id)" class="text-xs font-bold text-[#063c31] hover:text-[#063c31]/80 dark:text-[#d1b06b] flex items-center gap-1 transition-colors">
+                        <i class="fas fa-plus-circle"></i> {{ t('add_new_sub_category') }}
                     </button>
                 </div>
 
@@ -50,7 +50,7 @@
                             <p class="text-[10px] text-slate-500 dark:text-slate-400 font-sans uppercase">{{ sub.name_en }}</p>
                         </div>
                         <div class="flex gap-1">
-                            <button @click="openSubModal(main.id, sub)" class="h-7 w-7 flex items-center justify-center rounded-md text-slate-400 hover:text-brand-primary hover:bg-brand-gold/10 dark:hover:bg-brand-primary/20 transition-all">
+                            <button @click="openSubModal(main.id, sub)" class="h-7 w-7 flex items-center justify-center rounded-md text-slate-400 hover:text-[#063c31] hover:bg-[#d1b06b]/10 dark:hover:bg-[#063c31]/20 transition-all">
                                 <i class="fas fa-pen text-[10px]"></i>
                             </button>
                             <button @click="deleteSub(sub.id)" class="h-7 w-7 flex items-center justify-center rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div v-if="!main.sub_categories?.length" class="col-span-full py-4 text-center text-xs text-slate-400 italic">
-                        لا توجد أقسام فرعية لهذا القسم حالياً
+                        {{ t('no_sub_categories') }}
                     </div>
                 </div>
             </div>
@@ -71,22 +71,25 @@
         <div v-if="modals.main.open" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" @click.self="modals.main.open = false">
             <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
                 <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ modals.main.editing ? 'تعديل قسم رئيسي' : 'إضافة قسم رئيسي جديد' }}</h3>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ modals.main.editing ? t('edit_main_category') : t('add_new_main_category') }}</h3>
                     <button @click="modals.main.open = false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم بالعربية</label>
-                        <input v-model="modals.main.form.name_ar" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white">
+                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">{{ t('category_name_ar') }}</label>
+                        <input v-model="modals.main.form.name_ar" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-[#063c31] outline-none transition-all dark:text-white">
                     </div>
                     <div>
-                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم بالإنجليزية</label>
-                        <input v-model="modals.main.form.name_en" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white">
+                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">{{ t('category_name_en') }}</label>
+                        <input v-model="modals.main.form.name_en" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-[#063c31] outline-none transition-all dark:text-white">
                     </div>
                 </div>
                 <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
-                    <button @click="modals.main.open = false" class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg">إلغاء</button>
-                    <button @click="saveMain" class="px-6 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-brand-primary/20">حفظ</button>
+                    <button @click="modals.main.open = false" class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg">{{ t('cancel') }}</button>
+                    <button @click="saveMain" :disabled="loading" class="px-6 py-2 bg-[#063c31] hover:bg-[#063c31]/90 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-[#063c31]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <i v-if="loading" class="fas fa-circle-notch fa-spin"></i>
+                        {{ t('save') }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -97,22 +100,25 @@
         <div v-if="modals.sub.open" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" @click.self="modals.sub.open = false">
             <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
                 <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ modals.sub.editing ? 'تعديل قسم فرعي' : 'إضافة قسم فرعي جديد' }}</h3>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ modals.sub.editing ? t('edit_sub_category') : t('add_new_sub_category') }}</h3>
                     <button @click="modals.sub.open = false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم بالعربية</label>
-                        <input v-model="modals.sub.form.name_ar" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white">
+                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">{{ t('category_name_ar') }}</label>
+                        <input v-model="modals.sub.form.name_ar" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-[#063c31] outline-none transition-all dark:text-white">
                     </div>
                     <div>
-                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم بالإنجليزية</label>
-                        <input v-model="modals.sub.form.name_en" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white">
+                        <label class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">{{ t('category_name_en') }}</label>
+                        <input v-model="modals.sub.form.name_en" type="text" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-[#063c31] outline-none transition-all dark:text-white">
                     </div>
                 </div>
                 <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
-                    <button @click="modals.sub.open = false" class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg">إلغاء</button>
-                    <button @click="saveSub" class="px-6 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-brand-primary/20">حفظ</button>
+                    <button @click="modals.sub.open = false" class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg">{{ t('cancel') }}</button>
+                    <button @click="saveSub" :disabled="loading" class="px-6 py-2 bg-[#063c31] hover:bg-[#063c31]/90 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-[#063c31]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <i v-if="loading" class="fas fa-circle-notch fa-spin"></i>
+                        {{ t('save') }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -124,11 +130,15 @@
 definePageMeta({
   layout: 'admin'
 })
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Swal from 'sweetalert2'
 
+const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const { token } = useAuth()
+const loading = ref(false)
+
 const headers = computed(() => ({
   Authorization: `Bearer ${token.value}`,
   Accept: 'application/json'
@@ -156,33 +166,62 @@ const openMainModal = (cat = null) => {
 }
 
 const saveMain = async () => {
+    if (!modals.value.main.form.name_ar || !modals.value.main.form.name_en) {
+        Swal.fire({ icon: 'warning', text: locale.value === 'ar' ? 'يرجى إدخال جميع الأسماء' : 'Please enter all names' })
+        return
+    }
+
+    loading.value = true
     const isEditing = modals.value.main.editing
     const url = isEditing 
         ? `${config.public.apiBase}/categories/main/${modals.value.main.form.id}/update`
         : `${config.public.apiBase}/categories/main`
     
     try {
-        await $fetch(url, { method: 'POST', body: modals.value.main.form, headers: headers.value })
+        await $fetch(url, { 
+            method: 'POST', 
+            body: modals.value.main.form, 
+            headers: headers.value 
+        })
+        
+        await refresh()
         modals.value.main.open = false
-        refresh()
-    } catch(e) { console.error('Failed to save main category', e) }
+        
+        Swal.fire({
+            icon: 'success',
+            title: t('category_saved'),
+            timer: 1500,
+            showConfirmButton: false
+        })
+    } catch(e) { 
+        console.error('Failed to save main category', e)
+        Swal.fire({ icon: 'error', title: t('category_save_failed') })
+    } finally {
+        loading.value = false
+    }
 }
 
 const deleteMain = async (id) => {
     const result = await Swal.fire({
-        title: 'هل أنت متأكد؟',
-        text: 'سيتم حذف هذا القسم وكل الأقسام الفرعية التابعة له!',
+        title: t('confirm_delete_title'),
+        text: t('delete_main_confirm'),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'نعم، احذف',
-        cancelButtonText: 'إلغاء'
+        confirmButtonText: t('yes_delete'),
+        cancelButtonText: t('cancel')
     })
+    
     if (!result.isConfirmed) return
+    
     try {
-        await $fetch(`${config.public.apiBase}/categories/main/${id}/delete`, { method: 'POST', headers: headers.value })
-        refresh()
+        await $fetch(`${config.public.apiBase}/categories/main/${id}/delete`, { 
+            method: 'POST', 
+            headers: headers.value 
+        })
+        await refresh()
+        Swal.fire({ icon: 'success', title: t('deleted'), timer: 1500 })
     } catch(e) { console.error('Failed to delete', e) }
 }
 
@@ -199,33 +238,62 @@ const openSubModal = (mainId, sub = null) => {
 }
 
 const saveSub = async () => {
+    if (!modals.value.sub.form.name_ar || !modals.value.sub.form.name_en) {
+        Swal.fire({ icon: 'warning', text: locale.value === 'ar' ? 'يرجى إدخال جميع الأسماء' : 'Please enter all names' })
+        return
+    }
+
+    loading.value = true
     const isEditing = modals.value.sub.editing
     const url = isEditing 
         ? `${config.public.apiBase}/categories/sub/${modals.value.sub.form.id}/update`
         : `${config.public.apiBase}/categories/sub`
     
     try {
-        await $fetch(url, { method: 'POST', body: modals.value.sub.form, headers: headers.value })
+        await $fetch(url, { 
+            method: 'POST', 
+            body: modals.value.sub.form, 
+            headers: headers.value 
+        })
+        
+        await refresh()
         modals.value.sub.open = false
-        refresh()
-    } catch(e) { console.error('Failed to save subcategory', e) }
+        
+        Swal.fire({
+            icon: 'success',
+            title: t('category_saved'),
+            timer: 1500,
+            showConfirmButton: false
+        })
+    } catch(e) { 
+        console.error('Failed to save subcategory', e)
+        Swal.fire({ icon: 'error', title: t('category_save_failed') })
+    } finally {
+        loading.value = false
+    }
 }
 
 const deleteSub = async (id) => {
     const result = await Swal.fire({
-        title: 'هل أنت متأكد؟',
-        text: 'حذف القسم الفرعي؟',
+        title: t('confirm_delete_title'),
+        text: t('delete_sub_confirm'),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'نعم، احذف',
-        cancelButtonText: 'إلغاء'
+        confirmButtonText: t('yes_delete'),
+        cancelButtonText: t('cancel')
     })
+    
     if (!result.isConfirmed) return
+    
     try {
-        await $fetch(`${config.public.apiBase}/categories/sub/${id}/delete`, { method: 'POST', headers: headers.value })
-        refresh()
+        await $fetch(`${config.public.apiBase}/categories/sub/${id}/delete`, { 
+            method: 'POST', 
+            headers: headers.value 
+        })
+        await refresh()
+        Swal.fire({ icon: 'success', title: t('deleted'), timer: 1500 })
     } catch(e) { console.error('Failed to delete sub', e) }
 }
 </script>

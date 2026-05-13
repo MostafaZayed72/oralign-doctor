@@ -212,5 +212,19 @@
   "delete_failed_msg": "فشل حذف الحالة.",
   "saved": "تم الحفظ!",
   "save_success_msg": "تم حفظ التغييرات بنجاح.",
-  "save_failed_msg": "فشل حفظ التغييرات."
+  "save_failed_msg": "فشل حفظ التغييرات.",
+  "manage_categories": "إدارة الأقسام",
+  "manage_categories_desc": "إضافة وتعديل الأقسام الرئيسية والفرعية للحالات",
+  "add_new_main_category": "إضافة قسم رئيسي جديد",
+  "edit_main_category": "تعديل قسم رئيسي",
+  "add_new_sub_category": "إضافة قسم فرعي جديد",
+  "edit_sub_category": "تعديل قسم فرعي",
+  "category_name_ar": "الاسم بالعربية",
+  "category_name_en": "الاسم بالإنجليزية",
+  "sub_categories_count": "الأقسام الفرعية",
+  "no_sub_categories": "لا توجد أقسام فرعية لهذا القسم حالياً",
+  "delete_main_confirm": "سيتم حذف هذا القسم وكل الأقسام الفرعية التابعة له!",
+  "delete_sub_confirm": "حذف القسم الفرعي؟",
+  "category_saved": "تم حفظ القسم بنجاح",
+  "category_save_failed": "فشل في حفظ القسم"
 }

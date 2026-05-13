@@ -212,5 +212,19 @@
   "delete_failed_msg": "Failed to delete case.",
   "saved": "Saved!",
   "save_success_msg": "Changes saved successfully.",
-  "save_failed_msg": "Failed to save changes."
+  "save_failed_msg": "Failed to save changes.",
+  "manage_categories": "Manage Categories",
+  "manage_categories_desc": "Add and edit main and sub-categories for cases",
+  "add_new_main_category": "Add New Main Category",
+  "edit_main_category": "Edit Main Category",
+  "add_new_sub_category": "Add New Sub Category",
+  "edit_sub_category": "Edit Sub Category",
+  "category_name_ar": "Name (Arabic)",
+  "category_name_en": "Name (English)",
+  "sub_categories_count": "Sub Categories",
+  "no_sub_categories": "No sub-categories for this category yet",
+  "delete_main_confirm": "This will delete this category and all its sub-categories!",
+  "delete_sub_confirm": "Delete sub-category?",
+  "category_saved": "Category saved successfully",
+  "category_save_failed": "Failed to save category"
 }
