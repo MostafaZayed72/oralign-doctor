@@ -109,7 +109,7 @@
           <h4 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ $t('no_cases') }}</h4>
         </div>
 
-        <div v-else class="table-wrapper overflow-x-auto">
+        <div v-else class="table-wrapper overflow-x-auto pb-44">
           <table class="w-full text-center border-collapse dashboard-table">
             <thead>
               <tr>
@@ -164,6 +164,30 @@
                             <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('note') || 'ملاحظة' }}</span>
                           </button>
                       </div>
+                      
+                      <!-- Take Action Dropdown -->
+                      <div v-if="(c.treatment_plan1_file || c.treatment_plan1_url || (c.treatment_plan1 && !checkDefault(c.treatment_plan1))) && c.treatment_plan1_status !== 'approved'" class="relative w-full pt-1 border-t border-gray-100 dark:border-gray-800" v-click-outside="() => { if (activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan1') activeActionMenu = null }">
+                          <button @click.stop="activeActionMenu = (activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan1' ? null : [c.id, 'plan1'])" 
+                                  class="w-full h-8 flex items-center justify-center bg-primary text-white rounded-lg shadow-sm hover:opacity-90 transition-all gap-2 px-2 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+                              <span>{{ t('take_action') }}</span>
+                              <i class="fas fa-chevron-down text-[8px] transition-transform" :class="{ 'rotate-180': activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan1' }"></i>
+                          </button>
+                          
+                          <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                            <div v-if="activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan1'" class="absolute z-[100] mt-1 w-max min-w-full bg-white dark:bg-[#252525] rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-1 overflow-hidden ltr:left-0 rtl:right-0">
+                                <button @click.stop="handlePlanAction(c.id, 'plan1', 'approved'); activeActionMenu = null" class="w-full px-4 py-2 text-start text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 flex items-center gap-2">
+                                    <i class="fas fa-check-circle"></i> {{ t('approve') }}
+                                </button>
+                                <button @click.stop="handlePlanAction(c.id, 'plan1', 'modify'); activeActionMenu = null" class="w-full px-4 py-2 text-start text-[10px] font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 flex items-center gap-2">
+                                    <i class="fas fa-edit"></i> {{ t('modify') }}
+                                </button>
+                                <button @click.stop="handlePlanAction(c.id, 'plan1', 'reject'); activeActionMenu = null" class="w-full px-4 py-2 text-start text-[10px] font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
+                                    <i class="fas fa-times-circle"></i> {{ t('reject') }}
+                                </button>
+                            </div>
+                          </transition>
+                      </div>
+
                       <div v-if="c.treatment_plan1_status && !checkDefault(c.treatment_plan1_status)" :class="getTpClass(c.treatment_plan1_status)" class="px-2 py-1 rounded-md text-[10px] text-white font-black uppercase tracking-tight shadow-sm">
                         {{ c.treatment_plan1_status }}
                       </div>
@@ -186,6 +210,30 @@
                             <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('note') || 'ملاحظة' }}</span>
                           </button>
                       </div>
+
+                      <!-- Take Action Dropdown -->
+                      <div v-if="(c.treatment_plan2 || c.treatment_plan2_url || (c.treatment_plan2_text && !checkDefault(c.treatment_plan2_text))) && c.treatment_plan2_status !== 'approved'" class="relative w-full pt-1 border-t border-gray-100 dark:border-gray-800" v-click-outside="() => { if (activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan2') activeActionMenu = null }">
+                          <button @click.stop="activeActionMenu = (activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan2' ? null : [c.id, 'plan2'])" 
+                                  class="w-full h-8 flex items-center justify-center bg-primary text-white rounded-lg shadow-sm hover:opacity-90 transition-all gap-2 px-2 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+                              <span>{{ t('take_action') }}</span>
+                              <i class="fas fa-chevron-down text-[8px] transition-transform" :class="{ 'rotate-180': activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan2' }"></i>
+                          </button>
+                          
+                          <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                            <div v-if="activeActionMenu?.[0] === c.id && activeActionMenu?.[1] === 'plan2'" class="absolute z-[100] mt-1 w-max min-w-full bg-white dark:bg-[#252525] rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-1 overflow-hidden ltr:left-0 rtl:right-0">
+                                <button @click.stop="handlePlanAction(c.id, 'plan2', 'approved'); activeActionMenu = null" class="w-full px-4 py-2 text-start text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 flex items-center gap-2">
+                                    <i class="fas fa-check-circle"></i> {{ t('approve') }}
+                                </button>
+                                <button @click.stop="handlePlanAction(c.id, 'plan2', 'modify'); activeActionMenu = null" class="w-full px-4 py-2 text-start text-[10px] font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 flex items-center gap-2">
+                                    <i class="fas fa-edit"></i> {{ t('modify') }}
+                                </button>
+                                <button @click.stop="handlePlanAction(c.id, 'plan2', 'reject'); activeActionMenu = null" class="w-full px-4 py-2 text-start text-[10px] font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
+                                    <i class="fas fa-times-circle"></i> {{ t('reject') }}
+                                </button>
+                            </div>
+                          </transition>
+                      </div>
+
                       <div v-if="c.treatment_plan2_status && !checkDefault(c.treatment_plan2_status)" :class="getTpClass(c.treatment_plan2_status)" class="px-2 py-1 rounded-md text-[10px] text-white font-black uppercase tracking-tight shadow-sm">
                         {{ c.treatment_plan2_status }}
                       </div>
@@ -252,6 +300,7 @@ const localePath = useLocalePath()
 const { token, user: authUser } = useAuth()
 
 const showSubmitMenu = ref(false)
+const activeActionMenu = ref<[number, string] | null>(null)
 const statusFilter = ref("All Cases")
 const allCases = ref<any[]>([])
 const pending = ref(false)
@@ -404,6 +453,64 @@ const deleteCase = async (id: number) => {
         confirmButtonColor: '#10b981'
       })
     }
+  }
+}
+
+const handlePlanAction = async (caseId, plan, action) => {
+  let notes = "No notes"
+  
+  if (action === 'modify' || action === 'reject') {
+    const { value: text, isDismissed } = await Swal.fire({
+      title: action === 'modify' ? t('modification_notes') || 'Modification Notes' : t('rejection_reason') || 'Rejection Reason',
+      input: 'textarea',
+      inputPlaceholder: t('enter_notes_here') || 'Enter your notes here...',
+      showCancelButton: true,
+      confirmButtonColor: action === 'reject' ? '#ef4444' : '#f59e0b',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: t('submit') || 'Submit'
+    })
+    
+    if (isDismissed) return
+    notes = text || "No notes"
+  } else {
+    const result = await Swal.fire({
+      title: t('are_you_sure') || 'Are you sure?',
+      text: t('approve_plan_confirm') || 'You are about to approve this treatment plan.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      confirmButtonText: t('yes_approve') || 'Yes, Approve'
+    })
+    if (!result.isConfirmed) return
+  }
+  
+  try {
+    const response = await $fetch(`/api/doctor/plan-action`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: { 
+        id: caseId, 
+        action: action, 
+        notes: notes, 
+        plan: plan 
+      }
+    })
+    
+    if (response?.success) {
+      Swal.fire({
+        title: t('success') || 'Success!',
+        text: t('action_submitted_successfully') || 'Action submitted successfully!',
+        icon: 'success',
+        confirmButtonColor: '#10b981'
+      })
+      loadCases()
+    }
+  } catch (err) {
+    Swal.fire({
+      title: t('error') || 'Error',
+      text: err.data?.message || t('action_failed') || 'Failed to submit action',
+      icon: 'error'
+    })
   }
 }
 
