@@ -1587,6 +1587,25 @@ onUnmounted(() => {
   }
 })
 
+// Auto-update status when treatment plan content is added
+watch([
+  () => editForm.value.treatment_plan1,
+  () => editForm.value.treatment_plan1_url,
+  () => editForm.value.selectedFile1,
+  () => editForm.value.treatment_plan2_text,
+  () => editForm.value.treatment_plan2_url,
+  () => editForm.value.selectedFile2
+], (newValues) => {
+  const hasContent = newValues.some(val => {
+    if (typeof val === 'string') return val.trim().length > 0
+    return !!val // handles files
+  })
+  
+  if (hasContent && editForm.value.status !== 'treatment plan generated') {
+    editForm.value.status = 'treatment plan generated'
+  }
+}, { deep: true })
+
 const openModal = async (item) => {
     // Mark as read if not already read
     if (item.is_admin_read === 0) {
@@ -1770,6 +1789,8 @@ const saveEdit = async () => {
             timer: 2000,
             timerProgressBar: true,
             showConfirmButton: false
+        }).then(() => {
+            navigateTo('/dashboard')
         })
     } catch(e) {
         console.error('Save failed', e)

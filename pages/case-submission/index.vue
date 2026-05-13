@@ -167,6 +167,53 @@ const formData = ref({
     overcorrection: {}
   },
   additionalInstructions: '',
+  id: null,
+  isEdit: false
+})
+
+const route = useRoute()
+
+onMounted(async () => {
+  const caseId = route.query.id
+  if (caseId) {
+    formData.value.id = caseId
+    formData.value.isEdit = true
+    try {
+      const response: any = await $fetch(`/api/doctor/case-profile/${caseId}`, {
+        headers: { Authorization: `Bearer ${token.value}` }
+      })
+      if (response?.success && response.data?.case) {
+        const c = response.data.case
+        const p = response.data.prescription
+        
+        const names = (c.patient_name || '').trim().split(/\s+/)
+        formData.value.first_name = names[0] || ''
+        formData.value.last_name = names.slice(1).join(' ') || ''
+        formData.value.gender = c.gender || ''
+        formData.value.dob = c.dob || ''
+        
+        if (p) {
+          formData.value.chiefComplaint = p.chief_complaint || ''
+          formData.value.additionalNotes = c.additional_instructions || ''
+          formData.value.packageType = p.package_id == 3 ? 'Pro' : (p.package_id == 2 ? 'Plus' : 'Basic')
+          formData.value.hasPrimaryTeeth = p.has_primary_teeth == '1'
+          formData.value.treatmentArch = p.arch || 'Both'
+          formData.value.impressionType = c.impression_type || 'upload'
+          formData.value.stlLinks = c.stl_links || ''
+          formData.value.pickupAddress = c.pickup_address || ''
+        }
+        
+        if (response.data.detailedPlan) {
+          formData.value.detailedPlan = {
+            ...formData.value.detailedPlan,
+            ...response.data.detailedPlan
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load case for editing:', e)
+    }
+  }
 })
 
 const updateFormData = (key: string, value: any) => {
@@ -200,8 +247,12 @@ const submitCase = async () => {
   Swal.fire({ title: 'Submitting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() })
 
   try {
-    // Stage 1: Send Text Data (JSON is more reliable for text fields)
-    const dataResponse: any = await $fetch('/api/doctor/cases', {
+    // Stage 1: Send Text Data
+    const endpoint = formData.value.isEdit 
+      ? `/api/doctor/cases/${formData.value.id}/update` 
+      : '/api/doctor/cases'
+      
+    const dataResponse: any = await $fetch(endpoint, {
       method: 'POST',
       headers: { 
         Authorization: `Bearer ${token.value}`, 
@@ -221,11 +272,12 @@ const submitCase = async () => {
         impression_type: formData.value.impressionType,
         stl_links: formData.value.stlLinks,
         pickup_address: formData.value.pickupAddress,
-        detailed_plan: JSON.stringify(formData.value.detailedPlan)
+        detailed_plan: JSON.stringify(formData.value.detailedPlan),
+        is_edit: formData.value.isEdit
       }
     })
 
-    const caseId = dataResponse.case_id
+    const caseId = formData.value.isEdit ? formData.value.id : dataResponse.case_id
 
     // Stage 2: Upload Files ONE BY ONE (to bypass server payload limits)
     

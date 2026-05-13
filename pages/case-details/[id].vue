@@ -59,10 +59,14 @@
               <i class="fas fa-layer-group"></i>
               {{ $t('refinement') }}
             </button>
-            <button class="flex-1 md:flex-none px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-black rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+            <NuxtLink 
+              v-if="caseData.case.status === 'incomplete submission'"
+              :to="localePath({ path: caseData.case.case_type === 'refinement' ? '/refinement-submission' : '/case-submission', query: { id: caseData.case.id, mode: 'edit' } })"
+              class="flex-1 md:flex-none px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-black rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+            >
               <i class="fas fa-edit"></i>
               {{ $t('edit') }}
-            </button>
+            </NuxtLink>
           </div>
         </div>
 

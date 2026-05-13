@@ -109,8 +109,11 @@ import StepFour from '~/components/cases/StepFour.vue'
 const { token } = useAuth()
 const route = useRoute()
 
-// If caseId is in URL, skip Step 0
+// Handle query params
 const parentIdFromUrl = route.query.caseId
+const editIdFromUrl = route.query.id
+const isEditMode = !!editIdFromUrl || route.query.mode === 'edit'
+
 const currentStep = ref(parentIdFromUrl ? 1 : 0)
 const isSubmitting = ref(false)
 
@@ -130,8 +133,9 @@ const progressWidth = computed(() => {
 
 const currentStepComponent = computed(() => steps[currentStep.value].component)
 
-// Initialize Form Data (Using camelCase for consistency with components)
+// Initialize Form Data
 const formData = ref({
+  id: editIdFromUrl || null,
   parent_id: parentIdFromUrl || null,
   // Step 1: Patient
   first_name: '',
@@ -156,7 +160,7 @@ const formData = ref({
   treatmentArch: 'Both',
 
   // Step 5: Detailed Plan
-  isEdit: route.query.mode === 'edit',
+  isEdit: isEditMode,
   detailedPlan: {
     crowdingSpacing: {},
     transverseDiscrepancy: {},
@@ -178,10 +182,11 @@ const formData = ref({
 })
 
 onMounted(async () => {
-  if (parentIdFromUrl) {
+  const targetId = editIdFromUrl || parentIdFromUrl
+  if (targetId) {
     try {
-      console.log('Fetching parent case details for ID:', parentIdFromUrl)
-      const response: any = await $fetch(`/api/doctor/case-profile/${parentIdFromUrl}`, {
+      console.log('Fetching case details for ID:', targetId)
+      const response: any = await $fetch(`/api/doctor/case-profile/${targetId}`, {
         headers: { Authorization: `Bearer ${token.value}` }
       })
       
@@ -220,6 +225,10 @@ onMounted(async () => {
           }
         }
         
+        if (editIdFromUrl) {
+            formData.value.parent_id = c.parent_id || null
+        }
+
         console.log('Successfully synced refinement data:', formData.value)
       } else {
         console.warn('Failed to sync refinement data: success was false or data missing', response)
@@ -279,14 +288,18 @@ const submitRefinement = async () => {
       detailed_plan: JSON.stringify(formData.value.detailedPlan)
     }
 
-    const dataResponse: any = await $fetch('/api/doctor/store-refinement', {
+    const endpoint = formData.value.id 
+      ? `/api/doctor/cases/${formData.value.id}/update` 
+      : '/api/doctor/store-refinement'
+
+    const dataResponse: any = await $fetch(endpoint, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
       body: payload
     })
 
     if (!dataResponse.success) throw new Error(dataResponse.message)
-    const caseId = dataResponse.case_id
+    const caseId = formData.value.id || dataResponse.case_id
 
     // Stage 2: Upload Files ONE BY ONE
     // 1. Photos

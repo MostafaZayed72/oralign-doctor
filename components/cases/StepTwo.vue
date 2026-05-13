@@ -1,16 +1,16 @@
 <template>
   <div class="space-y-4 animate-in fade-in duration-700">
     <!-- Header -->
-    <div class="border-b border-slate-100 dark:border-slate-800 pb-6">
+    <div class="border-b border-slate-100 dark:border-slate-800 pb-2">
       <div class="flex items-center justify-between">
         <div>
-          <h3 class="text-xl font-black text-[#063c31] dark:text-white flex items-center gap-2">
+          <h3 class="text-lg font-black text-[#063c31] dark:text-white flex items-center gap-2">
             <i class="fas fa-tooth text-[#063c31]"></i> Detailed Plan (optional)
           </h3>
-          <p class="text-[10px] text-[#063c31]/50 dark:text-[#063c31]/40 mt-1 font-medium">Click on each category to specify clinical details and treatment goals.</p>
+          <p class="text-[9px] text-[#063c31]/50 dark:text-[#063c31]/40 mt-0.5 font-medium">Click on each category to specify clinical details and treatment goals.</p>
         </div>
         <div class="hidden md:block">
-           <span class="px-4 py-2 rounded-full bg-brand-primary/5 text-[#063c31] text-xs font-bold uppercase tracking-widest border border-brand-primary/10">
+           <span class="px-3 py-1 rounded-full bg-brand-primary/5 text-[#063c31] text-[10px] font-bold uppercase tracking-widest border border-brand-primary/10">
              Step 5 of 6
            </span>
         </div>
@@ -18,15 +18,15 @@
     </div>
 
     <!-- Content Wrapper -->
-    <div class="flex flex-col xl:flex-row gap-8">
+    <div class="flex flex-col xl:flex-row gap-4">
       <!-- Grid -->
       <div class="flex-1">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
           <button 
             v-for="cat in categories" 
             :key="cat.id"
             @click="openCategory(cat)"
-            class="group relative p-4 rounded-[1.5rem] border-2 transition-all duration-300 text-center space-y-1 overflow-hidden flex flex-col items-center justify-center min-h-[115px] shadow-sm"
+            class="group relative p-2 rounded-[1.2rem] border-2 transition-all duration-300 text-center space-y-0.5 overflow-hidden flex flex-col items-center justify-center min-h-[85px] shadow-sm"
             :class="[
               formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0
                 ? 'bg-white dark:bg-slate-900 border-brand-primary ring-4 ring-brand-primary/5' 
@@ -124,10 +124,10 @@
     </div>
 
     <!-- Navigation -->
-    <div class="flex justify-between items-center pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
+    <div class="flex justify-between items-center pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
       <button 
         @click="$emit('prev')"
-        class="group px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-[#063c31]/50 hover:text-[#063c31] dark:hover:text-white flex items-center gap-3 transition-all"
+        class="group px-6 py-2 rounded-2xl font-black text-xs uppercase tracking-widest text-[#063c31]/50 hover:text-[#063c31] dark:hover:text-white flex items-center gap-2 transition-all"
       >
         <i class="fas fa-chevron-left transition-transform group-hover:-translate-x-1"></i>
         Previous
@@ -135,7 +135,7 @@
       
       <button 
         @click="$emit('next')"
-        class="group relative px-10 py-3 bg-[#063c31] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-[#063c31]/20 hover:scale-105 hover:shadow-[#063c31]/40 active:scale-95 transition-all duration-300 flex items-center gap-3 overflow-hidden"
+        class="group relative px-8 py-2 bg-[#063c31] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-[#063c31]/20 hover:scale-105 hover:shadow-[#063c31]/40 active:scale-95 transition-all duration-300 flex items-center gap-2 overflow-hidden"
       >
         <span>Next Step</span>
         <i class="fas fa-chevron-right transition-transform group-hover:translate-x-1"></i>
@@ -400,7 +400,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.ipr?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('ipr', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/60">Do you have any notes regarding the Interproximal reduction?</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/60" dir="ltr">Do you have any notes regarding the Interproximal reduction?</label>
                       <textarea :value="formData.detailedPlan.ipr?.notes" @input="setSingleOpt('ipr', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -450,7 +450,7 @@
                       </div>
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the Passive aligners?</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300" dir="ltr">Do you have any notes regarding the Passive aligners?</label>
                       <textarea :value="formData.detailedPlan.passiveAligner?.notes" @input="setSingleOpt('passiveAligner', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>
@@ -467,7 +467,7 @@
                       <TeethSelector :selectedTeeth="formData.detailedPlan.overcorrection?.selectedTeeth || []" :compact="true" @toggle="(tooth) => toggleTooth('overcorrection', tooth)" />
                     </div>
                     <div class="space-y-4">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300">Do you have any notes regarding the overcorrection?</label>
+                      <label class="text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300" dir="ltr">Do you have any notes regarding the overcorrection?</label>
                       <textarea :value="formData.detailedPlan.overcorrection?.notes" @input="setSingleOpt('overcorrection', 'notes', $event.target.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-sm" placeholder="Type here..."></textarea>
                     </div>
                   </div>

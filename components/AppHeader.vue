@@ -235,7 +235,7 @@ const { isAuthenticated, logout } = useAuth()
 
 const navItems = computed(() => [
   { id: 1, type: 'about-us',              name: t('about_oralign'),           sub_menus: [] },
-  { id: 2, type: 'case-studies',          name: t('cases'),                   sub_menus: [] },
+  { id: 2, type: 'dashboard',             name: t('cases'),                   sub_menus: [] },
   { id: 3, type: 'packages',              name: t('treatment_packages'),      sub_menus: [] },
   { id: 4, type: 'faqs',                  name: t('most_common_questions'),   sub_menus: [] },
   {

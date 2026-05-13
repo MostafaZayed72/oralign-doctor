@@ -197,8 +197,11 @@
                     <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-blue-500 hover:text-blue-700 transition-colors transform hover:scale-110" :title="$t('view') || 'عرض'">
                       <i class="fas fa-eye text-lg"></i>
                     </NuxtLink>
-                    <button @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" :title="$t('edit')">
+                    <NuxtLink v-if="c.status === 'incomplete submission'" :to="localePath({ path: c.case_type === 'refinement' ? '/refinement-submission' : '/case-submission', query: { id: c.id, mode: 'edit' } })" class="text-emerald-500 hover:text-emerald-700 transition-colors transform hover:scale-110" :title="$t('edit')">
                       <i class="fas fa-edit text-lg"></i>
+                    </NuxtLink>
+                    <button v-else-if="c.case_type !== 'refinement'" @click.prevent="refineCase(c.id)" class="text-amber-500 hover:text-amber-700 transition-colors transform hover:scale-110" :title="$t('refinement')">
+                      <i class="fas fa-layer-group text-lg"></i>
                     </button>
                     <button @click.prevent="deleteCase(c.id)" class="text-red-500 hover:text-red-700 transition-colors transform hover:scale-110" :title="$t('delete') || 'حذف'">
                       <i class="fas fa-trash text-lg"></i>
