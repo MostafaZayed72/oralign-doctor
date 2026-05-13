@@ -68,8 +68,8 @@
       </header>
 
       <!-- Scrollable Content Body -->
-      <div class="flex-1 overflow-y-auto p-6 lg:p-12 custom-scrollbar relative bg-gray-50/30 dark:bg-[#0b0b0b]">
-        <div class="max-w-4xl mx-auto w-full">
+      <div class="flex-1 overflow-y-auto p-4 lg:p-6 custom-scrollbar relative bg-gray-50/30 dark:bg-[#0b0b0b]">
+        <div class="max-w-7xl mx-auto w-full">
            <transition name="slide-up" mode="out-in">
              <div :key="currentStep" class="animate-in slide-in-from-bottom-4 duration-500">
                <component 

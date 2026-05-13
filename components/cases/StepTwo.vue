@@ -1,13 +1,13 @@
 <template>
-  <div class="space-y-8 animate-in fade-in duration-700">
+  <div class="space-y-4 animate-in fade-in duration-700">
     <!-- Header -->
     <div class="border-b border-slate-100 dark:border-slate-800 pb-6">
       <div class="flex items-center justify-between">
         <div>
-          <h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+          <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
             <i class="fas fa-tooth text-brand-primary"></i> Detailed Plan (optional)
           </h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 font-medium">Click on each category to specify clinical details and treatment goals.</p>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-medium">Click on each category to specify clinical details and treatment goals.</p>
         </div>
         <div class="hidden md:block">
            <span class="px-4 py-2 rounded-full bg-brand-primary/5 text-brand-primary text-xs font-bold uppercase tracking-widest border border-brand-primary/10">
@@ -21,22 +21,22 @@
     <div class="flex flex-col xl:flex-row gap-8">
       <!-- Grid -->
       <div class="flex-1">
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <button 
             v-for="cat in categories" 
             :key="cat.id"
             @click="openCategory(cat)"
-            class="group relative p-3 rounded-[1.5rem] border-2 transition-all duration-300 text-center space-y-1 overflow-hidden flex flex-col items-center justify-center min-h-[90px]"
+            class="group relative p-4 rounded-[1.5rem] border-2 transition-all duration-300 text-center space-y-1 overflow-hidden flex flex-col items-center justify-center min-h-[115px] shadow-sm"
             :class="[
               formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0
                 ? 'bg-white dark:bg-slate-900 border-brand-primary ring-4 ring-brand-primary/5' 
-                : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-brand-primary/50'
+                : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 hover:border-brand-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800'
             ]"
           >
             <!-- Background Accent -->
             <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
             
-            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors z-10">{{ cat.label }}</h4>
+            <h4 class="text-xs sm:text-sm font-black tracking-wide text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-primary transition-colors z-10 inline-block first-letter:uppercase lowercase px-2">{{ cat.label }}</h4>
             
             <!-- Selection Marker -->
             <div v-if="formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0" class="mt-1">
@@ -50,8 +50,8 @@
       </div>
 
       <!-- Additional Instructions -->
-      <div class="w-full xl:w-72 shrink-0">
-        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-6 border border-slate-100 dark:border-slate-800 h-full flex flex-col">
+      <div class="w-full xl:w-64 shrink-0">
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-[1.5rem] p-4 border border-slate-100 dark:border-slate-800 h-full flex flex-col">
           <label class="block text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 mb-3 px-1 flex items-center gap-2">
             <i class="fas fa-edit text-brand-primary"></i> Instructions
           </label>
@@ -124,10 +124,10 @@
     </div>
 
     <!-- Navigation -->
-    <div class="flex justify-between items-center pt-10 mt-10 border-t border-slate-100 dark:border-slate-800">
+    <div class="flex justify-between items-center pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
       <button 
         @click="$emit('prev')"
-        class="group px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all"
+        class="group px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all"
       >
         <i class="fas fa-chevron-left transition-transform group-hover:-translate-x-1"></i>
         Previous
@@ -135,7 +135,7 @@
       
       <button 
         @click="$emit('next')"
-        class="group relative px-10 py-4 bg-[#063c31] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-[#063c31]/20 hover:scale-105 hover:shadow-[#063c31]/40 active:scale-95 transition-all duration-300 flex items-center gap-3 overflow-hidden"
+        class="group relative px-10 py-3 bg-[#063c31] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-[#063c31]/20 hover:scale-105 hover:shadow-[#063c31]/40 active:scale-95 transition-all duration-300 flex items-center gap-3 overflow-hidden"
       >
         <span>Next Step</span>
         <i class="fas fa-chevron-right transition-transform group-hover:translate-x-1"></i>
