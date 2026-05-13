@@ -623,48 +623,83 @@
                 </div>
 
                 <!-- Accessories Wizard UI -->
-                <div class="p-5 rounded-xl border border-red-100 dark:border-red-500/30 bg-[#1e293b] dark:bg-[#0f172a] space-y-4 shadow-lg relative overflow-hidden">
+                <div class="p-8 rounded-3xl border-2 border-[#d1b06b]/30 bg-[#063c31] space-y-6 shadow-2xl relative overflow-hidden">
                     <!-- Glow effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent pointer-events-none"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#d1b06b]/5 to-transparent pointer-events-none"></div>
 
-                    <h4 class="font-bold text-red-500 flex items-center justify-center gap-2 pb-2">
-                      <i class="fas fa-magic text-lg"></i> {{ t('accessories') }}
+                    <h4 class="font-black text-[#d1b06b] flex items-center justify-center gap-3 pb-4 border-b border-[#d1b06b]/20 uppercase tracking-[0.3em] text-lg">
+                      <i class="fas fa-magic text-2xl"></i> {{ t('accessories') }}
                     </h4>
                     
-                    <!-- Tab Level 1: Buttons / Slits -->
-                    <div class="flex justify-center gap-3">
-                       <button @click.prevent="activeAccessoryType = 'Buttons'" :class="activeAccessoryType === 'Buttons' ? 'ring-2 ring-red-500/80 bg-black text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-slate-800 text-slate-400 border border-slate-700'" class="px-6 py-1.5 rounded-xl font-black text-sm transition-all">{{ t('buttons') }}</button>
-                       <button @click.prevent="activeAccessoryType = 'Slits'" :class="activeAccessoryType === 'Slits' ? 'ring-2 ring-red-500/80 bg-black text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-slate-800 text-slate-400 border border-slate-700'" class="px-6 py-1.5 rounded-xl font-black text-sm transition-all">{{ t('slits') }}</button>
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <!-- Left Side: Controls -->
+                        <div class="lg:w-1/3 space-y-8">
+                            <!-- Type Selector -->
+                            <div class="space-y-4">
+                                <label class="block text-[10px] font-black text-[#d1b06b]/60 uppercase tracking-widest text-center">{{ t('type') }}</label>
+                                <div class="flex flex-col gap-3">
+                                    <button @click.prevent="activeAccessoryType = 'Buttons'" :class="activeAccessoryType === 'Buttons' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_20px_rgba(209,176,107,0.4)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-4 rounded-2xl font-black text-sm transition-all uppercase tracking-widest">{{ t('buttons') }}</button>
+                                    <button @click.prevent="activeAccessoryType = 'Slits'" :class="activeAccessoryType === 'Slits' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_20px_rgba(209,176,107,0.4)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-4 rounded-2xl font-black text-sm transition-all uppercase tracking-widest">{{ t('slits') }}</button>
+                                </div>
+                            </div>
+
+                            <!-- Surface Selector -->
+                            <div class="space-y-4">
+                                <label class="block text-[10px] font-black text-[#d1b06b]/60 uppercase tracking-widest text-center">{{ t('surface') }}</label>
+                                <div class="flex flex-col gap-3">
+                                    <button @click.prevent="activeSurface = 'Buccal'" :class="activeSurface === 'Buccal' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.3)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all">{{ t('buccal') }}</button>
+                                    <button @click.prevent="activeSurface = 'Lingual'" :class="activeSurface === 'Lingual' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.3)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all">{{ t('lingual') }}</button>
+                                </div>
+                            </div>
+
+                            <button @click.prevent="clearActiveSection" v-if="getActiveAccessoriesCount(editForm.accessories_data) > 0" class="w-full py-4 text-xs font-black text-red-400 hover:text-red-300 border border-red-500/30 rounded-2xl transition-all flex items-center justify-center gap-3 uppercase tracking-widest bg-red-500/5 mt-8">
+                                <i class="fas fa-eraser"></i> {{ t('clear_section') }}
+                            </button>
+                        </div>
+
+                        <!-- Right Side: Teeth Grids -->
+                        <div class="lg:w-2/3 space-y-10 bg-black/20 p-6 rounded-3xl border border-white/5 shadow-inner">
+                            <!-- Upper Jaw Section -->
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 mb-2">
+                                    <span class="h-px flex-1 bg-white/10"></span>
+                                    <span class="text-[10px] font-black text-[#d1b06b] uppercase tracking-[0.4em]">{{ t('upper') }}</span>
+                                    <span class="h-px flex-1 bg-white/10"></span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                                    <div v-for="(pair, idx) in teethUpper" :key="idx" class="contents">
+                                        <button v-for="tooth in pair" :key="tooth" @click.prevent="toggleTooth(tooth, 'Upper')" 
+                                                :class="isToothSelected(tooth, 'Upper') ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.5)] scale-105 border-[#d1b06b]' : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'" 
+                                                class="py-3 rounded-xl font-black text-[11px] transition-all border-2 border-transparent">
+                                            {{ tooth }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lower Jaw Section -->
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 mb-2">
+                                    <span class="h-px flex-1 bg-white/10"></span>
+                                    <span class="text-[10px] font-black text-[#d1b06b] uppercase tracking-[0.4em]">{{ t('lower') }}</span>
+                                    <span class="h-px flex-1 bg-white/10"></span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                                    <div v-for="(pair, idx) in teethLower" :key="idx" class="contents">
+                                        <button v-for="tooth in pair" :key="tooth" @click.prevent="toggleTooth(tooth, 'Lower')" 
+                                                :class="isToothSelected(tooth, 'Lower') ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.5)] scale-105 border-[#d1b06b]' : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'" 
+                                                class="py-3 rounded-xl font-black text-[11px] transition-all border-2 border-transparent">
+                                            {{ tooth }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Tab Level 2: Upper / Lower -->
-                    <div class="flex justify-center gap-3 mt-4">
-                       <button @click.prevent="activeJaw = 'Upper'" :class="activeJaw === 'Upper' ? 'ring-2 ring-red-500/80 bg-black text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'bg-slate-800 text-slate-400 border border-slate-700'" class="px-5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all">{{ t('upper') }}</button>
-                       <button @click.prevent="activeJaw = 'Lower'" :class="activeJaw === 'Lower' ? 'ring-2 ring-red-500/80 bg-black text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'bg-slate-800 text-slate-400 border border-slate-700'" class="px-5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all">{{ t('lower') }}</button>
-                    </div>
-
-                    <!-- Tab Level 3: Buccal / Lingual -->
-                    <div class="flex justify-center gap-3 mt-2 mb-4">
-                       <button @click.prevent="activeSurface = 'Buccal'" :class="activeSurface === 'Buccal' ? 'ring-1 ring-red-500/60 bg-black text-red-400 shadow-[0_0_6px_rgba(239,68,68,0.3)]' : 'bg-slate-800/80 text-slate-500 border border-slate-700'" class="px-4 py-1 rounded-full text-[10px] font-bold uppercase transition-all">{{ t('buccal') }}</button>
-                       <button @click.prevent="activeSurface = 'Lingual'" :class="activeSurface === 'Lingual' ? 'ring-1 ring-red-500/60 bg-black text-red-400 shadow-[0_0_6px_rgba(239,68,68,0.3)]' : 'bg-slate-800/80 text-slate-500 border border-slate-700'" class="px-4 py-1 rounded-full text-[10px] font-bold uppercase transition-all">{{ t('lingual') }}</button>
-                    </div>
-
-                    <!-- Teeth Grid -->
-                    <div class="flex flex-col items-center gap-2 mt-6 pb-2 relative z-10 w-full">
-                       <div v-for="(row, idx) in (activeJaw === 'Upper' ? teethUpper : teethLower)" :key="idx" class="flex justify-center gap-4 w-full">
-                          <button @click.prevent="toggleTooth(row[0])" :class="isToothSelected(row[0]) ? 'ring-2 ring-red-500/90 bg-black text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.6)] scale-105' : 'bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 hover:text-white'" class="w-14 py-1.5 rounded-lg font-black text-xs transition-all">{{ row[0] }}</button>
-                          <button @click.prevent="toggleTooth(row[1])" :class="isToothSelected(row[1]) ? 'ring-2 ring-red-500/90 bg-black text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.6)] scale-105' : 'bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 hover:text-white'" class="w-14 py-1.5 rounded-lg font-black text-xs transition-all">{{ row[1] }}</button>
-                       </div>
-                       
-                        <!-- Clear Current Section Button -->
-                        <button @click.prevent="clearActiveSection" v-if="getActiveAccessoriesCount(editForm.accessories_data) > 0" class="mt-4 px-6 py-3 text-xs font-black text-red-500 hover:text-red-400 border-2 border-red-500/30 hover:border-red-500/50 rounded-2xl transition-all flex items-center gap-3 uppercase tracking-widest bg-red-500/5">
-                            <i class="fas fa-eraser text-lg"></i> {{ t('clear_section') }}
-                        </button>
-                    </div>
-
-                    <div class="mt-8 pt-6 border-t-2 border-slate-700/50 space-y-2">
-                        <label class="block text-xs font-black text-slate-500 uppercase tracking-widest">{{ t('accessories_notes_label') }}</label>
-                        <textarea v-model="editForm.accessories_notes" rows="3" :placeholder="t('add_accessories_placeholder')" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-700 bg-slate-800/50 text-lg font-medium outline-none focus:ring-4 focus:ring-red-500/20 text-white shadow-sm resize-none transition-all"></textarea>
+                    <div class="mt-8 pt-8 border-t border-white/10 space-y-3">
+                        <label class="block text-[10px] font-black text-[#d1b06b]/50 uppercase tracking-widest">{{ t('accessories_notes_label') }}</label>
+                        <textarea v-model="editForm.accessories_notes" rows="3" :placeholder="t('add_accessories_placeholder')" class="w-full px-6 py-4 rounded-2xl border-2 border-white/10 bg-black/20 text-lg font-medium outline-none focus:ring-4 focus:ring-[#d1b06b]/20 focus:border-[#d1b06b]/50 text-white shadow-inner resize-none transition-all"></textarea>
                     </div>
                 </div>
             </div>
@@ -1321,11 +1356,12 @@ const teethLower = [
   ['LR4', 'LL4'], ['LR5', 'LL5'], ['LR6', 'LL6'], ['LR7', 'LL7']
 ]
 
-const toggleTooth = (tooth) => {
+const toggleTooth = (tooth, jaw) => {
   if(!editForm.value.accessories_data) return
   if(!editForm.value.accessories_data[activeAccessoryType.value]) return
   
-  const currentArray = editForm.value.accessories_data[activeAccessoryType.value][activeJaw.value][activeSurface.value]
+  const targetJaw = jaw || activeJaw.value
+  const currentArray = editForm.value.accessories_data[activeAccessoryType.value][targetJaw][activeSurface.value]
   const index = currentArray.indexOf(tooth)
   if (index === -1) {
     currentArray.push(tooth)
@@ -1345,10 +1381,11 @@ const clearActiveSection = () => {
   editForm.value.accessories_data = { ...editForm.value.accessories_data }
 }
 
-const isToothSelected = (tooth) => {
+const isToothSelected = (tooth, jaw) => {
   if(!editForm.value.accessories_data) return false
   if(!editForm.value.accessories_data[activeAccessoryType.value]) return false
-  return editForm.value.accessories_data[activeAccessoryType.value][activeJaw.value][activeSurface.value].includes(tooth)
+  const targetJaw = jaw || activeJaw.value
+  return editForm.value.accessories_data[activeAccessoryType.value][targetJaw][activeSurface.value].includes(tooth)
 }
 
 const getActiveAccessoriesCount = (data) => {
