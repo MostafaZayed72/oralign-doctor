@@ -194,7 +194,7 @@ onMounted(async () => {
         
         if (p) {
           formData.value.chiefComplaint = p.chief_complaint || ''
-          formData.value.additionalNotes = c.additional_instructions || ''
+          formData.value.additionalNotes = p.additional_notes || c.additional_instructions || ''
           formData.value.packageType = p.package_id == 3 ? 'Pro' : (p.package_id == 2 ? 'Plus' : 'Basic')
           formData.value.hasPrimaryTeeth = p.has_primary_teeth == '1'
           formData.value.treatmentArch = p.arch || 'Both'
