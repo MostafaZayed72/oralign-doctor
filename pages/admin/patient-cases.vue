@@ -319,9 +319,12 @@
                   </div>
                 </td>
 
-                <!-- Package Block -->
+                                <!-- Package Block -->
                 <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200" :class="getGroupColClass(activeGroup, 3)">
-                    {{ item.package }}
+                    <div class="flex flex-col items-center justify-center gap-1">
+                        <span>{{ item.package }}</span>
+                        <span v-if="item.sub_package" class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 uppercase tracking-widest">{{ item.sub_package }}</span>
+                    </div>
                 </td>
 
                 <!-- Price List Block -->
@@ -573,7 +576,7 @@
 
             <!-- Category Assignment -->
             <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly">
-              <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ t('case_classification') }}</h4>
+              <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ locale === 'ar' ? 'الباقة' : 'Package' }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('main_category') }}</label>
@@ -793,96 +796,112 @@
             </div>
 
             <!-- Documents & Invoices Section -->
-            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/50 dark:bg-teal-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/50 dark:bg-teal-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="isDocumentsOnly || (!isTreatmentPlanOnly && !isGeneralDataOnly && !isAlignersOnly)">
               <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-file-invoice-dollar text-2xl"></i> {{ t('documents_collection') }}</h4>
+              
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- Price List Upload -->
-                  <div class="space-y-2">
+                  <div class="space-y-2 col-span-1 md:col-span-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('price_list') }}</label>
                     <div class="relative flex flex-col items-start w-full gap-4">
-                      <label v-if="!editForm.price_list_file && !editForm.price_list_url" class="flex flex-col items-center justify-center w-full h-36 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 group transition-all shadow-inner">
-                          <div class="flex flex-col items-center justify-center pt-2 pb-3">
-                               <i class="fas fa-file-pdf text-3xl text-slate-300 dark:text-slate-700 group-hover:text-blue-400 transition-all mb-2"></i>
-                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider">{{ t('upload_price_list') }}</p>
-                          </div>
-                          <input type="file" accept=".pdf,image/*" @change="onPriceListSelected" class="hidden" />
-                      </label>
-                      
-                      <!-- Preview Area -->
-                      <div v-else class="w-full relative group">
-                          <div class="w-full h-36 rounded-3xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shadow-md">
-                              <template v-if="editForm.price_list_file">
-                                  <img v-if="editForm.price_list_file.type.startsWith('image/')" :src="getFileThumbnail(editForm.price_list_file)" class="w-full h-full object-cover" />
-                                  <div v-else class="flex flex-col items-center gap-2">
-                                      <i class="fas fa-file-pdf text-4xl text-red-500"></i>
-                                      <span class="text-[10px] font-black text-slate-500 max-w-[150px] truncate">{{ editForm.price_list_file.name }}</span>
-                                  </div>
-                              </template>
-                              <template v-else-if="editForm.price_list_url">
-                                  <img v-if="editForm.price_list_url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" :src="fixFileUrl(editForm.price_list_url)" class="w-full h-full object-cover" />
-                                  <div v-else class="flex flex-col items-center gap-2">
-                                      <i class="fas fa-file-pdf text-4xl text-red-500"></i>
-                                      <span class="text-[10px] font-black text-slate-500">{{ t('pdf_document') }}</span>
-                                  </div>
-                              </template>
-                          </div>
-                          
-                          <!-- Actions Overlay -->
-                          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 rounded-3xl">
-                              <a v-if="editForm.price_list_url" :href="fixFileUrl(editForm.price_list_url)" target="_blank" class="w-12 h-12 flex items-center justify-center bg-white text-blue-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
-                                  <i class="fas fa-external-link-alt"></i>
-                              </a>
-                              <button @click.prevent="removePriceList" class="w-12 h-12 flex items-center justify-center bg-white text-red-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
-                                  <i class="fas fa-trash-alt"></i>
-                              </button>
+                      <!-- Existing Documents -->
+                      <div v-if="editForm.documents && editForm.documents.filter(d => d.type === 'price_list').length" class="flex flex-wrap gap-4 w-full">
+                          <div v-for="(doc, idx) in editForm.documents.filter(d => d.type === 'price_list')" :key="doc.id" class="w-32 h-32 relative group rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center shadow-md">
+                              <img v-if="doc.url && doc.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" :src="fixFileUrl(doc.url)" class="w-full h-full object-cover" />
+                              <div v-else class="flex flex-col items-center gap-2">
+                                  <i class="fas fa-file-pdf text-3xl text-red-500"></i>
+                                  <span class="text-[9px] font-black text-slate-500 truncate w-24 text-center">{{ doc.name || 'Document' }}</span>
+                              </div>
+                              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                  <a :href="fixFileUrl(doc.url)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white text-blue-600 rounded-lg hover:scale-110"><i class="fas fa-external-link-alt text-xs"></i></a>
+                                  <button @click.prevent="deleteExistingDocument(doc.id, editForm.documents.findIndex(d => d.id === doc.id))" class="w-8 h-8 flex items-center justify-center bg-white text-red-600 rounded-lg hover:scale-110"><i class="fas fa-trash-alt text-xs"></i></button>
+                              </div>
                           </div>
                       </div>
+
+                      <!-- Newly Added Files -->
+                      <div v-if="editForm.price_list_files && editForm.price_list_files.length" class="flex flex-wrap gap-4 w-full">
+                          <div v-for="(file, idx) in editForm.price_list_files" :key="idx" class="w-32 h-32 relative group rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center shadow-md border-blue-400 border-dashed">
+                              <img v-if="file.type && file.type.startsWith('image/')" :src="getFileThumbnail(file)" class="w-full h-full object-cover opacity-80" />
+                              <div v-else class="flex flex-col items-center gap-2">
+                                  <i class="fas fa-file text-3xl text-blue-500"></i>
+                                  <span class="text-[9px] font-black text-slate-500 truncate w-24 text-center">{{ file.name }}</span>
+                              </div>
+                              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <button @click.prevent="removePriceListFile(idx)" class="w-8 h-8 flex items-center justify-center bg-white text-red-600 rounded-lg hover:scale-110"><i class="fas fa-times text-xs"></i></button>
+                              </div>
+                          </div>
+                      </div>
+
+                      <label class="flex flex-col items-center justify-center w-full h-24 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 group transition-all shadow-inner">
+                          <div class="flex flex-col items-center justify-center pt-2 pb-2">
+                               <i class="fas fa-plus-circle text-2xl text-slate-300 dark:text-slate-700 group-hover:text-blue-400 transition-all mb-1"></i>
+                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider">{{ t('upload_price_list') || 'Upload Price List' }}</p>
+                          </div>
+                          <input type="file" accept=".pdf,image/*" multiple @change="onPriceListSelected" class="hidden" />
+                      </label>
                     </div>
                   </div>
 
-                  <!-- Receipt Upload -->
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('receipt') }}</label>
-                    <div class="relative flex flex-col items-start w-full gap-4">
-                      <label v-if="!editForm.receipt_file && !editForm.receipt_url" class="flex flex-col items-center justify-center w-full h-36 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-400 group transition-all shadow-inner">
-                          <div class="flex flex-col items-center justify-center pt-2 pb-3">
-                               <i class="fas fa-receipt text-3xl text-slate-300 dark:text-slate-700 group-hover:text-emerald-400 transition-all mb-2"></i>
-                               <p class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider">{{ t('upload_receipt') }}</p>
-                          </div>
-                          <input type="file" accept=".pdf,image/*" @change="onReceiptSelected" class="hidden" />
-                      </label>
-
-                      <!-- Preview Area -->
-                      <div v-else class="w-full relative group">
-                          <div class="w-full h-36 rounded-3xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shadow-md">
-                              <template v-if="editForm.receipt_file">
-                                  <img v-if="editForm.receipt_file.type.startsWith('image/')" :src="getFileThumbnail(editForm.receipt_file)" class="w-full h-full object-cover" />
-                                  <div v-else class="flex flex-col items-center gap-2">
-                                      <i class="fas fa-file-pdf text-4xl text-emerald-500"></i>
-                                      <span class="text-[10px] font-black text-slate-500 max-w-[150px] truncate">{{ editForm.receipt_file.name }}</span>
+                  <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 mt-4 pt-4 border-t-2 border-slate-100 dark:border-slate-800">
+                      <!-- Bill Upload -->
+                      <div class="space-y-2">
+                        <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('bills') || 'Bills' }}</label>
+                        <div class="relative flex flex-col items-start w-full gap-4">
+                          <div v-if="editForm.documents && editForm.documents.filter(d => d.type === 'bill').length" class="flex flex-wrap gap-4 w-full">
+                              <div v-for="(doc, idx) in editForm.documents.filter(d => d.type === 'bill')" :key="doc.id" class="w-full h-20 relative group rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-100 flex items-center shadow-md px-4">
+                                  <i class="fas fa-file-invoice-dollar text-2xl text-yellow-500 mr-3"></i>
+                                  <span class="text-xs font-black text-slate-600 truncate flex-1">{{ doc.name || 'Document' }}</span>
+                                  <div class="flex gap-2">
+                                      <a :href="fixFileUrl(doc.url)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white text-blue-600 rounded-lg hover:scale-110 shadow"><i class="fas fa-external-link-alt text-xs"></i></a>
+                                      <button @click.prevent="deleteExistingDocument(doc.id, editForm.documents.findIndex(d => d.id === doc.id))" class="w-8 h-8 flex items-center justify-center bg-white text-red-600 rounded-lg hover:scale-110 shadow"><i class="fas fa-trash-alt text-xs"></i></button>
                                   </div>
-                              </template>
-                              <template v-else-if="editForm.receipt_url">
-                                  <img v-if="editForm.receipt_url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" :src="fixFileUrl(editForm.receipt_url)" class="w-full h-full object-cover" />
-                                  <div v-else class="flex flex-col items-center gap-2">
-                                      <i class="fas fa-file-pdf text-4xl text-emerald-500"></i>
-                                      <span class="text-[10px] font-black text-slate-500">{{ t('pdf_document') }}</span>
-                                  </div>
-                              </template>
+                              </div>
                           </div>
-                          
-                          <!-- Actions Overlay -->
-                          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 rounded-3xl">
-                              <a v-if="editForm.receipt_url" :href="fixFileUrl(editForm.receipt_url)" target="_blank" class="w-12 h-12 flex items-center justify-center bg-white text-emerald-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
-                                  <i class="fas fa-external-link-alt"></i>
-                              </a>
-                              <button @click.prevent="removeReceipt" class="w-12 h-12 flex items-center justify-center bg-white text-red-600 rounded-xl shadow-lg hover:scale-110 transition-transform">
-                                  <i class="fas fa-trash-alt"></i>
-                              </button>
+                          <div v-if="editForm.bill_files && editForm.bill_files.length" class="flex flex-wrap gap-4 w-full">
+                              <div v-for="(file, idx) in editForm.bill_files" :key="idx" class="w-full h-20 relative group rounded-2xl border-2 border-yellow-400 border-dashed bg-yellow-50 flex items-center shadow-sm px-4">
+                                  <i class="fas fa-file text-2xl text-yellow-500 mr-3"></i>
+                                  <span class="text-xs font-black text-slate-600 truncate flex-1">{{ file.name }}</span>
+                                  <button @click.prevent="removeBillFile(idx)" class="w-8 h-8 flex items-center justify-center bg-white text-red-600 rounded-lg hover:scale-110 shadow"><i class="fas fa-times text-xs"></i></button>
+                              </div>
                           </div>
+                          <label class="flex w-full h-16 border-2 border-slate-200 border-dashed rounded-2xl cursor-pointer bg-white hover:bg-yellow-50 hover:border-yellow-400 group transition-all items-center justify-center">
+                              <i class="fas fa-plus-circle text-xl text-slate-300 group-hover:text-yellow-500 mr-2"></i>
+                              <span class="text-xs text-slate-500 font-black uppercase">{{ t('add_bill') || 'Add Bill' }}</span>
+                              <input type="file" accept=".pdf,image/*" multiple @change="onBillSelected" class="hidden" />
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+
+                      <!-- Receipt Upload -->
+                      <div class="space-y-2">
+                        <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('receipt') }}</label>
+                        <div class="relative flex flex-col items-start w-full gap-4">
+                          <div v-if="editForm.documents && editForm.documents.filter(d => d.type === 'receipt').length" class="flex flex-wrap gap-4 w-full">
+                              <div v-for="(doc, idx) in editForm.documents.filter(d => d.type === 'receipt')" :key="doc.id" class="w-full h-20 relative group rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-100 flex items-center shadow-md px-4">
+                                  <i class="fas fa-receipt text-2xl text-emerald-500 mr-3"></i>
+                                  <span class="text-xs font-black text-slate-600 truncate flex-1">{{ doc.name || 'Document' }}</span>
+                                  <div class="flex gap-2">
+                                      <a :href="fixFileUrl(doc.url)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white text-blue-600 rounded-lg hover:scale-110 shadow"><i class="fas fa-external-link-alt text-xs"></i></a>
+                                      <button @click.prevent="deleteExistingDocument(doc.id, editForm.documents.findIndex(d => d.id === doc.id))" class="w-8 h-8 flex items-center justify-center bg-white text-red-600 rounded-lg hover:scale-110 shadow"><i class="fas fa-trash-alt text-xs"></i></button>
+                                  </div>
+                              </div>
+                          </div>
+                          <div v-if="editForm.receipt_files && editForm.receipt_files.length" class="flex flex-wrap gap-4 w-full">
+                              <div v-for="(file, idx) in editForm.receipt_files" :key="idx" class="w-full h-20 relative group rounded-2xl border-2 border-emerald-400 border-dashed bg-emerald-50 flex items-center shadow-sm px-4">
+                                  <i class="fas fa-file text-2xl text-emerald-500 mr-3"></i>
+                                  <span class="text-xs font-black text-slate-600 truncate flex-1">{{ file.name }}</span>
+                                  <button @click.prevent="removeReceiptFile(idx)" class="w-8 h-8 flex items-center justify-center bg-white text-red-600 rounded-lg hover:scale-110 shadow"><i class="fas fa-times text-xs"></i></button>
+                              </div>
+                          </div>
+                          <label class="flex w-full h-16 border-2 border-slate-200 border-dashed rounded-2xl cursor-pointer bg-white hover:bg-emerald-50 hover:border-emerald-400 group transition-all items-center justify-center">
+                              <i class="fas fa-plus-circle text-xl text-slate-300 group-hover:text-emerald-500 mr-2"></i>
+                              <span class="text-xs text-slate-500 font-black uppercase">{{ t('add_receipt') || 'Add Receipt' }}</span>
+                              <input type="file" accept=".pdf,image/*" multiple @change="onReceiptSelected" class="hidden" />
+                          </label>
+                        </div>
+                      </div>
+                  </div> 
               </div>
             </div>
 
@@ -1077,8 +1096,30 @@ const cases = computed(() => {
     // Merge raw_case fields into each item so treatment plan fields are always available
     const mappedResult = rawData.map(item => {
         const rc = item.raw_case || {}
+        
+                let packageName = '-'
+        let subPackageName = ''
+        const mainCatId = item.main_category_id || rc.main_category_id
+        if (mainCatId && catResponse.value?.data) {
+            const cat = catResponse.value.data.find(c => c.id === mainCatId)
+            if (cat) {
+                packageName = locale.value === 'ar' ? (cat.name_ar || cat.name_en) : (cat.name_en || cat.name_ar)
+                const subCatId = item.sub_category_id || rc.sub_category_id
+                if (subCatId && cat.sub_categories) {
+                    const subCat = cat.sub_categories.find(s => s.id === subCatId)
+                    if (subCat) {
+                        subPackageName = locale.value === 'ar' ? (subCat.name_ar || subCat.name_en) : (subCat.name_en || subCat.name_ar)
+                    }
+                }
+            }
+        }
+
         return {
             ...item,
+            package: packageName,
+            sub_package: subPackageName,
+            main_category_id: mainCatId,
+            sub_category_id: item.sub_category_id || rc.sub_category_id || null,
             // Ensure treatment plan fields are available from raw_case if not in top-level
             treatment_plan1_status: item.treatment_plan1_status || rc.treatment_plan1_status || null,
             treatment_plan1_file: item.treatment_plan1_file || rc.treatment_plan1_file || null,
@@ -1769,11 +1810,14 @@ const closeModal = () => {
 
 // File Handlers for New Documents
 const onPriceListSelected = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-        editForm.value.price_list_file = file
+    const files = Array.from(e.target.files)
+    if (files.length) {
+        editForm.value.price_list_files = [...(editForm.value.price_list_files || []), ...files]
         editForm.value.remove_price_list = false
     }
+}
+const removePriceListFile = (index) => {
+    editForm.value.price_list_files.splice(index, 1)
 }
 const removePriceList = () => {
     editForm.value.price_list_file = null
@@ -1782,11 +1826,23 @@ const removePriceList = () => {
 }
 
 const onReceiptSelected = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-        editForm.value.receipt_file = file
+    const files = Array.from(e.target.files)
+    if (files.length) {
+        editForm.value.receipt_files = [...(editForm.value.receipt_files || []), ...files]
         editForm.value.remove_receipt = false
     }
+}
+const onBillSelected = (e) => {
+    const files = Array.from(e.target.files)
+    if (files.length) {
+        editForm.value.bill_files = [...(editForm.value.bill_files || []), ...files]
+    }
+}
+const removeReceiptFile = (index) => {
+    editForm.value.receipt_files.splice(index, 1)
+}
+const removeBillFile = (index) => {
+    editForm.value.bill_files.splice(index, 1)
 }
 const removeReceipt = () => {
     editForm.value.receipt_file = null
@@ -1815,6 +1871,19 @@ const removeAttachment1 = () => {
     editForm.value.treatment_plan1_file_url = ''
 }
 
+const deleteExistingDocument = async (docId, index) => {
+    if (!confirm(t('confirm_delete') || 'Are you sure?')) return;
+    try {
+        await $fetch(`${config.public.apiBase}/patient-cases/document/delete/${docId}`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token.value}` }
+        })
+        editForm.value.documents.splice(index, 1)
+        toast.add({ title: 'Deleted successfully', color: 'green' })
+    } catch(e) {
+        console.error(e)
+    }
+}
 const removeAttachment2 = () => {
     editForm.value.remove_attachment2 = true
     editForm.value.treatment_plan2_file_url = ''
@@ -1847,11 +1916,19 @@ const saveEdit = async () => {
     if (editForm.value.remove_attachment2) formData.append('delete_treatment_plan2', 'true')
     
     // Documents
-    if (editForm.value.price_list_file) formData.append('price_list_file', editForm.value.price_list_file)
-    if (editForm.value.receipt_file) formData.append('receipt_file', editForm.value.receipt_file)
+    if (editForm.value.price_list_files && editForm.value.price_list_files.length > 0) {
+        editForm.value.price_list_files.forEach(f => formData.append('price_list_files[]', f))
+    }
+    if (editForm.value.receipt_files && editForm.value.receipt_files.length > 0) {
+        editForm.value.receipt_files.forEach(f => formData.append('receipt_files[]', f))
+    }
+    if (editForm.value.bill_files && editForm.value.bill_files.length > 0) {
+        editForm.value.bill_files.forEach(f => formData.append('bill_files[]', f))
+    }
     if (editForm.value.remove_price_list) formData.append('delete_price_list', 'true')
     if (editForm.value.remove_receipt) formData.append('delete_receipt', 'true')
     
+    formData.append('main_category_id', editForm.value.main_category_id || 'null')
     formData.append('sub_category_id', editForm.value.sub_category_id || 'null')
     
     // Only send optional fields if they have actual values

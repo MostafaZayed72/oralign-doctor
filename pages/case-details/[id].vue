@@ -63,7 +63,7 @@
               <i v-else class="fas fa-file-pdf text-red-500 text-sm"></i>
               {{ isGeneratingPDF ? 'Preparing PDF...' : 'Download PDF' }}
             </button>
-            <button @click="refineCase" class="flex-1 md:flex-none px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+            <button v-if="authUser?.role !== 'admin'" @click="refineCase" class="flex-1 md:flex-none px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
               <i class="fas fa-layer-group text-sm"></i>
               {{ $t('refinement') }}
             </button>
