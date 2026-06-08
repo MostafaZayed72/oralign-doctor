@@ -1075,7 +1075,7 @@ const { data: catResponse } = await useFetch(`${config.public.apiBase}/categorie
 const cases = computed(() => {
     const rawData = response.value?.data || []
     // Merge raw_case fields into each item so treatment plan fields are always available
-    const result = rawData.map(item => {
+    const mappedResult = rawData.map(item => {
         const rc = item.raw_case || {}
         return {
             ...item,
@@ -1098,9 +1098,26 @@ const cases = computed(() => {
             accessories_data: item.accessories_data || rc.accessories_data || null,
             aligners_notes: item.aligners_notes || rc.aligners_notes || null,
             accessories_notes: item.accessories_notes || rc.accessories_notes || null,
+            parent_id: rc.parent_id || null
         }
     })
-    return result
+
+    // Filter to show only the latest case per patient
+    // Backend already orders by created_at desc, so the first occurrence is the latest
+    const uniqueCases = []
+    const seenPatients = new Set()
+    
+    for (const item of mappedResult) {
+        // Create a unique key combining patient name and doctor to minimize false merging
+        const uniqueKey = `${item.patient?.trim()}-${item.doctor?.trim()}`
+        
+        if (!seenPatients.has(uniqueKey)) {
+            seenPatients.add(uniqueKey)
+            uniqueCases.push(item)
+        }
+    }
+
+    return uniqueCases
 })
 const allCategories = computed(() => catResponse.value?.data || [])
 
@@ -1711,6 +1728,10 @@ const openModal = async (item) => {
         treatment_plan2_url: item.treatment_plan2_url || '',
         price_list_url: item.price_list_url || '',
         receipt_url: item.receipt_url || '',
+        documents: item.documents || [],
+        price_list_files: [],
+        bill_files: [],
+        receipt_files: [],
         remove_attachment1: false,
         remove_attachment2: false,
         remove_price_list: false,
@@ -1732,6 +1753,10 @@ const closeModal = () => {
     editForm.value.selectedFile2 = null
     editForm.value.price_list_file = null
     editForm.value.receipt_file = null
+    editForm.value.price_list_files = []
+    editForm.value.bill_files = []
+    editForm.value.receipt_files = []
+    editForm.value.documents = []
     editForm.value.remove_attachment1 = false
     editForm.value.remove_attachment2 = false
     editForm.value.remove_price_list = false

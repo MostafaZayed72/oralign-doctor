@@ -13,21 +13,21 @@
     <!-- Main Categories Grid -->
     <div class="grid grid-cols-1 gap-6">
         <div v-for="main in categories" :key="main.id" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group">
-            <div class="p-6 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-200 dark:border-slate-800">
+            <div class="p-6 flex justify-between items-center bg-[#063c31] shadow-md border-b border-transparent">
                 <div class="flex items-center gap-4">
-                    <div class="h-12 w-12 rounded-xl bg-[#d1b06b]/20 dark:bg-[#063c31]/40 text-[#063c31] dark:text-[#d1b06b] flex items-center justify-center text-xl font-bold">
+                    <div class="h-12 w-12 rounded-xl bg-white/20 text-white flex items-center justify-center text-xl font-bold shadow-sm backdrop-blur-sm border border-white/10">
                         {{ main.name_ar ? main.name_ar[0] : 'C' }}
                     </div>
                     <div>
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{ main.name_ar }}</h2>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 font-sans tracking-wide uppercase">{{ main.name_en }}</span>
+                        <h2 class="text-lg font-bold text-white">{{ main.name_ar }}</h2>
+                        <span class="text-xs text-white/80 font-sans tracking-wide uppercase">{{ main.name_en }}</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button @click="openMainModal(main)" class="h-9 w-9 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 dark:bg-indigo-500/10 dark:text-indigo-400 transition-all">
+                    <button @click="openMainModal(main)" class="h-9 w-9 flex items-center justify-center rounded-lg bg-white/10 text-white hover:bg-white/30 transition-all border border-white/5">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button @click="deleteMain(main.id)" class="h-9 w-9 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 transition-all">
+                    <button @click="deleteMain(main.id)" class="h-9 w-9 flex items-center justify-center rounded-lg bg-red-500/30 text-white hover:bg-red-500/60 transition-all border border-white/5">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>

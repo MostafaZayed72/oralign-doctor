@@ -374,8 +374,20 @@ const loadCases = async () => {
 }
 
 const filteredCases = computed(() => {
-  if (statusFilter.value === "All Cases") return allCases.value
-  return allCases.value.filter(
+  // Filter to show only the latest case per patient
+  const uniqueCases = []
+  const seenPatients = new Set()
+  
+  for (const c of allCases.value) {
+    const key = c.patient_name?.trim() || String(c.id)
+    if (!seenPatients.has(key)) {
+      seenPatients.add(key)
+      uniqueCases.push(c)
+    }
+  }
+
+  if (statusFilter.value === "All Cases") return uniqueCases
+  return uniqueCases.filter(
     (c: any) => c.status?.toLowerCase() === statusFilter.value.toLowerCase()
   )
 })

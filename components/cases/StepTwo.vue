@@ -642,11 +642,14 @@ const openCategory = (cat: any) => {
 
 const hasSelection = (catId: string) => {
   const data = props.formData.detailedPlan[catId]
-  if (!data) return false
+  if (!data || Object.keys(data).length === 0) return false
   return Object.values(data).some(val => {
-    if (Array.isArray(val)) return val.length > 0
+    if (Array.isArray(val)) {
+        const filtered = val.filter(v => v !== null && v !== undefined && v !== '' && v !== 'null')
+        return filtered.length > 0
+    }
     if (typeof val === 'boolean') return val === true
-    return !!val
+    return !!val && val !== 'null' && val !== ''
   })
 }
 

@@ -2,6 +2,14 @@
   <div class="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] pt-6 pb-6 transition-colors duration-300">
     <div class="container mx-auto px-4 max-w-7xl">
       
+      <!-- Back Button -->
+      <div class="mb-4">
+        <NuxtLink :to="localePath(authUser?.role === 'admin' ? '/admin/patient-cases' : '/dashboard')" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:scale-105 hover:text-brand-primary">
+          <i class="fas fa-arrow-left rtl:rotate-180"></i>
+          {{ $t('back') || 'رجوع' }}
+        </NuxtLink>
+      </div>
+
       <!-- Loading State -->
       <div v-if="pending" class="flex flex-col items-center justify-center min-h-[60vh]">
         <div class="w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -406,7 +414,7 @@ import Swal from 'sweetalert2'
 import TeethSelector from '~/components/cases/TeethSelector.vue'
 const route = useRoute()
 const config = useRuntimeConfig()
-const { token } = useAuth()
+const { token, user: authUser } = useAuth()
 const localePath = useLocalePath()
 const { t } = useI18n()
 
