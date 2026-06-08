@@ -222,8 +222,7 @@
 
                 <!-- Doctor Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl">
-                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight">{{ item.doctor }}</span>
+                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">\n                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
@@ -238,7 +237,7 @@
                 </td>
                 
                 <!-- Treatment Plan Status 1 Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center" :class="getGroupColClass(activeGroup, 5)">
+                <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
                             <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded shadow-md hover:bg-blue-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
@@ -262,7 +261,7 @@
                 </td>
                 
                 <!-- Treatment Plan Status 2 Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center" :class="getGroupColClass(activeGroup, 6)">
+                <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
                             <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded shadow-md hover:bg-rose-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
@@ -314,8 +313,7 @@
 
                 <!-- Doctor Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl">
-                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight">{{ item.doctor }}</span>
+                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">\n                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
@@ -370,8 +368,7 @@
 
                 <!-- Doctor Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl">
-                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight">{{ item.doctor }}</span>
+                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">\n                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
@@ -536,7 +533,7 @@
           <!-- Modal Body -->
           <div class="p-10 space-y-12 overflow-y-auto flex-1 custom-scroll bg-slate-50/20 dark:bg-slate-950/20 relative">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10" v-show="!isTreatmentPlanOnly">
                 <!-- Patient Name -->
                 <div class="space-y-2">
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('patient_name') }}</label>
@@ -569,10 +566,10 @@
                 </div>
             </div>
 
-            <hr class="border-slate-200 dark:border-slate-800 relative z-0">
+            <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly">
 
             <!-- Category Assignment -->
-            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md">
+            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly">
               <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ t('case_classification') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div class="space-y-2">
@@ -598,9 +595,9 @@
               </div>
             </div>
             
-            <hr class="border-slate-200 dark:border-slate-800 relative z-0">
+            <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
                 <!-- Aligners Delivered Section -->
                 <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 shadow-sm">
                     <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest">
@@ -704,10 +701,10 @@
                 </div>
             </div>
             
-            <hr class="border-slate-200 dark:border-slate-800 relative z-0">
+            <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
 
             <!-- Plan 1 Section -->
-            <div class="p-8 rounded-3xl border-2 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md">
+            <div class="p-8 rounded-3xl border-2 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
               <h4 class="text-xl font-black text-blue-800 dark:text-blue-400 flex items-center gap-3 pb-4 border-b-2 border-blue-200 dark:border-blue-800/50 uppercase tracking-widest"><i class="fas fa-file-medical-alt text-2xl"></i> {{ t('treatment_plan_1') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- File Upload Plan 1 -->
@@ -750,7 +747,7 @@
             </div>
 
             <!-- Plan 2 Section -->
-            <div class="p-8 rounded-3xl border-2 border-purple-100 dark:border-purple-900/30 bg-purple-50/50 dark:bg-purple-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md">
+            <div class="p-8 rounded-3xl border-2 border-purple-100 dark:border-purple-900/30 bg-purple-50/50 dark:bg-purple-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
               <h4 class="text-xl font-black text-purple-800 dark:text-purple-400 flex items-center gap-3 pb-4 border-b-2 border-purple-200 dark:border-purple-800/50 uppercase tracking-widest"><i class="fas fa-paperclip text-2xl"></i> {{ t('treatment_plan_2') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- File Upload Plan 2 -->
@@ -793,7 +790,7 @@
             </div>
 
             <!-- Documents & Invoices Section -->
-            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/50 dark:bg-teal-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md">
+            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/50 dark:bg-teal-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
               <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-file-invoice-dollar text-2xl"></i> {{ t('documents_collection') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- Price List Upload -->
@@ -1559,6 +1556,8 @@ const activeNoteTitle = ref('')
 
 // Modal Dialog Logic
 const isModalOpen = ref(false)
+const isTreatmentPlanOnly = ref(false)
+const isGeneralDataOnly = ref(false)
 const isSaving = ref(false)
 const editForm = ref({
     id: null,
@@ -1678,7 +1677,9 @@ watch([
   }
 }, { deep: true })
 
-const openModal = async (item) => {
+const openModal = async (item, treatmentOnly = false, generalDataOnly = false) => {
+    isTreatmentPlanOnly.value = treatmentOnly;
+    isGeneralDataOnly.value = generalDataOnly;
     // Mark as read if not already read
     if (item.is_admin_read === 0) {
         // Update local object immediately for UI feedback
