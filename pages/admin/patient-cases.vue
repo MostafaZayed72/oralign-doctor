@@ -222,7 +222,8 @@
 
                 <!-- Doctor Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">\n                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
+                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
@@ -313,7 +314,8 @@
 
                 <!-- Doctor Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">\n                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
+                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
@@ -368,7 +370,8 @@
 
                 <!-- Doctor Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">\n                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
+                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                    <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
