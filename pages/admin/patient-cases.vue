@@ -620,11 +620,11 @@
             
             <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <div class="grid grid-cols-1 gap-6 relative z-10" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
                 <!-- Aligners Delivered Section -->
                 <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 shadow-sm">
                     <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest">
-                      <i class="fas fa-box-open text-2xl"></i> {{ t('aligners_delivered') }}
+                       <i class="fas fa-box-open text-2xl"></i> {{ t('aligners_delivered') }}
                     </h4>
                     <div class="grid grid-cols-2 gap-8 mb-6">
                         <div class="space-y-2">
@@ -653,13 +653,13 @@
                     
                     <div class="flex flex-col lg:flex-row gap-8">
                         <!-- Left Side: Controls -->
-                        <div class="lg:w-1/3 space-y-8">
+                        <div class="lg:w-1/4 space-y-8">
                             <!-- Type Selector -->
                             <div class="space-y-4">
                                 <label class="block text-[10px] font-black text-[#d1b06b]/60 uppercase tracking-widest text-center">{{ t('type') }}</label>
                                 <div class="flex flex-col gap-3">
-                                    <button @click.prevent="activeAccessoryType = 'Buttons'" :class="activeAccessoryType === 'Buttons' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_20px_rgba(209,176,107,0.4)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-4 rounded-2xl font-black text-sm transition-all uppercase tracking-widest">{{ t('buttons') }}</button>
-                                    <button @click.prevent="activeAccessoryType = 'Slits'" :class="activeAccessoryType === 'Slits' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_20px_rgba(209,176,107,0.4)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-4 rounded-2xl font-black text-sm transition-all uppercase tracking-widest">{{ t('slits') }}</button>
+                                    <button @click.prevent="activeAccessoryType = 'Buttons'" :class="activeAccessoryType === 'Buttons' ? 'bg-amber-500 text-white shadow-[0_0_20px_rgba(245,158,11,0.45)] border-amber-400' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-4 rounded-2xl font-black text-sm transition-all uppercase tracking-widest border-2 border-transparent">{{ t('buttons') }}</button>
+                                    <button @click.prevent="activeAccessoryType = 'Slits'" :class="activeAccessoryType === 'Slits' ? 'bg-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.45)] border-cyan-400' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-4 rounded-2xl font-black text-sm transition-all uppercase tracking-widest border-2 border-transparent">{{ t('slits') }}</button>
                                 </div>
                             </div>
 
@@ -667,8 +667,8 @@
                             <div class="space-y-4">
                                 <label class="block text-[10px] font-black text-[#d1b06b]/60 uppercase tracking-widest text-center">{{ t('surface') }}</label>
                                 <div class="flex flex-col gap-3">
-                                    <button @click.prevent="activeSurface = 'Buccal'" :class="activeSurface === 'Buccal' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.3)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all">{{ t('buccal') }}</button>
-                                    <button @click.prevent="activeSurface = 'Lingual'" :class="activeSurface === 'Lingual' ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.3)]' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all">{{ t('lingual') }}</button>
+                                    <button @click.prevent="activeSurface = 'Buccal'" :class="activeSurface === 'Buccal' ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.35)] border-emerald-400' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all border-2 border-transparent">{{ t('buccal') }}</button>
+                                    <button @click.prevent="activeSurface = 'Lingual'" :class="activeSurface === 'Lingual' ? 'bg-violet-500 text-white shadow-[0_0_15px_rgba(139,92,246,0.35)] border-violet-400' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'" class="w-full py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all border-2 border-transparent">{{ t('lingual') }}</button>
                                 </div>
                             </div>
 
@@ -678,38 +678,74 @@
                         </div>
 
                         <!-- Right Side: Teeth Grids -->
-                        <div class="lg:w-2/3 space-y-10 bg-black/20 p-6 rounded-3xl border border-white/5 shadow-inner">
+                        <div class="lg:w-3/4 space-y-10 bg-black/20 p-6 rounded-3xl border border-white/5 shadow-inner overflow-x-auto">
                             <!-- Upper Jaw Section -->
-                            <div class="space-y-4">
+                            <div class="space-y-4 min-w-[320px]">
                                 <div class="flex items-center gap-4 mb-2">
                                     <span class="h-px flex-1 bg-white/10"></span>
                                     <span class="text-[10px] font-black text-[#d1b06b] uppercase tracking-[0.4em]">{{ t('upper') }}</span>
                                     <span class="h-px flex-1 bg-white/10"></span>
                                 </div>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                                    <div v-for="(pair, idx) in teethUpper" :key="idx" class="contents">
-                                        <button v-for="tooth in pair" :key="tooth" @click.prevent="toggleTooth(tooth, 'Upper')" 
-                                                :class="isToothSelected(tooth, 'Upper') ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.5)] scale-105 border-[#d1b06b]' : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'" 
-                                                class="py-3 rounded-xl font-black text-[11px] transition-all border-2 border-transparent">
-                                            {{ tooth }}
+                                
+                                <div class="flex items-center justify-center gap-1.5 md:gap-2.5 w-full">
+                                    <!-- Right side teeth -->
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
+                                        <button v-for="tooth in upperRightTeeth" :key="tooth" @click.prevent="toggleTooth(tooth, 'Upper')" 
+                                                :class="getToothClass(tooth, 'Upper')" 
+                                                class="w-8 h-8 sm:w-9 sm:h-9 md:w-10.5 md:h-10.5 rounded-lg sm:rounded-xl font-black text-[7.5px] sm:text-[9px] md:text-[10px] transition-all border-2 flex flex-col items-center justify-center relative pb-1 pt-0.5">
+                                            <span class="leading-none">{{ tooth }}</span>
+                                            <!-- Active indicator dot (Messenger style) -->
+                                            <span v-if="isToothSelected(tooth, 'Upper')" class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Vertical Divider -->
+                                    <div class="w-0.5 h-7 sm:h-8 md:h-10 bg-white/20 rounded"></div>
+                                    
+                                    <!-- Left side teeth -->
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
+                                        <button v-for="tooth in upperLeftTeeth" :key="tooth" @click.prevent="toggleTooth(tooth, 'Upper')" 
+                                                :class="getToothClass(tooth, 'Upper')" 
+                                                class="w-8 h-8 sm:w-9 sm:h-9 md:w-10.5 md:h-10.5 rounded-lg sm:rounded-xl font-black text-[7.5px] sm:text-[9px] md:text-[10px] transition-all border-2 flex flex-col items-center justify-center relative pb-1 pt-0.5">
+                                            <span class="leading-none">{{ tooth }}</span>
+                                            <!-- Active indicator dot (Messenger style) -->
+                                            <span v-if="isToothSelected(tooth, 'Upper')" class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Lower Jaw Section -->
-                            <div class="space-y-4">
+                            <div class="space-y-4 min-w-[320px]">
                                 <div class="flex items-center gap-4 mb-2">
                                     <span class="h-px flex-1 bg-white/10"></span>
                                     <span class="text-[10px] font-black text-[#d1b06b] uppercase tracking-[0.4em]">{{ t('lower') }}</span>
                                     <span class="h-px flex-1 bg-white/10"></span>
                                 </div>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                                    <div v-for="(pair, idx) in teethLower" :key="idx" class="contents">
-                                        <button v-for="tooth in pair" :key="tooth" @click.prevent="toggleTooth(tooth, 'Lower')" 
-                                                :class="isToothSelected(tooth, 'Lower') ? 'bg-[#d1b06b] text-[#063c31] shadow-[0_0_15px_rgba(209,176,107,0.5)] scale-105 border-[#d1b06b]' : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'" 
-                                                class="py-3 rounded-xl font-black text-[11px] transition-all border-2 border-transparent">
-                                            {{ tooth }}
+                                
+                                <div class="flex items-center justify-center gap-1.5 md:gap-2.5 w-full">
+                                    <!-- Right side teeth -->
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
+                                        <button v-for="tooth in lowerRightTeeth" :key="tooth" @click.prevent="toggleTooth(tooth, 'Lower')" 
+                                                :class="getToothClass(tooth, 'Lower')" 
+                                                class="w-8 h-8 sm:w-9 sm:h-9 md:w-10.5 md:h-10.5 rounded-lg sm:rounded-xl font-black text-[7.5px] sm:text-[9px] md:text-[10px] transition-all border-2 flex flex-col items-center justify-center relative pb-1 pt-0.5">
+                                            <span class="leading-none">{{ tooth }}</span>
+                                            <!-- Active indicator dot (Messenger style) -->
+                                            <span v-if="isToothSelected(tooth, 'Lower')" class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Vertical Divider -->
+                                    <div class="w-0.5 h-7 sm:h-8 md:h-10 bg-white/20 rounded"></div>
+                                    
+                                    <!-- Left side teeth -->
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
+                                        <button v-for="tooth in lowerLeftTeeth" :key="tooth" @click.prevent="toggleTooth(tooth, 'Lower')" 
+                                                :class="getToothClass(tooth, 'Lower')" 
+                                                class="w-8 h-8 sm:w-9 sm:h-9 md:w-10.5 md:h-10.5 rounded-lg sm:rounded-xl font-black text-[7.5px] sm:text-[9px] md:text-[10px] transition-all border-2 flex flex-col items-center justify-center relative pb-1 pt-0.5">
+                                            <span class="leading-none">{{ tooth }}</span>
+                                            <!-- Active indicator dot (Messenger style) -->
+                                            <span v-if="isToothSelected(tooth, 'Lower')" class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
                                         </button>
                                     </div>
                                 </div>
@@ -1498,14 +1534,11 @@ const activeAccessoryType = ref('Buttons')
 const activeJaw = ref('Upper')
 const activeSurface = ref('Buccal')
 
-const teethUpper = [
-  ['UR1', 'UL1'], ['UR2', 'UL2'], ['UR3', 'UL3'],
-  ['UR4', 'UL4'], ['UR5', 'UL5'], ['UR6', 'UL6'], ['UR7', 'UL7']
-]
-const teethLower = [
-  ['LR1', 'LL1'], ['LR2', 'LL2'], ['LR3', 'LL3'],
-  ['LR4', 'LL4'], ['LR5', 'LL5'], ['LR6', 'LL6'], ['LR7', 'LL7']
-]
+const upperRightTeeth = ['UR7', 'UR6', 'UR5', 'UR4', 'UR3', 'UR2', 'UR1']
+const upperLeftTeeth = ['UL1', 'UL2', 'UL3', 'UL4', 'UL5', 'UL6', 'UL7']
+
+const lowerRightTeeth = ['LR7', 'LR6', 'LR5', 'LR4', 'LR3', 'LR2', 'LR1']
+const lowerLeftTeeth = ['LL1', 'LL2', 'LL3', 'LL4', 'LL5', 'LL6', 'LL7']
 
 const toggleTooth = (tooth, jaw) => {
   if(!editForm.value.accessories_data) return
@@ -1537,6 +1570,19 @@ const isToothSelected = (tooth, jaw) => {
   if(!editForm.value.accessories_data[activeAccessoryType.value]) return false
   const targetJaw = jaw || activeJaw.value
   return editForm.value.accessories_data[activeAccessoryType.value][targetJaw][activeSurface.value].includes(tooth)
+}
+
+const getToothClass = (tooth, jaw) => {
+  const isSelected = isToothSelected(tooth, jaw)
+  if (!isSelected) {
+    return 'bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+  }
+  
+  if (activeAccessoryType.value === 'Buttons') {
+    return 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.25)] scale-105'
+  } else {
+    return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.25)] scale-105'
+  }
 }
 
 const getActiveAccessoriesCount = (data) => {
