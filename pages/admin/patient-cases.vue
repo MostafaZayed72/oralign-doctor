@@ -1165,8 +1165,8 @@ const getRowClass = (item) => {
   }
   if (activeGroup.value === 'Finance') {
     return isUnread 
-      ? 'bg-orange-100/90 dark:bg-amber-900/20' 
-      : 'bg-orange-50/50 dark:bg-amber-950/20'
+      ? 'bg-[#d1b06b]/20 dark:bg-[#d1b06b]/15' 
+      : 'bg-[#d1b06b]/5 dark:bg-[#d1b06b]/5'
   }
   if (activeGroup.value === 'Laboratory') {
     return isUnread 
@@ -1180,7 +1180,7 @@ const getGroupButtonClass = (group) => {
   if (activeGroup.value !== group) return 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all font-black'
   
   if (group === 'Virtual Planning') return 'bg-gradient-to-b from-emerald-400 to-emerald-600 text-white shadow-[0_5px_0_rgb(6,95,70),0_10px_20px_rgba(16,185,129,0.3)] border-t-2 border-white/30 active:translate-y-1 active:shadow-none scale-105 font-black'
-  if (group === 'Finance') return 'bg-gradient-to-b from-orange-400 to-orange-600 text-white shadow-[0_5px_0_rgb(154,52,18),0_10px_20px_rgba(249,115,22,0.3)] border-t-2 border-white/30 active:translate-y-1 active:shadow-none scale-105 font-black'
+  if (group === 'Finance') return 'bg-gradient-to-b from-[#d1b06b] to-[#b89650] text-white shadow-[0_5px_0_#9a7e43,0_10px_20px_rgba(209,176,107,0.3)] border-t-2 border-white/30 active:translate-y-1 active:shadow-none scale-105 font-black'
   if (group === 'Laboratory') return 'bg-gradient-to-b from-blue-400 to-blue-600 text-white shadow-[0_5px_0_rgb(30,64,175),0_10px_20px_rgba(59,130,246,0.3)] border-t-2 border-white/30 active:translate-y-1 active:shadow-none scale-105 font-black'
   return ''
 }
@@ -1476,7 +1476,7 @@ const downloadExcel = async () => {
 // Dynamic UI Styling Helpers
 const getGroupHeaderClass = (group) => {
   if (group === 'Virtual Planning') return 'bg-emerald-600 text-white font-black shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]'
-  if (group === 'Finance') return 'bg-orange-500 text-white font-black shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]'
+  if (group === 'Finance') return 'bg-[#d1b06b] text-white font-black shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]'
   if (group === 'Laboratory') return 'bg-blue-600 text-white font-black shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]'
   return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200'
 }
@@ -1486,7 +1486,7 @@ const getGroupColClass = (group, index) => {
   
   // Odd columns get a theme-based subtle background
   if (group === 'Virtual Planning') return 'bg-emerald-500/5 dark:bg-emerald-400/5'
-  if (group === 'Finance') return 'bg-orange-500/5 dark:bg-orange-400/5'
+  if (group === 'Finance') return 'bg-[#d1b06b]/5 dark:bg-[#d1b06b]/5'
   if (group === 'Laboratory') return 'bg-blue-500/5 dark:bg-blue-400/5'
   
   return 'bg-slate-500/5'

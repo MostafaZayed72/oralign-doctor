@@ -49,28 +49,7 @@
         </NuxtLink>
       </nav>
 
-      <!-- Bottom Profile/Settings -->
-      <div class="mt-auto border-t border-slate-800 pt-6">
-        <button 
-          @click="logout"
-          class="flex items-center w-full px-4 py-3 rounded-xl transition-all duration-300 group hover:bg-rose-500/10 text-slate-400 hover:text-rose-500"
-          :class="isCollapsed ? 'justify-center' : 'gap-3'"
-        >
-          <i class="fas fa-sign-out-alt text-lg"></i>
-          <span v-if="!isCollapsed" class="font-bold tracking-tight">{{ t('logout') }}</span>
-        </button>
-      </div>
     </div>
-
-    <!-- Confirm Dialog -->
-    <AdminConfirmDialog 
-      :is-open="showLogoutDialog"
-      :title="t('logout')"
-      :message="t('logout_confirm')"
-      icon="fas fa-sign-out-alt"
-      @confirm="handleLogout"
-      @cancel="showLogoutDialog = false"
-    />
   </aside>
 
   <!-- Mobile Overlay -->
@@ -91,7 +70,7 @@ defineProps({
 defineEmits(['close'])
 
 const { t, locale } = useI18n()
-const { token, logout: authLogout } = useAuth()
+const { token } = useAuth()
 const config = useRuntimeConfig()
 const isRtl = computed(() => locale.value === 'ar')
 const dir = computed(() => (isRtl.value ? 'rtl' : 'ltr'))
@@ -122,17 +101,6 @@ onMounted(() => {
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
   localStorage.setItem('sidebar_is_collapsed', isCollapsed.value)
-}
-
-const showLogoutDialog = ref(false)
-
-const logout = () => {
-  showLogoutDialog.value = true
-}
-
-const handleLogout = async () => {
-  showLogoutDialog.value = false
-  await authLogout()
 }
 
 const localePath = useLocalePath()
