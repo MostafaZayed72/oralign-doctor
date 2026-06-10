@@ -233,7 +233,7 @@
                 </td>
 
                 <!-- Date Block -->
-                <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 4)">
+                <td @click.stop class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-default" :class="getGroupColClass(activeGroup, 4)">
                   <span class="text-slate-700 dark:text-slate-300 text-[13px] font-black">{{ item.date_modified.split(' ')[0] }}</span>
                 </td>
                 
@@ -241,9 +241,9 @@
                 <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-blue-500 rounded shadow-md hover:bg-blue-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
-                                <i class="fas fa-paperclip text-[10px]"></i>
-                                <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملف' : 'File' }}</span>
+                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
+                                <i class="fas fa-file-pdf text-red-500 text-sm"></i>
+                                <span class="text-[10px] font-bold">{{ t('download_pdf') }}</span>
                             </a>
                             <a v-if="item.treatment_plan1_url" :href="item.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
@@ -265,9 +265,9 @@
                 <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-rose-500 rounded shadow-md hover:bg-rose-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
-                                <i class="fas fa-paperclip text-[10px]"></i>
-                                <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملف' : 'File' }}</span>
+                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
+                                <i class="fas fa-file-pdf text-red-500 text-sm"></i>
+                                <span class="text-[10px] font-bold">{{ t('download_pdf') }}</span>
                             </a>
                             <a v-if="item.treatment_plan2_url" :href="item.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>

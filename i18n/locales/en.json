@@ -89,6 +89,7 @@
     "col_tp1": "TP 1",
     "col_tp2": "TP 2",
     "col_pdf": "PDF",
+    "download_pdf": "Download PDF",
     "no_cases": "No Submitted Cases created yet!",
     "please_login": "Please log in first",
     "failed_load_cases": "Failed to load cases",

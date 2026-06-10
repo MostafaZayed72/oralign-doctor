@@ -89,6 +89,7 @@
     "col_tp1": "خطة العلاج 1",
     "col_tp2": "خطة العلاج 2",
     "col_pdf": "PDF",
+    "download_pdf": "تحميل PDF",
     "no_cases": "لا توجد حالات مقدمة بعد!",
     "please_login": "يرجى تسجيل الدخول أولاً",
     "failed_load_cases": "فشل تحميل الحالات",
