@@ -241,9 +241,8 @@
                 <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-full h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
-                                <i class="fas fa-file-pdf text-red-500 text-sm"></i>
-                                <span class="text-[10px] font-bold">{{ t('download_pdf') }}</span>
+                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
+                                <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
                             <a v-if="item.treatment_plan1_url" :href="item.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
@@ -265,9 +264,8 @@
                 <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-full h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض المرفق' : 'View Attachment'">
-                                <i class="fas fa-file-pdf text-red-500 text-sm"></i>
-                                <span class="text-[10px] font-bold">{{ t('download_pdf') }}</span>
+                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
+                                <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
                             <a v-if="item.treatment_plan2_url" :href="item.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
@@ -329,12 +327,21 @@
 
                 <!-- Price List Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 4)">
-                    <a v-if="item.price_list_url" :href="fixFileUrl(item.price_list_url)" target="_blank" class="flex items-center justify-center w-full min-h-[70px] bg-indigo-500 text-white transition-all duration-300 gap-2 px-3 bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl hover:scale-105 hover:z-30 hover:shadow-2xl z-10">
-                        <i class="fas fa-file-invoice text-xs"></i>
-                        <span class="text-[11px] font-black uppercase tracking-widest">{{ locale === 'ar' ? 'قائمة الأسعار' : 'Price List' }}</span>
-                    </a>
-                    <div v-else class="min-h-[70px] flex items-center justify-center">
-                        <span class="text-slate-400 font-bold">-</span>
+                    <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[70px]">
+                        <!-- Old price_list_url if exists -->
+                        <button v-if="item.price_list_url" @click.stop="openPreview(item.price_list_url, locale === 'ar' ? 'قائمة الأسعار' : 'Price List')" class="w-10 h-10 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة قائمة الأسعار' : 'Preview Price List'">
+                            <i class="fas fa-file-invoice text-sm"></i>
+                        </button>
+                        <!-- Documents of type price_list -->
+                        <template v-if="item.documents && item.documents.filter(d => d.type === 'price_list').length">
+                            <button v-for="(doc, dIdx) in item.documents.filter(d => d.type === 'price_list')" :key="doc.id" @click.stop="openPreview(doc.url, doc.name || (locale === 'ar' ? 'قائمة الأسعار' : 'Price List'))" class="w-10 h-10 flex flex-col items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-indigo-600 dark:text-indigo-400 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:scale-110" :title="doc.name || 'Price List'">
+                                <i v-if="doc.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" class="fas fa-image text-sm"></i>
+                                <i v-else class="fas fa-file-pdf text-sm text-red-500"></i>
+                                <span class="text-[8px] font-black truncate w-8 text-center">{{ dIdx + 1 }}</span>
+                            </button>
+                        </template>
+                        <!-- If none -->
+                        <span v-if="!item.price_list_url && (!item.documents || !item.documents.filter(d => d.type === 'price_list').length)" class="text-slate-400 font-bold">-</span>
                     </div>
                 </td>
 
@@ -345,12 +352,22 @@
 
                 <!-- Receipt Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 6)">
-                    <a v-if="item.receipt_url" :href="fixFileUrl(item.receipt_url)" target="_blank" class="flex items-center justify-center w-full min-h-[70px] bg-emerald-500 text-white transition-all duration-300 gap-2 px-3 bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl hover:scale-105 hover:z-30 hover:shadow-2xl z-10">
-                        <i class="fas fa-receipt text-xs"></i>
-                        <span class="text-[11px] font-black uppercase tracking-widest">{{ locale === 'ar' ? 'الفاتورة' : 'Receipt' }}</span>
-                    </a>
-                    <div v-else class="min-h-[70px] flex items-center justify-center">
-                        <span class="text-slate-400 font-bold">-</span>
+                    <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[70px]">
+                        <!-- Old receipt_url if exists -->
+                        <button v-if="item.receipt_url" @click.stop="openPreview(item.receipt_url, locale === 'ar' ? 'الفاتورة' : 'Receipt')" class="w-10 h-10 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة الفاتورة' : 'Preview Receipt'">
+                            <i class="fas fa-receipt text-sm"></i>
+                        </button>
+                        <!-- Documents of type receipt or bill -->
+                        <template v-if="item.documents && item.documents.filter(d => d.type === 'receipt' || d.type === 'bill').length">
+                            <button v-for="(doc, dIdx) in item.documents.filter(d => d.type === 'receipt' || d.type === 'bill')" :key="doc.id" @click.stop="openPreview(doc.url, doc.name || (doc.type === 'receipt' ? (locale === 'ar' ? 'الفاتورة' : 'Receipt') : (locale === 'ar' ? 'سند قبض' : 'Bill')))" class="w-10 h-10 flex flex-col items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:scale-110" :class="doc.type === 'receipt' ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'" :title="doc.name || (doc.type === 'receipt' ? 'Receipt' : 'Bill')">
+                                <i v-if="doc.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)" class="fas fa-image text-sm"></i>
+                                <i v-else-if="doc.type === 'receipt'" class="fas fa-receipt text-sm text-emerald-500"></i>
+                                <i v-else class="fas fa-file-invoice-dollar text-sm text-amber-500"></i>
+                                <span class="text-[8px] font-black truncate w-8 text-center">{{ dIdx + 1 }}</span>
+                            </button>
+                        </template>
+                        <!-- If none -->
+                        <span v-if="!item.receipt_url && (!item.documents || !item.documents.filter(d => d.type === 'receipt' || d.type === 'bill').length)" class="text-slate-400 font-bold">-</span>
                     </div>
                 </td>
               </template>
@@ -992,6 +1009,33 @@
         </div>
       </div>
     </transition>
+
+    <!-- Central Preview Modal -->
+    <transition name="fade">
+      <div v-if="isPreviewOpen" class="fixed inset-0 z-[150] flex flex-col items-center justify-center p-4 bg-slate-900/95 backdrop-blur-md transition-all duration-300" @click="closePreview">
+        <div class="relative max-w-[95vw] max-h-[85vh] flex flex-col items-center justify-center bg-transparent" @click.stop>
+          
+          <!-- Close Button -->
+          <button @click="closePreview" class="absolute -top-14 ltr:right-0 rtl:left-0 text-slate-300 hover:text-white bg-slate-800/90 hover:bg-slate-700/90 h-10 w-10 rounded-full flex items-center justify-center transition-all shadow-lg border border-slate-700/50 hover:scale-110">
+            <i class="fas fa-times text-lg"></i>
+          </button>
+          
+          <!-- Title / Info -->
+          <div class="absolute -top-14 ltr:left-0 rtl:right-0 text-white bg-slate-800/90 px-4 py-2 rounded-xl text-xs font-black tracking-widest border border-slate-700/50 max-w-[60vw] truncate">
+            {{ previewFileName }}
+          </div>
+
+          <!-- Image Preview -->
+          <img v-if="previewFileType === 'image'" :src="previewFileUrl" class="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl bg-white border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200" />
+          
+          <!-- PDF / Document Preview -->
+          <div v-else-if="previewFileType === 'pdf'" class="w-[90vw] h-[80vh] md:w-[75vw] md:h-[78vh] bg-white rounded-2xl overflow-hidden shadow-2xl relative border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+            <iframe :src="previewFileUrl" class="w-full h-full border-none"></iframe>
+          </div>
+          
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -1014,6 +1058,36 @@ const headers = computed(() => ({
 }))
 
 const activeGroup = ref('Virtual Planning')
+
+const isPreviewOpen = ref(false)
+const previewFileUrl = ref('')
+const previewFileType = ref('')
+const previewFileName = ref('')
+
+const openPreview = (url, name = '') => {
+  if (!url) return
+  const fixedUrl = fixFileUrl(url)
+  previewFileUrl.value = fixedUrl
+  previewFileName.value = name
+  
+  if (fixedUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+    previewFileType.value = 'image'
+  } else if (fixedUrl.match(/\.pdf$/i)) {
+    previewFileType.value = 'pdf'
+  } else {
+    // Default fallback to iframe
+    previewFileType.value = 'pdf'
+  }
+  
+  isPreviewOpen.value = true
+}
+
+const closePreview = () => {
+  isPreviewOpen.value = false
+  previewFileUrl.value = ''
+  previewFileType.value = ''
+  previewFileName.value = ''
+}
 
 // Fix file URLs from cPanel server
 const fixFileUrl = (url) => {
@@ -1132,6 +1206,7 @@ const cases = computed(() => {
             // Finance fields
             price_list_url: item.price_list_url || rc.price_list_url || null,
             receipt_url: item.receipt_url || rc.receipt_url || null,
+            documents: item.documents || rc.documents || [],
             // Lab fields
             lab_status: item.lab_status || rc.lab_status || null,
             aligners_upper: item.aligners_upper ?? rc.aligners_upper ?? null,
@@ -1872,14 +1947,33 @@ const removeAttachment1 = () => {
 }
 
 const deleteExistingDocument = async (docId, index) => {
-    if (!confirm(t('confirm_delete') || 'Are you sure?')) return;
+    const result = await Swal.fire({
+        title: locale.value === 'ar' ? 'هل أنت متأكد؟' : 'Are you sure?',
+        text: locale.value === 'ar' ? 'لن تتمكن من استرجاع هذا الملف!' : 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: locale.value === 'ar' ? 'نعم، احذفه!' : 'Yes, delete it!',
+        cancelButtonText: locale.value === 'ar' ? 'إلغاء' : 'Cancel'
+    })
+    
+    if (!result.isConfirmed) return;
+
     try {
         await $fetch(`${config.public.apiBase}/patient-cases/document/delete/${docId}`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token.value}` }
         })
         editForm.value.documents.splice(index, 1)
-        toast.add({ title: 'Deleted successfully', color: 'green' })
+        await refresh()
+        Swal.fire({
+            title: locale.value === 'ar' ? 'تم الحذف بنجاح!' : 'Deleted successfully!',
+            icon: 'success',
+            confirmButtonColor: '#10b981',
+            timer: 1500,
+            showConfirmButton: false
+        })
     } catch(e) {
         console.error(e)
     }
