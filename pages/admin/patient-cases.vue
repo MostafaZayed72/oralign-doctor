@@ -556,18 +556,18 @@
           <!-- Modal Body -->
           <div class="p-10 space-y-12 overflow-y-auto flex-1 custom-scroll bg-slate-50/20 dark:bg-slate-950/20 relative">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10" v-show="!isTreatmentPlanOnly">
+            <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10" v-show="!isTreatmentPlanOnly">
                 <!-- Patient Name -->
                 <div class="space-y-2">
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('patient_name') }}</label>
-                  <input type="text" v-model="editForm.patient" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-sm">
+                  <input type="text" v-model="editForm.patient" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-inner">
                 </div>
 
                 <!-- General Status -->
                 <div class="space-y-2">
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('general_status') }}</label>
                   <div class="relative">
-                      <select v-model="editForm.status" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-sm appearance-none cursor-pointer">
+                      <select v-model="editForm.status" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-inner appearance-none cursor-pointer">
                         <option v-if="editForm.status && !['complete submission', 'incomplete submission', 'rejected'].includes(editForm.status)" :value="editForm.status" disabled>
                           {{ editForm.status }}
                         </option>
@@ -583,7 +583,7 @@
                 <div class="space-y-2">
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('lab_status_label') }}</label>
                   <div class="relative">
-                      <select v-model="editForm.lab_status" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none dark:text-white transition-all shadow-sm appearance-none cursor-pointer">
+                      <select v-model="editForm.lab_status" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none dark:text-white transition-all shadow-inner appearance-none cursor-pointer">
                         <option value="">{{ t('not_specified') }}</option>
                         <option v-for="ls in labStatuses" :key="ls" :value="ls" class="text-slate-900 dark:text-white">{{ ls }}</option>
                       </select>
@@ -593,11 +593,11 @@
                 </div>
             </div>
 
-            <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly">
+            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="!isTreatmentPlanOnly">
 
             <!-- Category Assignment -->
-            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly">
-              <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ locale === 'ar' ? 'الباقة' : 'Package' }}</h4>
+            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly">
+              <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ locale === 'ar' ? 'الباقة' : 'Package' }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('main_category') }}</label>
@@ -622,12 +622,12 @@
               </div>
             </div>
             
-            <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
             
             <div class="grid grid-cols-1 gap-6 relative z-10" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
                 <!-- Aligners Delivered Section -->
-                <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/30 dark:bg-teal-900/5 space-y-6 shadow-sm">
-                    <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest">
+                <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-6 shadow-sm">
+                    <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-200 dark:border-slate-800 uppercase tracking-widest">
                        <i class="fas fa-box-open text-2xl"></i> {{ t('aligners_delivered') }}
                     </h4>
                     <div class="grid grid-cols-2 gap-8 mb-6">
@@ -764,11 +764,11 @@
                 </div>
             </div>
             
-            <hr class="border-slate-200 dark:border-slate-800 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
 
             <!-- Plan 1 Section -->
-            <div class="p-8 rounded-3xl border-2 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
-              <h4 class="text-xl font-black text-blue-800 dark:text-blue-400 flex items-center gap-3 pb-4 border-b-2 border-blue-200 dark:border-blue-800/50 uppercase tracking-widest"><i class="fas fa-file-medical-alt text-2xl"></i> {{ t('treatment_plan_1') }}</h4>
+            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
+              <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-file-medical-alt text-2xl"></i> {{ t('treatment_plan_1') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- File Upload Plan 1 -->
                   <div class="space-y-2">
@@ -810,8 +810,8 @@
             </div>
 
             <!-- Plan 2 Section -->
-            <div class="p-8 rounded-3xl border-2 border-purple-100 dark:border-purple-900/30 bg-purple-50/50 dark:bg-purple-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
-              <h4 class="text-xl font-black text-purple-800 dark:text-purple-400 flex items-center gap-3 pb-4 border-b-2 border-purple-200 dark:border-purple-800/50 uppercase tracking-widest"><i class="fas fa-paperclip text-2xl"></i> {{ t('treatment_plan_2') }}</h4>
+            <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
+              <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-200 dark:border-slate-800 uppercase tracking-widest"><i class="fas fa-paperclip text-2xl"></i> {{ t('treatment_plan_2') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- File Upload Plan 2 -->
                   <div class="space-y-2">
@@ -853,8 +853,8 @@
             </div>
 
             <!-- Documents & Invoices Section -->
-            <div class="p-8 rounded-3xl border-2 border-teal-100 dark:border-teal-900/30 bg-teal-50/50 dark:bg-teal-900/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="isDocumentsOnly || (!isTreatmentPlanOnly && !isGeneralDataOnly && !isAlignersOnly)">
-              <h4 class="text-xl font-black text-teal-800 dark:text-teal-400 flex items-center gap-3 pb-4 border-b-2 border-teal-200 dark:border-teal-800/50 uppercase tracking-widest"><i class="fas fa-file-invoice-dollar text-2xl"></i> {{ t('documents_collection') }}</h4>
+            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="isDocumentsOnly || (!isTreatmentPlanOnly && !isGeneralDataOnly && !isAlignersOnly)">
+              <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-file-invoice-dollar text-2xl"></i> {{ t('documents_collection') }}</h4>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- Price List Upload -->
