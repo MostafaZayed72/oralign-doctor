@@ -21,7 +21,7 @@
     <!-- Stats Grid -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Users -->
-      <NuxtLink :to="localePath('/users')" class="bg-[#0f3c2e] rounded-[2rem] p-8 text-center text-white shadow-xl shadow-emerald-900/20 hover:scale-[1.03] hover:shadow-2xl transition-all duration-500 group cursor-pointer block relative overflow-hidden">
+      <NuxtLink :to="localePath('/admin/users')" class="bg-[#0f3c2e] rounded-[2rem] p-8 text-center text-white shadow-xl shadow-emerald-900/20 hover:scale-[1.03] hover:shadow-2xl transition-all duration-500 group cursor-pointer block relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div class="h-16 w-16 mx-auto bg-white/10 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/10 shadow-inner">
           <i class="fas fa-users text-2xl opacity-80 group-hover:opacity-100 transition-opacity"></i>

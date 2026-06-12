@@ -20,7 +20,7 @@
     <!-- Textareas -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div class="space-y-2">
-        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Chief Complaint</label>
+        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Chief Complaint <span class="text-red-500 font-bold">*</span></label>
         <textarea 
           :value="formData.chiefComplaint"
           @input="$emit('update', 'chiefComplaint', $event.target.value)"
@@ -42,33 +42,7 @@
     </div>
 
     <!-- Selection Cards -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Card 1: Primary Teeth -->
-      <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 space-y-6">
-        <h4 class="text-base font-black text-slate-900 dark:text-white leading-tight">Does the patient have any remaining primary teeth?</h4>
-        <div class="flex gap-4">
-          <label 
-            class="flex-1 flex items-center justify-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300"
-            :class="formData.hasPrimaryTeeth ? 'border-brand-primary bg-brand-primary/5' : 'border-slate-50 dark:border-slate-800 hover:border-slate-200'"
-            @click="$emit('update', 'hasPrimaryTeeth', true)"
-          >
-            <span class="font-bold" :class="formData.hasPrimaryTeeth ? 'text-brand-primary' : 'text-slate-500'">{{ $t('yes') }}</span>
-            <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="formData.hasPrimaryTeeth ? 'border-brand-primary' : 'border-slate-300'">
-              <div v-if="formData.hasPrimaryTeeth" class="w-2 h-2 rounded-full bg-brand-primary"></div>
-            </div>
-          </label>
-          <label 
-            class="flex-1 flex items-center justify-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300"
-            :class="!formData.hasPrimaryTeeth ? 'border-brand-primary bg-brand-primary/5' : 'border-slate-50 dark:border-slate-800 hover:border-slate-200'"
-            @click="$emit('update', 'hasPrimaryTeeth', false)"
-          >
-            <span class="font-bold" :class="!formData.hasPrimaryTeeth ? 'text-brand-primary' : 'text-slate-500'">{{ $t('no') }}</span>
-            <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="!formData.hasPrimaryTeeth ? 'border-brand-primary' : 'border-slate-300'">
-              <div v-if="!formData.hasPrimaryTeeth" class="w-2 h-2 rounded-full bg-brand-primary"></div>
-            </div>
-          </label>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
       <!-- Card 2: Package Type -->
       <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 space-y-6">
@@ -123,7 +97,7 @@
       </button>
       
       <button 
-        @click="$emit('next')"
+        @click="handleNext"
         class="group relative px-10 py-4 bg-[#063c31] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-[#063c31]/20 hover:scale-105 hover:shadow-[#063c31]/40 active:scale-95 transition-all duration-300 flex items-center gap-3 overflow-hidden"
       >
         <span>Next Step</span>
@@ -135,10 +109,28 @@
 </template>
 
 <script setup lang="ts">
+import Swal from 'sweetalert2'
+import { useI18n } from 'vue-i18n'
+
 const props = defineProps({
   formData: { type: Object, required: true }
 })
 const emit = defineEmits(['update', 'next', 'prev'])
+
+const { t, locale } = useI18n()
+
+const handleNext = () => {
+  if (!props.formData.chiefComplaint || !props.formData.chiefComplaint.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'الرجاء إدخال الشكوى الرئيسية (Chief Complaint).' : 'Please enter the Chief Complaint.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+  emit('next')
+}
 
 const packages = [
   { id: 'Basic', label: 'Oralign Basic' },

@@ -17,34 +17,34 @@
       </div>
     </div>
 
+    <!-- Patient Card (Full width, single row on desktop) -->
+    <div class="p-8 rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20">
+      <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-[#063c31] mb-6">Patient Information</h4>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="flex flex-col gap-1 p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/20 border border-slate-50 dark:border-slate-800">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">First Name</span>
+          <span class="text-sm font-black text-[#063c31] dark:text-white">{{ formData.first_name || '—' }}</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/20 border border-slate-50 dark:border-slate-800">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Last Name</span>
+          <span class="text-sm font-black text-[#063c31] dark:text-white">{{ formData.last_name || '—' }}</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/20 border border-slate-50 dark:border-slate-800">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gender</span>
+          <span class="text-sm font-black text-[#063c31] dark:text-white">{{ formData.gender || '—' }}</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/20 border border-slate-50 dark:border-slate-800">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Date of Birth</span>
+          <span class="text-sm font-black text-[#063c31] dark:text-white">{{ formData.dob || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Summary Sections -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
       <!-- Left Column: Core Info -->
       <div class="lg:col-span-4 space-y-8">
-        <!-- Patient Card -->
-        <div class="p-8 rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20">
-          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary mb-6">Patient Information</h4>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center py-3 border-b border-slate-50 dark:border-slate-800">
-              <span class="text-xs font-bold text-slate-400">First Name</span>
-              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.first_name || '—' }}</span>
-            </div>
-            <div class="flex justify-between items-center py-3 border-b border-slate-50 dark:border-slate-800">
-              <span class="text-xs font-bold text-slate-400">Last Name</span>
-              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.last_name || '—' }}</span>
-            </div>
-            <div class="flex justify-between items-center py-3 border-b border-slate-50 dark:border-slate-800">
-              <span class="text-xs font-bold text-slate-400">Gender</span>
-              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.gender || '—' }}</span>
-            </div>
-            <div class="flex justify-between items-center py-3">
-              <span class="text-xs font-bold text-slate-400">Date of Birth</span>
-              <span class="text-sm font-black text-slate-700 dark:text-white">{{ formData.dob || '—' }}</span>
-            </div>
-          </div>
-        </div>
-
         <!-- Records Card -->
         <div class="p-8 rounded-[2.5rem] bg-[#063c31] text-white shadow-xl shadow-[#063c31]/20">
           <h4 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-6">Records & Scans</h4>
@@ -70,31 +70,44 @@
         <div class="p-8 md:p-10 rounded-[3rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20">
           <div class="flex items-center justify-between mb-8">
             <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary">Detailed Treatment Plan</h4>
-            <div class="w-10 h-10 rounded-xl bg-brand-primary/5 flex items-center justify-center">
-              <i class="fas fa-magic text-brand-primary text-sm"></i>
-            </div>
+            <button 
+              @click="$emit('goToDetailedPlan')"
+              title="Edit Detailed Plan"
+              class="w-10 h-10 rounded-xl bg-brand-primary/5 hover:bg-brand-primary/10 flex items-center justify-center text-brand-primary transition-all duration-300 hover:scale-110 active:scale-95"
+            >
+              <i class="fas fa-pen text-sm"></i>
+            </button>
           </div>
 
           <!-- 16 Categories Preview Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div 
-              v-for="cat in clinicalCategories" 
-              :key="cat.id"
-              class="p-4 rounded-2xl border transition-all"
-              :class="isCategoryActive(cat.id) ? 'border-brand-primary/30 bg-brand-primary/[0.02]' : 'border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20'"
-            >
-              <div class="flex items-start gap-4">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="isCategoryActive(cat.id) ? 'bg-brand-primary/10 text-brand-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
-                  <i :class="cat.icon" class="text-xs"></i>
-                </div>
-                <div>
-                  <h5 class="text-[11px] font-black uppercase tracking-widest" :class="isCategoryActive(cat.id) ? 'text-brand-primary' : 'text-slate-400'">{{ cat.label }}</h5>
-                  <p class="text-[10px] mt-1 font-medium" :class="isCategoryActive(cat.id) ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 italic'">
-                    {{ getCategorySummary(cat.id) }}
-                  </p>
+          <div v-if="hasAnyActiveCategory" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <template v-for="cat in clinicalCategories" :key="cat.id">
+              <div 
+                v-if="isCategoryActive(cat.id)"
+                class="p-4 rounded-2xl border transition-all border-brand-primary/30 bg-brand-primary/[0.02]"
+              >
+                <div class="flex items-start gap-4">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-brand-primary/10 text-brand-primary">
+                    <i :class="cat.icon" class="text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="text-[11px] font-black uppercase tracking-widest text-brand-primary">{{ cat.label }}</h5>
+                    <div class="flex flex-wrap gap-1 mt-1.5">
+                      <span 
+                        v-for="(detail, i) in getCategoryDetails(cat.id)" 
+                        :key="i"
+                        class="px-2.5 py-1 bg-[#063c31]/5 text-[#063c31] dark:bg-slate-800 dark:text-slate-300 rounded-xl text-[10px] font-black tracking-wide leading-tight shadow-sm"
+                      >
+                        {{ detail }}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
+          </div>
+          <div v-else class="p-8 text-center text-xs font-bold text-[#063c31]/50 italic bg-[#063c31]/5 rounded-2xl border border-dashed border-[#063c31]/20">
+            No detailed treatment plan options specified.
           </div>
 
           <!-- Chief Complaint & Notes -->
@@ -231,13 +244,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import TeethSelector from './TeethSelector.vue'
 const props = defineProps({
   formData: { type: Object, required: true },
   isSubmitting: { type: Boolean, default: false }
 })
-const emit = defineEmits(['prev', 'submit'])
+const emit = defineEmits(['prev', 'submit', 'goToDetailedPlan'])
+
+const hasAnyActiveCategory = computed(() => {
+  return clinicalCategories.some(cat => isCategoryActive(cat.id))
+})
 
 const isGeneratingPDF = ref(false)
 
@@ -298,5 +315,32 @@ const getCategorySummary = (id: string) => {
   if (cat.option) return cat.option
   if (cat.group) return cat.group
   return 'Specified with notes'
+}
+
+const getCategoryDetails = (id: string) => {
+  const cat = props.formData.detailedPlan[id]
+  if (!cat) return []
+  
+  const details: string[] = []
+  
+  for (const [key, val] of Object.entries(cat)) {
+    if (Array.isArray(val) && val.length > 0) {
+      if (key === 'selectedTeeth') {
+        details.push(`Teeth: ${val.join(', ')}`)
+      } else {
+        details.push(`${val.join(', ')}`)
+      }
+    } else if (val && typeof val === 'string' && val !== 'null' && val.trim() !== '') {
+      if (key === 'notes') {
+        details.push(`Notes: "${val}"`)
+      } else {
+        details.push(val)
+      }
+    } else if (typeof val === 'boolean' && val === true) {
+      details.push(key)
+    }
+  }
+  
+  return details
 }
 </script>

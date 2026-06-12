@@ -18,50 +18,33 @@
     </div>
 
     <!-- Content Wrapper -->
-    <div class="flex flex-col xl:flex-row gap-4">
+    <div>
       <!-- Grid -->
-      <div class="flex-1">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          <button 
-            v-for="cat in categories" 
-            :key="cat.id"
-            @click="openCategory(cat)"
-            class="group relative p-2 rounded-[1.2rem] border-2 transition-all duration-300 text-center space-y-0.5 overflow-hidden flex flex-col items-center justify-center min-h-[85px] shadow-sm"
-            :class="[
-              formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0
-                ? 'bg-white dark:bg-slate-900 border-brand-primary ring-4 ring-brand-primary/5' 
-                : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 hover:border-brand-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800'
-            ]"
-          >
-            <!-- Background Accent -->
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
-            
-            <h4 class="text-xs sm:text-sm font-black tracking-wide text-[#063c31]/70 dark:text-slate-200 leading-tight group-hover:text-[#063c31] transition-colors z-10 inline-block first-letter:uppercase lowercase px-2">{{ cat.label }}</h4>
-            
-            <!-- Selection Marker -->
-            <div v-if="formData.detailedPlan[cat.id] && Object.keys(formData.detailedPlan[cat.id]).length > 0" class="mt-1">
-               <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-[#063c31] text-[7px] font-black uppercase tracking-tighter">Selected</div>
-            </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
+        <button 
+          v-for="cat in categories" 
+          :key="cat.id"
+          @click="openCategory(cat)"
+          class="group relative p-2 rounded-[1.2rem] border-2 transition-all duration-300 text-center space-y-0.5 overflow-hidden flex flex-col items-center justify-center min-h-[85px] shadow-sm"
+          :class="[
+            hasSelection(cat.id)
+              ? 'bg-white dark:bg-slate-900 border-brand-primary ring-4 ring-brand-primary/5' 
+              : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 hover:border-brand-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800'
+          ]"
+        >
+          <!-- Background Accent -->
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity" :class="cat.color || 'bg-brand-primary'"></div>
+          
+          <h4 class="text-xs sm:text-sm font-black tracking-wide text-[#063c31]/70 dark:text-slate-200 leading-tight group-hover:text-[#063c31] transition-colors z-10 inline-block first-letter:uppercase lowercase px-2">{{ cat.label }}</h4>
+          
+          <!-- Selection Marker -->
+          <div v-if="hasSelection(cat.id)" class="mt-1">
+             <div class="px-2 py-0.5 rounded-full bg-brand-primary/10 text-[#063c31] text-[7px] font-black uppercase tracking-tighter">Selected</div>
+          </div>
 
-            <!-- Decorative card corner -->
-            <div class="absolute -top-6 -right-6 w-12 h-12 rounded-full blur-xl transition-all duration-500 group-hover:scale-150" :class="cat.color || 'bg-brand-primary/20'"></div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Additional Instructions -->
-      <div class="w-full xl:w-64 shrink-0">
-        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-[1.5rem] p-4 border border-slate-100 dark:border-slate-800 h-full flex flex-col">
-          <label class="block text-[10px] font-black uppercase tracking-widest text-[#063c31]/70 dark:text-slate-300 mb-3 px-1 flex items-center gap-2">
-            <i class="fas fa-edit text-[#063c31]"></i> Instructions
-          </label>
-          <textarea 
-            :value="formData.additionalInstructions"
-            @input="$emit('update', 'additionalInstructions', $event.target.value)"
-            class="flex-1 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-4 text-xs text-slate-800 dark:text-white focus:ring-2 focus:ring-brand-primary outline-none transition-all resize-none shadow-sm min-h-[150px]"
-            placeholder="Technical notes..."
-          ></textarea>
-        </div>
+          <!-- Decorative card corner -->
+          <div class="absolute -top-6 -right-6 w-12 h-12 rounded-full blur-xl transition-all duration-500 group-hover:scale-150" :class="cat.color || 'bg-brand-primary/20'"></div>
+        </button>
       </div>
     </div>
 
@@ -595,13 +578,6 @@ const setBiteRampGroup = (group: string) => {
   if (!plan.biteRamps) plan.biteRamps = {}
   plan.biteRamps.group = group
   plan.biteRamps.selectedTeeth = selected
-
-  // Propagate to others
-  const categoriesToSync = ['elastics', 'pontics', 'attachments', 'archExpansion', 'extraction', 'ipr', 'overcorrection', 'movementRestrictions', 'eruptionSpace']
-  categoriesToSync.forEach(cat => {
-    if (!plan[cat]) plan[cat] = {}
-    plan[cat].selectedTeeth = [...selected]
-  })
   
   emit('update', 'detailedPlan', plan)
 }
@@ -618,13 +594,6 @@ const setArchExpansionGroup = (group: string) => {
   if (!plan.archExpansion) plan.archExpansion = {}
   plan.archExpansion.group = group
   plan.archExpansion.selectedTeeth = selected
-
-  // Propagate to others
-  const categoriesToSync = ['elastics', 'biteRamps', 'pontics', 'attachments', 'extraction', 'ipr', 'overcorrection', 'movementRestrictions', 'eruptionSpace']
-  categoriesToSync.forEach(cat => {
-    if (!plan[cat]) plan[cat] = {}
-    plan[cat].selectedTeeth = [...selected]
-  })
   
   emit('update', 'detailedPlan', plan)
 }

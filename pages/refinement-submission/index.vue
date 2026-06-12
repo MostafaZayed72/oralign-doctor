@@ -1,23 +1,41 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-[#0b0b0b] flex flex-col lg:flex-row transition-colors duration-300">
+  <div class="min-h-screen bg-gray-50 dark:bg-[#0b0b0b] flex flex-col lg:flex-row transition-colors duration-300 brand-green-theme">
     
     <!-- Sidebar Navigation -->
-    <aside class="w-full lg:w-72 bg-white dark:bg-[#121212] border-r border-gray-100 dark:border-gray-800 flex flex-col lg:h-screen sticky top-0 z-40">
-      <div class="p-8 border-b border-gray-100 dark:border-gray-800">
-        <h2 class="text-xl font-black text-gray-800 dark:text-gray-100">Refinement</h2>
-        <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mt-1">Case Submission</p>
+    <aside 
+      class="relative w-full bg-white dark:bg-[#121212] border-r border-gray-100 dark:border-gray-800 flex flex-col lg:h-screen sticky top-0 z-40 transition-all duration-300"
+      :class="[isCollapsed ? 'lg:w-20' : 'lg:w-72']"
+    >
+      <!-- Collapse Toggle Button (Desktop Only) -->
+      <button 
+        @click="isCollapsed = !isCollapsed"
+        class="hidden lg:flex absolute top-10 h-8 w-8 items-center justify-center rounded-full bg-[#063c31] text-white shadow-xl border border-white/10 hover:bg-[#05332a] transition-all z-[60] group"
+        :class="isRtl ? '-left-4' : '-right-4'"
+      >
+        <i :class="getChevronIcon" class="fas text-[10px] transition-transform group-hover:scale-125"></i>
+      </button>
+
+      <div class="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between" :class="isCollapsed ? 'justify-center p-4' : 'p-8'">
+        <div v-if="!isCollapsed">
+          <h2 class="text-xl font-black text-gray-800 dark:text-gray-100">Refinement</h2>
+          <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mt-1">Case Submission</p>
+        </div>
+        <div v-else class="w-full flex justify-center py-2">
+          <span class="text-xl font-black text-[#063c31] dark:text-white">R</span>
+        </div>
       </div>
       
       <nav class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
         <button 
           v-for="(step, index) in steps" 
           :key="index"
-          @click="currentStep = index"
-          class="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left group"
+          @click="goToStep(index)"
+          class="w-full flex items-center rounded-2xl transition-all duration-300 group"
           :class="[
             currentStep === index 
               ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 translate-x-2' 
-              : 'hover:bg-gray-50 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400'
+              : 'hover:bg-gray-50 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400',
+            isCollapsed ? 'justify-center p-3' : 'gap-4 p-4 text-left'
           ]"
         >
           <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-colors"
@@ -25,7 +43,7 @@
             <i v-if="currentStep > index" class="fas fa-check text-xs"></i>
             <i v-else :class="step.icon" class="text-xs"></i>
           </div>
-          <div class="min-w-0">
+          <div v-if="!isCollapsed" class="min-w-0">
             <div class="text-[10px] uppercase font-black tracking-widest opacity-60">Step {{ index + 1 }}</div>
             <div class="text-sm font-bold truncate">{{ step.title }}</div>
           </div>
@@ -34,11 +52,11 @@
 
       <!-- Bottom Status -->
       <div class="p-6 bg-gray-50/50 dark:bg-white/5 border-t border-gray-100 dark:border-gray-800">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+        <div class="flex items-center" :class="isCollapsed ? 'justify-center' : 'gap-3'">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
             <i class="fas fa-layer-group"></i>
           </div>
-          <div>
+          <div v-if="!isCollapsed">
             <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Progress</div>
             <div class="text-sm font-bold text-gray-800 dark:text-gray-100">{{ Math.round((currentStep / (steps.length - 1)) * 100) }}% Complete</div>
           </div>
@@ -79,6 +97,7 @@
                  @update="updateFormData"
                  @next="nextStep"
                  @prev="prevStep"
+                 @go-to-detailed-plan="currentStep = steps.findIndex(s => s.title === 'Detailed Plan')"
                  @submit="submitRefinement"
                />
              </div>
@@ -91,10 +110,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, markRaw, onMounted } from 'vue'
+import { ref, computed, markRaw, onMounted, watch } from 'vue'
 import Swal from 'sweetalert2'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const isCollapsed = ref(false)
+const isRtl = computed(() => locale.value === 'ar')
+const getChevronIcon = computed(() => {
+  if (isRtl.value) {
+    return isCollapsed.value ? 'fa-chevron-left' : 'fa-chevron-right'
+  } else {
+    return isCollapsed.value ? 'fa-chevron-right' : 'fa-chevron-left'
+  }
+})
+
+onMounted(() => {
+  const saved = localStorage.getItem('case_sidebar_collapsed')
+  if (saved !== null) {
+    isCollapsed.value = saved === 'true'
+  }
+})
+
+watch(isCollapsed, (newVal) => {
+  localStorage.setItem('case_sidebar_collapsed', String(newVal))
+})
 
 // Explicit imports required for dynamic components, wrapped in markRaw to avoid Vue reactivity 
 // and Windows absolute path (protocol 'f:') SSR errors.
@@ -253,6 +293,33 @@ const updateFormData = (key: string, value: any) => {
 }
 
 const nextStep = () => {
+  if (currentStep.value === 0 && !formData.value.parent_id) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'الرجاء اختيار الحالة المراد عمل تحسين لها أولاً.' : 'Please select a case to refine first.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+  if (currentStep.value === 1 && (!formData.value.first_name || !formData.value.first_name.trim() || !formData.value.last_name || !formData.value.last_name.trim())) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'الرجاء إدخال الاسم الأول والاسم الأخير للمريض أولاً.' : 'Please enter the patient\'s First Name and Last Name first.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+  if (currentStep.value === 4 && (!formData.value.chiefComplaint || !formData.value.chiefComplaint.trim())) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'حقل الخطة العلاجية/الشكوى الرئيسية (Chief Complaint) إجباري.' : 'The Chief Complaint / Plan field is mandatory.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
   }
@@ -264,8 +331,76 @@ const prevStep = () => {
   }
 }
 
+const goToStep = (index: number) => {
+  // If moving past Step 1 (index 0), parent_id must be selected
+  if (index > 0 && !formData.value.parent_id) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'الرجاء اختيار الحالة المراد عمل تحسين لها أولاً.' : 'Please select a case to refine first.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+
+  // If moving past Step 2 (index 1), first name and last name must be filled
+  if (index > 1 && (!formData.value.first_name || !formData.value.first_name.trim() || !formData.value.last_name || !formData.value.last_name.trim())) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'الرجاء إدخال الاسم الأول والاسم الأخير للمريض أولاً.' : 'Please enter the patient\'s First Name and Last Name first.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+  
+  // If moving past Step 5 (index 4), chief complaint must be filled
+  if (index > 4 && (!formData.value.chiefComplaint || !formData.value.chiefComplaint.trim())) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'حقل الخطة العلاجية/الشكوى الرئيسية (Chief Complaint) إجباري.' : 'The Chief Complaint / Plan field is mandatory.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+  
+  currentStep.value = index
+}
+
 const submitRefinement = async () => {
   if (isSubmitting.value) return
+
+  if (!formData.value.parent_id) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'الرجاء اختيار الحالة المراد عمل تحسين لها أولاً.' : 'Please select a case to refine first.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+
+  if (!formData.value.first_name || !formData.value.first_name.trim() || !formData.value.last_name || !formData.value.last_name.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'حقل الاسم الأول والاسم الأخير إجباري للمريض.' : 'First Name and Last Name fields are mandatory for the patient.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+
+  if (!formData.value.chiefComplaint || !formData.value.chiefComplaint.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: locale.value === 'ar' ? 'تنبيه!' : 'Warning!',
+      text: locale.value === 'ar' ? 'حقل الخطة العلاجية/الشكوى الرئيسية (Chief Complaint) إجباري.' : 'The Chief Complaint / Plan field is mandatory.',
+      confirmButtonColor: '#063c31'
+    })
+    return
+  }
+
   isSubmitting.value = true
 
   try {

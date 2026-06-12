@@ -107,7 +107,7 @@ const localePath = useLocalePath()
 
 const menuItems = computed(() => [
   { name: t('dashboard'), icon: 'fas fa-th-large', path: localePath('/admin') },
-  { name: t('users'), icon: 'fas fa-users', path: localePath('/users') },
+  { name: t('users'), icon: 'fas fa-users', path: localePath('/admin/users') },
   { name: t('services'), icon: 'fas fa-wrench', path: localePath('/services') },
   { name: t('blogs'), icon: 'fas fa-paste', path: localePath('/blog') },
   { 

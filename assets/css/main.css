@@ -104,3 +104,111 @@
   .delay-300 { transition-delay: 300ms; }
   .delay-500 { transition-delay: 500ms; }
 }
+
+/* Brand Green Theme Overrides (Olive Green #063c31) */
+.brand-green-theme .text-slate-400,
+.brand-green-theme .text-gray-400,
+.brand-green-theme .text-zinc-400 {
+  color: #063c31 !important;
+}
+.brand-green-theme .text-slate-500,
+.brand-green-theme .text-gray-500,
+.brand-green-theme .text-zinc-500 {
+  color: rgba(6, 60, 49, 0.85) !important;
+}
+.brand-green-theme .text-slate-600,
+.brand-green-theme .text-gray-600,
+.brand-green-theme .text-zinc-600 {
+  color: #063c31 !important;
+}
+.brand-green-theme .border-slate-50,
+.brand-green-theme .border-gray-50,
+.brand-green-theme .border-zinc-50 {
+  border-color: rgba(6, 60, 49, 0.04) !important;
+}
+.brand-green-theme .border-slate-100,
+.brand-green-theme .border-gray-100,
+.brand-green-theme .border-zinc-100 {
+  border-color: rgba(6, 60, 49, 0.08) !important;
+}
+.brand-green-theme .border-slate-200,
+.brand-green-theme .border-gray-200,
+.brand-green-theme .border-zinc-200 {
+  border-color: rgba(6, 60, 49, 0.16) !important;
+}
+.brand-green-theme .border-slate-300,
+.brand-green-theme .border-gray-300,
+.brand-green-theme .border-zinc-300 {
+  border-color: rgba(6, 60, 49, 0.3) !important;
+}
+.brand-green-theme .bg-slate-50,
+.brand-green-theme .bg-gray-50,
+.brand-green-theme .bg-zinc-50 {
+  background-color: rgba(6, 60, 49, 0.03) !important;
+}
+.brand-green-theme .bg-slate-50\/30,
+.brand-green-theme .bg-gray-50\/30,
+.brand-green-theme .bg-zinc-50\/30 {
+  background-color: rgba(6, 60, 49, 0.02) !important;
+}
+.brand-green-theme .bg-slate-50\/50,
+.brand-green-theme .bg-gray-50\/50,
+.brand-green-theme .bg-zinc-50\/50 {
+  background-color: rgba(6, 60, 49, 0.03) !important;
+}
+.brand-green-theme .bg-slate-100,
+.brand-green-theme .bg-gray-100,
+.brand-green-theme .bg-zinc-100 {
+  background-color: rgba(6, 60, 49, 0.05) !important;
+}
+.brand-green-theme .bg-slate-200,
+.brand-green-theme .bg-gray-200,
+.brand-green-theme .bg-zinc-200 {
+  background-color: rgba(6, 60, 49, 0.16) !important;
+}
+.brand-green-theme .hover\:border-slate-200:hover,
+.brand-green-theme .hover\:border-gray-200:hover {
+  border-color: rgba(6, 60, 49, 0.4) !important;
+}
+.brand-green-theme .hover\:bg-slate-50:hover,
+.brand-green-theme .hover\:bg-gray-50:hover {
+  background-color: rgba(6, 60, 49, 0.08) !important;
+}
+
+/* Convert emerald-500 and other generic greens to brand primary (#063c31) */
+.brand-green-theme .bg-emerald-500 {
+  background-color: #063c31 !important;
+}
+.brand-green-theme .bg-emerald-600 {
+  background-color: #05332a !important;
+}
+.brand-green-theme .hover\:bg-emerald-600:hover {
+  background-color: #05332a !important;
+}
+.brand-green-theme .hover\:bg-emerald-700:hover {
+  background-color: #042921 !important;
+}
+.brand-green-theme .text-emerald-500 {
+  color: #063c31 !important;
+}
+.brand-green-theme .border-emerald-500\/50 {
+  border-color: rgba(6, 60, 49, 0.5) !important;
+}
+.brand-green-theme .bg-emerald-50\/30 {
+  background-color: rgba(6, 60, 49, 0.05) !important;
+}
+.brand-green-theme .shadow-emerald-500\/30 {
+  box-shadow: 0 10px 15px -3px rgba(6, 60, 49, 0.3), 0 4px 6px -4px rgba(6, 60, 49, 0.3) !important;
+}
+.brand-green-theme .shadow-emerald-500\/20 {
+  box-shadow: 0 10px 15px -3px rgba(6, 60, 49, 0.2), 0 4px 6px -4px rgba(6, 60, 49, 0.2) !important;
+}
+.brand-green-theme .text-emerald-600 {
+  color: #063c31 !important;
+}
+.brand-green-theme .bg-emerald-500\/10 {
+  background-color: rgba(6, 60, 49, 0.1) !important;
+}
+.brand-green-theme .border-emerald-500\/20 {
+  border-color: rgba(6, 60, 49, 0.2) !important;
+}

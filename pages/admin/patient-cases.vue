@@ -568,8 +568,12 @@
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('general_status') }}</label>
                   <div class="relative">
                       <select v-model="editForm.status" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-sm appearance-none cursor-pointer">
-                        <option value="pending">{{ t('pending') }}</option>
-                        <option v-for="s in filters.filter(f => f !== 'All Cases')" :key="s" :value="s">{{ s }}</option>
+                        <option v-if="editForm.status && !['complete submission', 'incomplete submission', 'rejected'].includes(editForm.status)" :value="editForm.status" disabled>
+                          {{ editForm.status }}
+                        </option>
+                        <option value="complete submission">{{ locale === 'ar' ? 'تقديم مكتمل (Complete)' : 'Complete' }}</option>
+                        <option value="incomplete submission">{{ locale === 'ar' ? 'تقديم غير مكتمل (Incomplete)' : 'Incomplete' }}</option>
+                        <option value="rejected">{{ locale === 'ar' ? 'مرفوض (Rejected)' : 'Rejected' }}</option>
                       </select>
                       <i class="fas fa-chevron-down absolute rtl:left-6 ltr:right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                   </div>
