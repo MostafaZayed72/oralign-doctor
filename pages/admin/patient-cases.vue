@@ -976,6 +976,20 @@
                           </label>
                         </div>
                       </div>
+
+                      <!-- Notes Section -->
+                      <div class="col-span-1 md:col-span-2 mt-4 pt-4 border-t-2 border-slate-100 dark:border-slate-800 space-y-2">
+                        <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                          <i class="fas fa-sticky-note text-teal-500 mr-1 rtl:ml-1"></i>
+                          {{ locale === 'ar' ? 'ملاحظات المستندات' : 'Documents Notes' }}
+                        </label>
+                        <textarea 
+                          v-model="editForm.document_notes"
+                          rows="3"
+                          :placeholder="locale === 'ar' ? 'اكتب ملاحظاتك هنا عن المستندات أو الفواتير...' : 'Enter document/bill notes here...'"
+                          class="w-full px-5 py-4 text-sm font-bold rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-inner resize-y min-h-[100px]"
+                        ></textarea>
+                      </div>
                   </div> 
               </div>
             </div>
@@ -1352,6 +1366,7 @@ const cases = computed(() => {
             accessories_data: item.accessories_data || rc.accessories_data || null,
             aligners_notes: item.aligners_notes || rc.aligners_notes || null,
             accessories_notes: item.accessories_notes || rc.accessories_notes || null,
+            document_notes: item.document_notes || rc.document_notes || null,
             parent_id: pId,
             refinement_number: refinementNumber
         }
@@ -2010,7 +2025,8 @@ const openModal = async (item, treatmentOnly = false, generalDataOnly = false) =
         price_list_file: null,
         receipt_file: null,
         aligners_notes: item.aligners_notes || '',
-        accessories_notes: item.accessories_notes || ''
+        accessories_notes: item.accessories_notes || '',
+        document_notes: item.document_notes || ''
     }
     isModalOpen.value = true
 }
@@ -2177,6 +2193,7 @@ const saveEdit = async () => {
     // Only send optional fields if they have actual values
     if (editForm.value.aligners_notes && editForm.value.aligners_notes.trim()) formData.append('aligners_notes', editForm.value.aligners_notes)
     if (editForm.value.accessories_notes && editForm.value.accessories_notes.trim()) formData.append('accessories_notes', editForm.value.accessories_notes)
+    if (editForm.value.document_notes !== undefined) formData.append('document_notes', editForm.value.document_notes || '')
     if (editForm.value.aligners_upper !== null && editForm.value.aligners_upper !== '') formData.append('aligners_upper', editForm.value.aligners_upper)
     if (editForm.value.aligners_lower !== null && editForm.value.aligners_lower !== '') formData.append('aligners_lower', editForm.value.aligners_lower)
     if (editForm.value.accessories_data) formData.append('accessories_data', JSON.stringify(editForm.value.accessories_data))
