@@ -131,6 +131,18 @@
                     {{ locale === 'ar' ? 'تفعيل' : 'Approve' }}
                   </button>
 
+                  <!-- Impersonate Button -->
+                  <button 
+                    v-if="doc.status === 'active'"
+                    @click="impersonateDoctor(doc)"
+                    :disabled="loading"
+                    class="h-8 px-3.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/10 transition-all active:scale-95 disabled:opacity-50"
+                    :title="locale === 'ar' ? 'تسجيل دخول كطبيب' : 'Login as Doctor'"
+                  >
+                    <i class="fas fa-user-secret"></i>
+                    {{ locale === 'ar' ? 'دخول كطبيب' : 'Login As' }}
+                  </button>
+
                   <!-- Delete Button -->
                   <button 
                     @click="deleteDoctor(doc.id)"
@@ -160,7 +172,7 @@ import Swal from 'sweetalert2'
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const { token } = useAuth()
+const { token, user } = useAuth()
 const loading = ref(false)
 const searchQuery = ref('')
 const statusFilter = ref('all') // 'all', 'active', 'inactive'
@@ -271,6 +283,65 @@ const deleteDoctor = async (id) => {
       icon: 'error',
       title: t('error'),
       text: e.data?.message || t('delete_failed_msg')
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const impersonateDoctor = async (doc) => {
+  const result = await Swal.fire({
+    title: locale.value === 'ar' ? 'محاكاة تسجيل الدخول؟' : 'Simulate Login?',
+    text: locale.value === 'ar'
+      ? `هل تريد تسجيل الدخول ومحاكاة حساب الطبيب: ${doc.name}؟`
+      : `Do you want to log in and impersonate Dr. ${doc.name}?`,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#f59e0b',
+    cancelButtonColor: '#64748b',
+    confirmButtonText: locale.value === 'ar' ? 'نعم، دخول' : 'Yes, Impersonate',
+    cancelButtonText: t('cancel')
+  })
+
+  if (!result.isConfirmed) return
+
+  loading.value = true
+  try {
+    const response = await $fetch(`${config.public.apiBase}/impersonate/${doc.id}`, {
+      method: 'POST',
+      headers: headers.value
+    })
+
+    if (response?.success && response?.token) {
+      // Save current admin token to admin_token cookie
+      const adminTokenCookie = useCookie('admin_token', { maxAge: 60 * 60 * 24 * 7 })
+      adminTokenCookie.value = token.value
+
+      // Update auth_token and auth_user
+      token.value = response.token
+      user.value = response.user
+
+      // Show success
+      Swal.fire({
+        icon: 'success',
+        title: locale.value === 'ar' ? 'تم الدخول بنجاح!' : 'Logged In!',
+        text: locale.value === 'ar'
+          ? `أنت الآن تتصفح كطبيب: ${response.user.f_name} ${response.user.l_name}`
+          : `You are now browsing as: ${response.user.f_name} ${response.user.l_name}`,
+        timer: 2000,
+        showConfirmButton: false
+      })
+
+      // Redirect to doctor dashboard
+      const localePath = useLocalePath()
+      navigateTo(localePath('/dashboard'))
+    }
+  } catch (e) {
+    console.error('Impersonation failed', e)
+    Swal.fire({
+      icon: 'error',
+      title: t('error'),
+      text: e.data?.message || (locale.value === 'ar' ? 'فشل تسجيل الدخول كطبيب.' : 'Impersonation failed.')
     })
   } finally {
     loading.value = false

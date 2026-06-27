@@ -209,14 +209,20 @@
                 <!-- Patient Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
-                       :class="item.is_admin_read === 0 
-                         ? 'bg-blue-600 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110' 
-                         : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'">
+                       :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
-                    <span class="text-[15px] font-black tracking-tight"
-                          :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
-                      {{ item.patient }}
-                    </span>
+                    <div class="flex flex-col items-center justify-center">
+                      <span class="text-[15px] font-black tracking-tight"
+                            :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
+                        {{ item.patient }}
+                      </span>
+                      <span v-if="item.parent_id || item.case_type === 'refinement'" 
+                            class="text-[10px] mt-1 font-bold uppercase tracking-wider flex items-center gap-1"
+                            :class="item.is_admin_read === 0 ? 'text-amber-100/90' : 'text-amber-600 dark:text-amber-400'">
+                        <i class="fas fa-sync-alt text-[9px]"></i>
+                        {{ getRefinementLabel(item) }}
+                      </span>
+                    </div>
                   </NuxtLink>
                 </td>
 
@@ -299,14 +305,20 @@
                 <!-- Patient Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
-                       :class="item.is_admin_read === 0 
-                         ? 'bg-blue-600 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110' 
-                         : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'">
+                       :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
-                    <span class="text-[15px] font-black tracking-tight"
-                          :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
-                      {{ item.patient }}
-                    </span>
+                    <div class="flex flex-col items-center justify-center">
+                      <span class="text-[15px] font-black tracking-tight"
+                            :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
+                        {{ item.patient }}
+                      </span>
+                      <span v-if="item.parent_id || item.case_type === 'refinement'" 
+                            class="text-[10px] mt-1 font-bold uppercase tracking-wider flex items-center gap-1"
+                            :class="item.is_admin_read === 0 ? 'text-amber-100/90' : 'text-amber-600 dark:text-amber-400'">
+                        <i class="fas fa-sync-alt text-[9px]"></i>
+                        {{ getRefinementLabel(item) }}
+                      </span>
+                    </div>
                   </NuxtLink>
                 </td>
 
@@ -377,14 +389,20 @@
                 <!-- Patient Block -->
                 <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
-                       :class="item.is_admin_read === 0 
-                         ? 'bg-blue-600 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110' 
-                         : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'">
+                       :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
-                    <span class="text-[15px] font-black tracking-tight"
-                          :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
-                      {{ item.patient }}
-                    </span>
+                    <div class="flex flex-col items-center justify-center">
+                      <span class="text-[15px] font-black tracking-tight"
+                            :class="item.is_admin_read === 0 ? 'text-white' : 'text-slate-800 dark:text-slate-100'">
+                        {{ item.patient }}
+                      </span>
+                      <span v-if="item.parent_id || item.case_type === 'refinement'" 
+                            class="text-[10px] mt-1 font-bold uppercase tracking-wider flex items-center gap-1"
+                            :class="item.is_admin_read === 0 ? 'text-amber-100/90' : 'text-amber-600 dark:text-amber-400'">
+                        <i class="fas fa-sync-alt text-[9px]"></i>
+                        {{ getRefinementLabel(item) }}
+                      </span>
+                    </div>
                   </NuxtLink>
                 </td>
 
@@ -1189,6 +1207,47 @@ const getGroupButtonClass = (group) => {
   return ''
 }
 
+const getRefinementLabel = (item) => {
+  const num = item.refinement_number || 1
+  if (locale.value === 'ar') {
+    const arNumbers = {
+      1: 'الأول',
+      2: 'الثاني',
+      3: 'الثالث',
+      4: 'الرابع',
+      5: 'الخامس',
+      6: 'السادس',
+      7: 'السابع',
+      8: 'الثامن',
+      9: 'التاسع',
+      10: 'العاشر'
+    }
+    return `الريفاينمينت ${arNumbers[num] || num}`
+  } else {
+    const getOrdinal = (n) => {
+      const s = ["th", "st", "nd", "rd"]
+      const v = n % 100
+      return n + (s[(v - 20) % 10] || s[v] || s[0])
+    }
+    return `${getOrdinal(num)} Refinement`
+  }
+}
+
+const getPatientLinkClass = (item) => {
+  const isUnread = item.is_admin_read === 0
+  const isRefinement = item.parent_id || item.case_type === 'refinement'
+  
+  if (isUnread) {
+    if (isRefinement) {
+      return 'bg-[#d1b06b] border-amber-300 text-white shadow-[0_0_15px_rgba(209,176,107,0.4)] brightness-110'
+    } else {
+      return 'bg-blue-600 border-blue-400 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] brightness-110'
+    }
+  } else {
+    return 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]'
+  }
+}
+
 const handleRowClick = async (item, e) => {
   if (e.target.closest('button') || e.target.closest('a') || e.target.type === 'checkbox') return
   
@@ -1207,11 +1266,32 @@ const { data: catResponse } = await useFetch(`${config.public.apiBase}/categorie
 
 const cases = computed(() => {
     const rawData = response.value?.data || []
+    
+    // Build an ID map for parent tracing
+    const idToParentMap = new Map()
+    rawData.forEach(item => {
+        const rc = item.raw_case || {}
+        idToParentMap.set(item.id, item.parent_id || rc.parent_id || null)
+    })
+    
+    const getRootId = (itemId) => {
+        let currentId = itemId
+        let visited = new Set()
+        while (currentId) {
+            if (visited.has(currentId)) break
+            visited.add(currentId)
+            const parentId = idToParentMap.get(currentId)
+            if (!parentId) return currentId
+            currentId = parentId
+        }
+        return currentId
+    }
+
     // Merge raw_case fields into each item so treatment plan fields are always available
     const mappedResult = rawData.map(item => {
         const rc = item.raw_case || {}
         
-                let packageName = '-'
+        let packageName = '-'
         let subPackageName = ''
         const mainCatId = item.main_category_id || rc.main_category_id
         if (mainCatId && catResponse.value?.data) {
@@ -1226,6 +1306,24 @@ const cases = computed(() => {
                     }
                 }
             }
+        }
+
+        // Calculate refinement number in frontend as a fallback
+        let refinementNumber = item.refinement_number || rc.refinement_number || 0
+        const pId = item.parent_id || rc.parent_id || null
+        
+        if (pId && !refinementNumber) {
+            const rootId = getRootId(item.id)
+            // Get all items in the same family (meaning their root ID matches)
+            const familyItems = rawData.filter(x => {
+                const xRc = x.raw_case || {}
+                const xPId = x.parent_id || xRc.parent_id || null
+                return xPId && getRootId(x.id) === rootId
+            })
+            // Sort by id ascending to establish sequence
+            familyItems.sort((a, b) => a.id - b.id)
+            const idx = familyItems.findIndex(x => x.id === item.id)
+            refinementNumber = idx !== -1 ? (idx + 1) : 1
         }
 
         return {
@@ -1254,7 +1352,8 @@ const cases = computed(() => {
             accessories_data: item.accessories_data || rc.accessories_data || null,
             aligners_notes: item.aligners_notes || rc.aligners_notes || null,
             accessories_notes: item.accessories_notes || rc.accessories_notes || null,
-            parent_id: rc.parent_id || null
+            parent_id: pId,
+            refinement_number: refinementNumber
         }
     })
 
