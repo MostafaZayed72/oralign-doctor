@@ -124,14 +124,38 @@
                 <i class="fas fa-file-excel group-hover:scale-105 transition-transform"></i> 
                 {{ t('download_excel') }}
             </button>
+            <button 
+              @click="toggleDrafts" 
+              class="px-5 py-2.5 text-[13px] font-black rounded-xl border transition-all flex items-center gap-2 shadow-sm"
+              :class="showDrafts 
+                ? 'bg-amber-500 text-white border-amber-400 hover:bg-amber-600' 
+                : 'bg-amber-500/10 text-amber-600 border-amber-200 dark:border-amber-500/30 hover:bg-amber-600 hover:text-white'"
+            >
+                <i class="fas" :class="showDrafts ? 'fa-folder-open' : 'fa-archive'"></i>
+                {{ showDrafts 
+                  ? (locale === 'ar' ? 'عرض الحالات النشطة' : 'Show Active Cases') 
+                  : (locale === 'ar' ? 'صندوق المسودات (المحذوفة)' : 'Drafts Box (Deleted)') }}
+            </button>
           </div>
         </div>
 
         <div class="flex flex-col items-end gap-3 w-full md:w-auto">
           <transition name="fade">
-            <button v-if="selectedCases.length > 0" @click="deleteSelected" class="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-red-500/20">
-              <i class="fas fa-trash-alt"></i> {{ t('delete') }} <span class="bg-white/20 px-2 py-0.5 rounded text-xs">{{ selectedCases.length }}</span>
-            </button>
+            <div v-if="selectedCases.length > 0" class="flex gap-2 flex-wrap">
+              <template v-if="showDrafts">
+                <button @click="restoreSelected" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-emerald-500/20">
+                  <i class="fas fa-undo"></i> {{ locale === 'ar' ? 'استعادة' : 'Restore' }} <span class="bg-white/20 px-1.5 py-0.5 rounded text-[10px]">{{ selectedCases.length }}</span>
+                </button>
+                <button @click="forceDeleteSelected" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-red-600/20">
+                  <i class="fas fa-trash-alt"></i> {{ locale === 'ar' ? 'حذف نهائياً' : 'Delete Permanently' }} <span class="bg-white/20 px-1.5 py-0.5 rounded text-[10px]">{{ selectedCases.length }}</span>
+                </button>
+              </template>
+              <template v-else>
+                <button @click="deleteSelected" class="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-red-500/20">
+                  <i class="fas fa-trash-alt"></i> {{ t('delete') }} <span class="bg-white/20 px-2 py-0.5 rounded text-xs">{{ selectedCases.length }}</span>
+                </button>
+              </template>
+            </div>
           </transition>
           <div class="relative w-full md:w-64">
              <input type="text" :placeholder="t('search')" v-model="searchQuery" class="w-full ltr:pl-10 ltr:pr-4 rtl:pr-10 rtl:pl-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all dark:text-white">
@@ -470,12 +494,22 @@
                 <!-- Actions Block -->
                 <td class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 8)">
                     <div class="flex items-center justify-center gap-2">
-                        <button @click.stop="openModal(item)" class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 active:scale-95 transition-all">
-                          <i class="fas fa-pen text-xs"></i>
-                        </button>
-                        <button @click.stop="deleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded shadow-lg hover:bg-red-600 active:scale-95 transition-all">
-                          <i class="fas fa-trash-alt text-xs"></i>
-                        </button>
+                        <template v-if="showDrafts">
+                          <button @click.stop="restoreSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-emerald-500 text-white rounded shadow-lg hover:bg-emerald-600 active:scale-95 transition-all" :title="locale === 'ar' ? 'استعادة' : 'Restore'">
+                            <i class="fas fa-undo text-xs"></i>
+                          </button>
+                          <button @click.stop="forceDeleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded shadow-lg hover:bg-red-700 active:scale-95 transition-all" :title="locale === 'ar' ? 'حذف نهائياً' : 'Delete Permanently'">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                          </button>
+                        </template>
+                        <template v-else>
+                          <button @click.stop="openModal(item)" class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 active:scale-95 transition-all">
+                            <i class="fas fa-pen text-xs"></i>
+                          </button>
+                          <button @click.stop="deleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded shadow-lg hover:bg-red-600 active:scale-95 transition-all">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                          </button>
+                        </template>
                     </div>
                 </td>
               </template>
@@ -616,11 +650,11 @@
             <!-- Category Assignment -->
             <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly">
               <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ locale === 'ar' ? 'الباقة' : 'Package' }}</h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div class="space-y-2">
                     <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('main_category') }}</label>
                     <div class="relative">
-                        <select v-model="editForm.main_category_id" @change="editForm.sub_category_id = null" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 dark:text-white shadow-sm cursor-pointer appearance-none">
+                        <select v-model="editForm.main_category_id" @change="editForm.sub_category_id = null; editForm.sub_category_id2 = null" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 dark:text-white shadow-sm cursor-pointer appearance-none">
                           <option :value="null">{{ t('select_category') }}</option>
                           <option v-for="cat in allCategories" :key="cat.id" :value="cat.id">{{ locale === 'ar' ? cat.name_ar : cat.name_en }}</option>
                         </select>
@@ -628,9 +662,19 @@
                     </div>
                   </div>
                   <div class="space-y-2">
-                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('sub_category') }}</label>
+                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ locale === 'ar' ? 'القسم الفرعي الأول' : 'Sub Category 1' }}</label>
                     <div class="relative">
                         <select v-model="editForm.sub_category_id" :disabled="!editForm.main_category_id" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 dark:text-white shadow-sm cursor-pointer appearance-none disabled:opacity-50">
+                          <option :value="null">{{ t('select_sub_category') }}</option>
+                          <option v-for="sub in filteredSubCategories" :key="sub.id" :value="sub.id">{{ locale === 'ar' ? sub.name_ar : sub.name_en }}</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute rtl:left-5 ltr:right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ locale === 'ar' ? 'القسم الفرعي الثاني' : 'Sub Category 2' }}</label>
+                    <div class="relative">
+                        <select v-model="editForm.sub_category_id2" :disabled="!editForm.main_category_id" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 dark:text-white shadow-sm cursor-pointer appearance-none disabled:opacity-50">
                           <option :value="null">{{ t('select_sub_category') }}</option>
                           <option v-for="sub in filteredSubCategories" :key="sub.id" :value="sub.id">{{ locale === 'ar' ? sub.name_ar : sub.name_en }}</option>
                         </select>
@@ -1274,8 +1318,14 @@ const handleRowClick = async (item, e) => {
   openModal(item)
 }
 
+const showDrafts = ref(false)
+const toggleDrafts = () => {
+  showDrafts.value = !showDrafts.value
+  selectedCases.value = [] // clear selection
+}
+
 // Fetch initial data
-const { data: response, pending, error, refresh } = await useFetch(`${config.public.apiBase}/patient-cases`, { headers })
+const { data: response, pending, error, refresh } = await useFetch(() => `${config.public.apiBase}/patient-cases?show_drafts=${showDrafts.value ? 1 : 0}`, { headers })
 const { data: catResponse } = await useFetch(`${config.public.apiBase}/categories`, { headers })
 
 const cases = computed(() => {
@@ -1313,12 +1363,21 @@ const cases = computed(() => {
             if (cat) {
                 packageName = locale.value === 'ar' ? (cat.name_ar || cat.name_en) : (cat.name_en || cat.name_ar)
                 const subCatId = item.sub_category_id || rc.sub_category_id
+                const subCatId2 = item.sub_category_id2 || rc.sub_category_id2
+                let parts = []
                 if (subCatId && cat.sub_categories) {
                     const subCat = cat.sub_categories.find(s => s.id === subCatId)
                     if (subCat) {
-                        subPackageName = locale.value === 'ar' ? (subCat.name_ar || subCat.name_en) : (subCat.name_en || subCat.name_ar)
+                        parts.push(locale.value === 'ar' ? (subCat.name_ar || subCat.name_en) : (subCat.name_en || subCat.name_ar))
                     }
                 }
+                if (subCatId2 && cat.sub_categories) {
+                    const subCat2 = cat.sub_categories.find(s => s.id === subCatId2)
+                    if (subCat2) {
+                        parts.push(locale.value === 'ar' ? (subCat2.name_ar || subCat2.name_en) : (subCat2.name_en || subCat2.name_ar))
+                    }
+                }
+                subPackageName = parts.join(' / ')
             }
         }
 
@@ -1346,6 +1405,7 @@ const cases = computed(() => {
             sub_package: subPackageName,
             main_category_id: mainCatId,
             sub_category_id: item.sub_category_id || rc.sub_category_id || null,
+            sub_category_id2: item.sub_category_id2 || rc.sub_category_id2 || null,
             // Ensure treatment plan fields are available from raw_case if not in top-level
             treatment_plan1_status: item.treatment_plan1_status || rc.treatment_plan1_status || null,
             treatment_plan1_file: item.treatment_plan1_file || rc.treatment_plan1_file || null,
@@ -1832,6 +1892,120 @@ const deleteSingleRow = async (id) => {
     } catch(e) { console.error('Delete failed', e) }
 }
 
+const restoreSelected = async () => {
+    const result = await Swal.fire({
+        title: locale.value === 'ar' ? 'تأكيد الاستعادة' : 'Confirm Restore',
+        text: locale.value === 'ar' ? 'هل أنت متأكد من استعادة الحالات المحددة؟' : 'Are you sure you want to restore the selected cases?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: locale.value === 'ar' ? 'نعم، استعدها!' : 'Yes, restore them!',
+        cancelButtonText: t('cancel')
+    })
+    if(!result.isConfirmed) return
+    try {
+        await $fetch(`${config.public.apiBase}/patient-cases/restore`, {
+            method: 'POST', body: { ids: selectedCases.value },
+            headers: headers.value
+        })
+        selectedCases.value = []
+        await refresh()
+        Swal.fire({
+            icon: 'success',
+            title: locale.value === 'ar' ? 'تمت الاستعادة!' : 'Restored!',
+            text: locale.value === 'ar' ? 'تم استعادة الحالات المحددة بنجاح.' : 'Selected cases restored successfully.',
+            timer: 1500,
+            showConfirmButton: false
+        })
+    } catch(e) { console.error('Restore failed', e) }
+}
+
+const forceDeleteSelected = async () => {
+    const result = await Swal.fire({
+        title: locale.value === 'ar' ? 'تأكيد الحذف النهائي' : 'Confirm Permanent Delete',
+        text: locale.value === 'ar' ? 'تحذير: سيتم حذف الحالات المحددة نهائياً ولا يمكن التراجع عن هذا الإجراء!' : 'Warning: Selected cases will be deleted permanently and this action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: locale.value === 'ar' ? 'نعم، احذفها نهائياً!' : 'Yes, delete permanently!',
+        cancelButtonText: t('cancel')
+    })
+    if(!result.isConfirmed) return
+    try {
+        await $fetch(`${config.public.apiBase}/patient-cases/force-delete`, {
+            method: 'POST', body: { ids: selectedCases.value },
+            headers: headers.value
+        })
+        selectedCases.value = []
+        await refresh()
+        Swal.fire({
+            icon: 'success',
+            title: locale.value === 'ar' ? 'تم الحذف النهائي!' : 'Permanently Deleted!',
+            text: locale.value === 'ar' ? 'تم حذف الحالات المحددة نهائياً.' : 'Selected cases deleted permanently.',
+            timer: 1500,
+            showConfirmButton: false
+        })
+    } catch(e) { console.error('Force delete failed', e) }
+}
+
+const restoreSingleRow = async (id) => {
+    const result = await Swal.fire({
+        title: locale.value === 'ar' ? 'تأكيد الاستعادة' : 'Confirm Restore',
+        text: locale.value === 'ar' ? 'هل أنت متأكد من استعادة هذه الحالة؟' : 'Are you sure you want to restore this case?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: locale.value === 'ar' ? 'نعم، استعدها!' : 'Yes, restore it!',
+        cancelButtonText: t('cancel')
+    })
+    if(!result.isConfirmed) return
+    try {
+        await $fetch(`${config.public.apiBase}/patient-cases/restore`, {
+            method: 'POST', body: { ids: [id] },
+            headers: headers.value
+        })
+        await refresh()
+        Swal.fire({
+            icon: 'success',
+            title: locale.value === 'ar' ? 'تمت الاستعادة!' : 'Restored!',
+            text: locale.value === 'ar' ? 'تم استعادة الحالة بنجاح.' : 'Case restored successfully.',
+            timer: 1500,
+            showConfirmButton: false
+        })
+    } catch(e) { console.error('Restore failed', e) }
+}
+
+const forceDeleteSingleRow = async (id) => {
+    const result = await Swal.fire({
+        title: locale.value === 'ar' ? 'تأكيد الحذف النهائي' : 'Confirm Permanent Delete',
+        text: locale.value === 'ar' ? 'تحذير: سيتم حذف هذه الحالة نهائياً ولا يمكن التراجع عن هذا الإجراء!' : 'Warning: This case will be deleted permanently and this action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: locale.value === 'ar' ? 'نعم، احذفها نهائياً!' : 'Yes, delete permanently!',
+        cancelButtonText: t('cancel')
+    })
+    if(!result.isConfirmed) return
+    try {
+        await $fetch(`${config.public.apiBase}/patient-cases/force-delete`, {
+            method: 'POST', body: { ids: [id] },
+            headers: headers.value
+        })
+        await refresh()
+        Swal.fire({
+            icon: 'success',
+            title: locale.value === 'ar' ? 'تم الحذف النهائي!' : 'Permanently Deleted!',
+            text: locale.value === 'ar' ? 'تم حذف الحالة نهائياً.' : 'Case deleted permanently.',
+            timer: 1500,
+            showConfirmButton: false
+        })
+    } catch(e) { console.error('Force delete failed', e) }
+}
+
 // Note Modal State
 const isNoteModalOpen = ref(false)
 const activeNoteContent = ref('')
@@ -1867,6 +2041,7 @@ const editForm = ref({
     remove_receipt: false,
     main_category_id: null,
     sub_category_id: null,
+    sub_category_id2: null,
     aligners_notes: '',
     accessories_notes: ''
 })
@@ -2022,6 +2197,7 @@ const openModal = async (item, treatmentOnly = false, generalDataOnly = false) =
         remove_receipt: false,
         main_category_id: item.main_category_id || null,
         sub_category_id: item.sub_category_id || null,
+        sub_category_id2: item.sub_category_id2 || null,
         price_list_file: null,
         receipt_file: null,
         aligners_notes: item.aligners_notes || '',
@@ -2189,6 +2365,7 @@ const saveEdit = async () => {
     
     formData.append('main_category_id', editForm.value.main_category_id || 'null')
     formData.append('sub_category_id', editForm.value.sub_category_id || 'null')
+    formData.append('sub_category_id2', editForm.value.sub_category_id2 || 'null')
     
     // Only send optional fields if they have actual values
     if (editForm.value.aligners_notes && editForm.value.aligners_notes.trim()) formData.append('aligners_notes', editForm.value.aligners_notes)
