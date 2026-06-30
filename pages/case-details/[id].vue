@@ -451,8 +451,15 @@ const clinicalCategories = [
 const isCategoryActive = (id) => {
   if (!caseData.value?.detailedPlan) return false
   const cat = caseData.value.detailedPlan[id]
-  if (!cat) return false
-  return Object.keys(cat).length > 0 && (cat.selectedTeeth?.length > 0 || cat.option || cat.group || cat.notes)
+  if (!cat || Object.keys(cat).length === 0) return false
+  return Object.values(cat).some(val => {
+    if (Array.isArray(val)) {
+      const filtered = val.filter(v => v !== null && v !== undefined && v !== '' && v !== 'null')
+      return filtered.length > 0
+    }
+    if (typeof val === 'boolean') return val === true
+    return val !== null && val !== undefined && val !== '' && val !== 'null'
+  })
 }
 
 const getCategorySummary = (id) => {
@@ -463,6 +470,19 @@ const getCategorySummary = (id) => {
   if (cat.selectedTeeth?.length > 0) return `${cat.selectedTeeth.length} Teeth selected`
   if (cat.option) return cat.option
   if (cat.group) return cat.group
+  
+  const parts = []
+  for (const [key, val] of Object.entries(cat)) {
+    if (Array.isArray(val) && val.length > 0) {
+      parts.push(`${val.length} options selected`)
+    } else if (val && typeof val === 'string' && val !== 'null' && val.trim() !== '' && key !== 'notes') {
+      parts.push(val)
+    } else if (typeof val === 'boolean' && val === true) {
+      parts.push(key)
+    }
+  }
+  if (parts.length > 0) return parts.join(', ')
+  
   return 'Specified with notes'
 }
 
@@ -525,7 +545,7 @@ const filteredOptions = computed(() => {
     // Check if details contain actual data beyond headers
     const details = opt.treatmnet_option_details || ''
     const cleaned = details
-      .replace(/Teeth:|Notes:|Type:|Option:|Before Step:|Perform before:|\s+/g, '')
+      .replace(/Teeth:|Notes:|Type:|Option:|Options:|Before Step:|Perform before:|Crowding options:|Spacing options:|Crossbite:|Scissor:|Midline:|Openbite:|Deepbite:|Class II:|Class III:|\s+/gi, '')
       .replace(/\|/g, '')
       .trim()
     

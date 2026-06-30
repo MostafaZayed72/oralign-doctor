@@ -73,7 +73,14 @@
           <p class="text-xs text-gray-500 font-medium">{{ $t('case_submission_subtitle') }}</p>
         </div>
         
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+           <NuxtLink 
+             :to="localePath('/dashboard')"
+             class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-black py-3 px-6 rounded-2xl shadow-sm transition-all flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 hover:scale-105 active:scale-95"
+           >
+             <i class="fas fa-arrow-left rtl:rotate-180"></i>
+             <span>{{ $t('back') || 'Back' }}</span>
+           </NuxtLink>
            <button 
              @click="submitCase"
              :disabled="isSubmitting"
@@ -113,6 +120,7 @@
 import { ref, computed, markRaw, onMounted, watch } from 'vue'
 const { token } = useAuth()
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 
 const isCollapsed = ref(false)
 const isRtl = computed(() => locale.value === 'ar')

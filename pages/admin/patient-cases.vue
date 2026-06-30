@@ -227,11 +227,9 @@
                   <input type="checkbox" v-model="selectedCases" :value="item.id" class="rounded border-slate-300 text-#063c31 focus:ring-#063c31 w-4 h-4 cursor-pointer">
                 </div>
               </td>
-
-              <!-- Virtual Planning Cells -->
               <template v-if="activeGroup === 'Virtual Planning'">
                 <!-- Patient Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
@@ -249,26 +247,26 @@
                     </div>
                   </NuxtLink>
                 </td>
-
+ 
                 <!-- Doctor Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
+                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
-
+ 
                 <!-- UUID Block -->
-                <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 3)">
+                <td @click.stop="openModal(item, 'all')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 3)">
                    <span class="text-slate-500 dark:text-slate-400 font-mono text-[12px] font-bold">{{ item.uuid }}</span>
                 </td>
-
+ 
                 <!-- Date Block -->
-                <td @click.stop class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-default" :class="getGroupColClass(activeGroup, 4)">
+                <td @click.stop="openModal(item, 'general')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 4)">
                   <span class="text-slate-700 dark:text-slate-300 text-[13px] font-black">{{ item.date_modified.split(' ')[0] }}</span>
                 </td>
                 
                 <!-- Treatment Plan Status 1 Block -->
-                <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
+                <td @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
                             <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
@@ -291,7 +289,7 @@
                 </td>
                 
                 <!-- Treatment Plan Status 2 Block -->
-                <td @click.stop="openModal(item, true)" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
+                <td @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
                             <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
@@ -312,9 +310,9 @@
                         <span v-else-if="!(item.treatment_plan2 && !checkDefault(item.treatment_plan2)) && !item.treatment_plan2_url && !(item.treatment_plan2_text && !checkDefault(item.treatment_plan2_text))" class="text-[12px] font-black text-slate-400">—</span>
                     </div>
                 </td>
-
+ 
                 <!-- Status -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 7)">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 7)">
                     <div class="w-full min-h-[70px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getBadgeClass(item.status)">
                       <span v-if="item.status" class="text-[12px] font-black uppercase tracking-tight text-white-force">
                         {{ item.status }}
@@ -327,7 +325,8 @@
               <!-- Finance Cells -->
               <template v-else-if="activeGroup === 'Finance'">
                 <!-- Patient Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
+                <!-- Patient Block -->
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
@@ -347,14 +346,14 @@
                 </td>
 
                 <!-- Doctor Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
+                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
-                                <!-- Package Block -->
-                <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200" :class="getGroupColClass(activeGroup, 3)">
+                <!-- Package Block -->
+                <td @click.stop="openModal(item, 'package')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
                     <div class="flex flex-col items-center justify-center gap-1">
                         <span>{{ item.package }}</span>
                         <span v-if="item.sub_package" class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 uppercase tracking-widest">{{ item.sub_package }}</span>
@@ -362,7 +361,7 @@
                 </td>
 
                 <!-- Price List Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 4)">
+                <td @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 4)">
                     <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[70px]">
                         <!-- Old price_list_url if exists -->
                         <button v-if="item.price_list_url" @click.stop="openPreview(item.price_list_url, locale === 'ar' ? 'قائمة الأسعار' : 'Price List')" class="w-10 h-10 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة قائمة الأسعار' : 'Preview Price List'">
@@ -382,12 +381,12 @@
                 </td>
 
                 <!-- Price Block -->
-                <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-800 dark:text-white" :class="getGroupColClass(activeGroup, 5)">
+                <td @click.stop="openModal(item, 'documents')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-800 dark:text-white cursor-pointer" :class="getGroupColClass(activeGroup, 5)">
                     {{ item.price_after_discount || '--' }}
                 </td>
 
                 <!-- Receipt Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 6)">
+                <td @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[70px]">
                         <!-- Old receipt_url if exists -->
                         <button v-if="item.receipt_url" @click.stop="openPreview(item.receipt_url, locale === 'ar' ? 'الفاتورة' : 'Receipt')" class="w-10 h-10 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة الفاتورة' : 'Preview Receipt'">
@@ -411,7 +410,7 @@
               <!-- Laboratory Cells -->
               <template v-else-if="activeGroup === 'Laboratory'">
                 <!-- Patient Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
@@ -431,19 +430,19 @@
                 </td>
 
                 <!-- Doctor Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div @click.stop="openModal(item, false, true)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
+                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
                 <!-- Type Block -->
-                <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200" :class="getGroupColClass(activeGroup, 3)">
+                <td @click.stop="openModal(item, 'general')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
                     {{ item.type || '-' }}
                 </td>
                 
                 <!-- Aligners Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center" :class="getGroupColClass(activeGroup, 4)">
+                <td @click.stop="openModal(item, 'aligners')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 4)">
                   <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                       <div class="flex items-center justify-center gap-1 w-full" v-if="item.aligners_upper || item.aligners_lower">
                           <div class="flex-1 bg-blue-100 dark:bg-blue-900/50 px-2 py-1.5 rounded border border-blue-200 text-[10px] font-black text-blue-700 dark:text-blue-300">U: {{ item.aligners_upper || '0' }}</div>
@@ -458,7 +457,7 @@
                 </td>
                 
                 <!-- Accessories Block -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center" :class="getGroupColClass(activeGroup, 5)">
+                <td @click.stop="openModal(item, 'accessories')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                   <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                       <div v-if="item.accessories_data && getActiveAccessoriesCount(item.accessories_data) > 0" class="flex flex-col gap-1 w-full">
                            <div v-for="(summary, index) in getAccessoriesSummary(item.accessories_data).slice(0, 2)" :key="index" class="w-full text-center text-[9px] font-black bg-slate-100 dark:bg-slate-700 px-1.5 py-1.5 rounded border border-slate-200 truncate">
@@ -475,7 +474,7 @@
                 </td>
 
                 <!-- Manufacturing -->
-                <td class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 6)">
+                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
                     <div class="w-full min-h-[70px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getLabBadgeClass(item.lab_status)">
                       <span v-if="item.lab_status" class="text-[12px] font-black uppercase tracking-tight text-white-force">
                         {{ item.lab_status }}
@@ -485,14 +484,14 @@
                 </td>
 
                 <!-- Date Modified Block -->
-                <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 7)">
-                    <button @click.stop="openHistoryModal(item.modification_log)" class="text-indigo-600 dark:text-indigo-400 font-black text-[12px] hover:underline underline-offset-4 decoration-2">
+                <td @click.stop="openHistoryModal(item.modification_log)" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 7)">
+                    <button class="text-indigo-600 dark:text-indigo-400 font-black text-[12px] hover:underline underline-offset-4 decoration-2">
                         {{ item.date_modified.split(' ')[0] }}
                     </button>
                 </td>
 
                 <!-- Actions Block -->
-                <td class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 8)">
+                <td @click.stop class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 8)">
                     <div class="flex items-center justify-center gap-2">
                         <template v-if="showDrafts">
                           <button @click.stop="restoreSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-emerald-500 text-white rounded shadow-lg hover:bg-emerald-600 active:scale-95 transition-all" :title="locale === 'ar' ? 'استعادة' : 'Restore'">
@@ -598,7 +597,7 @@
           <!-- Modal Header -->
           <div class="px-8 py-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 shadow-sm relative z-20">
             <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-              <i class="fas fa-edit text-teal-500"></i> {{ t('edit_case_data') }} <span class="text-teal-600 dark:text-teal-400 font-mono tracking-tighter opacity-80">{{ editForm.uuid }}</span>
+              <i class="fas fa-edit text-teal-500"></i> {{ modalTitle }} <span class="text-teal-600 dark:text-teal-400 font-mono tracking-tighter opacity-80">{{ editForm.uuid }}</span>
             </h3>
             <button @click="closeModal" class="text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 h-12 w-12 rounded-xl flex items-center justify-center transition-all">
                 <i class="fas fa-times text-2xl"></i>
@@ -608,7 +607,7 @@
           <!-- Modal Body -->
           <div class="p-10 space-y-12 overflow-y-auto flex-1 custom-scroll bg-slate-50/20 dark:bg-slate-950/20 relative">
             
-            <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10" v-show="!isTreatmentPlanOnly">
+            <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10" v-show="activeModalSection === 'all' || activeModalSection === 'general'">
                 <!-- Patient Name -->
                 <div class="space-y-2">
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('patient_name') }}</label>
@@ -645,10 +644,10 @@
                 </div>
             </div>
 
-            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="!isTreatmentPlanOnly">
+            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="activeModalSection === 'all'">
 
             <!-- Category Assignment -->
-            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isTreatmentPlanOnly">
+            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-6 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="activeModalSection === 'all' || activeModalSection === 'package'">
               <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-tags text-2xl"></i> {{ locale === 'ar' ? 'الباقة' : 'Package' }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div class="space-y-2">
@@ -684,22 +683,22 @@
               </div>
             </div>
             
-            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="activeModalSection === 'all'">
             
-            <div class="grid grid-cols-1 gap-6 relative z-10" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <div class="grid grid-cols-1 gap-6 relative z-10" v-show="activeModalSection === 'all' || activeModalSection === 'aligners' || activeModalSection === 'accessories'">
                 <!-- Aligners Delivered Section -->
-                <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-6 shadow-sm">
+                <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-6 shadow-sm" v-show="activeModalSection === 'all' || activeModalSection === 'aligners'">
                     <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-200 dark:border-slate-800 uppercase tracking-widest">
                        <i class="fas fa-box-open text-2xl"></i> {{ t('aligners_delivered') }}
                     </h4>
                     <div class="grid grid-cols-2 gap-8 mb-6">
                         <div class="space-y-2">
-                            <label class="block text-xs font-black text-slate-500 dark:text-slate-400 mb-2 text-center uppercase tracking-widest">{{ t('upper') }}</label>
-                            <input type="number" v-model="editForm.aligners_upper" placeholder="0" min="0" class="w-full px-6 py-4 rounded-2xl border-2 border-teal-200 dark:border-teal-700/50 bg-white dark:bg-slate-800 text-center text-2xl font-black text-slate-700 dark:text-teal-100 focus:ring-4 focus:ring-teal-500/20 outline-none transition-all shadow-inner">
+                             <label class="block text-xs font-black text-slate-500 dark:text-slate-400 mb-2 text-center uppercase tracking-widest">{{ t('upper') }}</label>
+                             <input type="number" v-model="editForm.aligners_upper" placeholder="0" min="0" class="w-full px-6 py-4 rounded-2xl border-2 border-teal-200 dark:border-teal-700/50 bg-white dark:bg-slate-800 text-center text-2xl font-black text-slate-700 dark:text-teal-100 focus:ring-4 focus:ring-teal-500/20 outline-none transition-all shadow-inner">
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-xs font-black text-slate-500 dark:text-slate-400 mb-2 text-center uppercase tracking-widest">{{ t('lower') }}</label>
-                            <input type="number" v-model="editForm.aligners_lower" placeholder="0" min="0" class="w-full px-6 py-4 rounded-2xl border-2 border-teal-200 dark:border-teal-700/50 bg-white dark:bg-slate-800 text-center text-2xl font-black text-slate-700 dark:text-teal-100 focus:ring-4 focus:ring-teal-500/20 outline-none transition-all shadow-inner">
+                             <label class="block text-xs font-black text-slate-500 dark:text-slate-400 mb-2 text-center uppercase tracking-widest">{{ t('lower') }}</label>
+                             <input type="number" v-model="editForm.aligners_lower" placeholder="0" min="0" class="w-full px-6 py-4 rounded-2xl border-2 border-teal-200 dark:border-teal-700/50 bg-white dark:bg-slate-800 text-center text-2xl font-black text-slate-700 dark:text-teal-100 focus:ring-4 focus:ring-teal-500/20 outline-none transition-all shadow-inner">
                         </div>
                     </div>
                     <div class="space-y-2">
@@ -709,7 +708,7 @@
                 </div>
 
                 <!-- Accessories Wizard UI -->
-                <div class="p-8 rounded-3xl border-2 border-[#d1b06b]/30 bg-[#063c31] space-y-6 shadow-2xl relative overflow-hidden">
+                <div class="p-8 rounded-3xl border-2 border-[#d1b06b]/30 bg-[#063c31] space-y-6 shadow-2xl relative overflow-hidden" v-show="activeModalSection === 'all' || activeModalSection === 'accessories'">
                     <!-- Glow effect -->
                     <div class="absolute inset-0 bg-gradient-to-br from-[#d1b06b]/5 to-transparent pointer-events-none"></div>
 
@@ -826,10 +825,10 @@
                 </div>
             </div>
             
-            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="!isTreatmentPlanOnly && !isGeneralDataOnly">
+            <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="activeModalSection === 'all'">
 
             <!-- Plan 1 Section -->
-            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
+            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="activeModalSection === 'all' || activeModalSection === 'plans'">
               <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-file-medical-alt text-2xl"></i> {{ t('treatment_plan_1') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- File Upload Plan 1 -->
@@ -872,7 +871,7 @@
             </div>
 
             <!-- Plan 2 Section -->
-            <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="!isGeneralDataOnly">
+            <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="activeModalSection === 'all' || activeModalSection === 'plans'">
               <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-200 dark:border-slate-800 uppercase tracking-widest"><i class="fas fa-paperclip text-2xl"></i> {{ t('treatment_plan_2') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <!-- File Upload Plan 2 -->
@@ -915,7 +914,7 @@
             </div>
 
             <!-- Documents & Invoices Section -->
-            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="isDocumentsOnly || (!isTreatmentPlanOnly && !isGeneralDataOnly && !isAlignersOnly)">
+            <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="activeModalSection === 'all' || activeModalSection === 'documents'">
               <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-file-invoice-dollar text-2xl"></i> {{ t('documents_collection') }}</h4>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -2013,9 +2012,24 @@ const activeNoteTitle = ref('')
 
 // Modal Dialog Logic
 const isModalOpen = ref(false)
+const activeModalSection = ref('all')
 const isTreatmentPlanOnly = ref(false)
 const isGeneralDataOnly = ref(false)
+const isAlignersOnly = ref(false)
+const isDocumentsOnly = ref(false)
+const isAccessoriesOnly = ref(false)
+const isPackageOnly = ref(false)
 const isSaving = ref(false)
+
+const modalTitle = computed(() => {
+  if (activeModalSection.value === 'general') return locale.value === 'ar' ? 'البيانات العامة للمريض' : 'General Patient Data'
+  if (activeModalSection.value === 'package') return locale.value === 'ar' ? 'الباقة / التصنيف' : 'Package / Category'
+  if (activeModalSection.value === 'aligners') return t('aligners_delivered')
+  if (activeModalSection.value === 'accessories') return t('accessories')
+  if (activeModalSection.value === 'plans') return locale.value === 'ar' ? 'خطة العلاج' : 'Treatment Plan'
+  if (activeModalSection.value === 'documents') return t('documents_collection')
+  return t('edit_case_data')
+})
 const editForm = ref({
     id: null,
     uuid: '',
@@ -2135,9 +2149,20 @@ watch([
   }
 }, { deep: true })
 
-const openModal = async (item, treatmentOnly = false, generalDataOnly = false) => {
-    isTreatmentPlanOnly.value = treatmentOnly;
-    isGeneralDataOnly.value = generalDataOnly;
+const openModal = async (item, section = 'all') => {
+    if (section === true) {
+        activeModalSection.value = 'plans'
+    } else if (section === false) {
+        activeModalSection.value = 'general'
+    } else {
+        activeModalSection.value = section
+    }
+    isTreatmentPlanOnly.value = activeModalSection.value === 'plans'
+    isGeneralDataOnly.value = activeModalSection.value === 'general'
+    isAlignersOnly.value = activeModalSection.value === 'aligners'
+    isDocumentsOnly.value = activeModalSection.value === 'documents'
+    isAccessoriesOnly.value = activeModalSection.value === 'accessories'
+    isPackageOnly.value = activeModalSection.value === 'package'
     // Mark as read if not already read
     if (item.is_admin_read === 0) {
         // Update local object immediately for UI feedback
@@ -2210,6 +2235,7 @@ const openModal = async (item, treatmentOnly = false, generalDataOnly = false) =
 const closeModal = () => {
     if(isSaving.value) return
     isModalOpen.value = false
+    activeModalSection.value = 'all'
     editForm.value.selectedFile1 = null
     editForm.value.selectedFile2 = null
     editForm.value.price_list_file = null

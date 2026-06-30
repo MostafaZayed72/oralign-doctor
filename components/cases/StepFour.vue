@@ -303,8 +303,15 @@ const clinicalCategories = [
 
 const isCategoryActive = (id: string) => {
   const cat = props.formData.detailedPlan[id]
-  if (!cat) return false
-  return Object.keys(cat).length > 0 && (cat.selectedTeeth?.length > 0 || cat.option || cat.group || cat.notes)
+  if (!cat || Object.keys(cat).length === 0) return false
+  return Object.values(cat).some(val => {
+    if (Array.isArray(val)) {
+      const filtered = val.filter(v => v !== null && v !== undefined && v !== '' && v !== 'null')
+      return filtered.length > 0
+    }
+    if (typeof val === 'boolean') return val === true
+    return val !== null && val !== undefined && val !== '' && val !== 'null'
+  })
 }
 
 const getCategorySummary = (id: string) => {
@@ -314,6 +321,19 @@ const getCategorySummary = (id: string) => {
   if (cat.selectedTeeth?.length > 0) return `${cat.selectedTeeth.length} Teeth selected`
   if (cat.option) return cat.option
   if (cat.group) return cat.group
+  
+  const parts: string[] = []
+  for (const [key, val] of Object.entries(cat)) {
+    if (Array.isArray(val) && val.length > 0) {
+      parts.push(`${val.length} options selected`)
+    } else if (val && typeof val === 'string' && val !== 'null' && val.trim() !== '' && key !== 'notes') {
+      parts.push(val)
+    } else if (typeof val === 'boolean' && val === true) {
+      parts.push(key)
+    }
+  }
+  if (parts.length > 0) return parts.join(', ')
+  
   return 'Specified with notes'
 }
 
