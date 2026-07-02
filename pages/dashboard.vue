@@ -125,7 +125,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="c in filteredCases" :key="c.id" class="case-row">
+              <tr v-for="c in filteredCases" :key="c.id" class="case-row" :class="{ 'active-row': activeActionMenu?.[0] === c.id }">
                 <td class="dashboard-td">
                   <NuxtLink :to="localePath(`/case-details/${c.id}`)" class="text-primary font-bold text-sm hover:underline cell-content">
                     {{ c.uuid || `Oralign-${c.id}` }}
@@ -666,4 +666,17 @@ onMounted(() => loadCases())
 
 /* لا تغيير لون الصف عند hover */
 .case-row { transition: none; }
+
+.case-row.active-row {
+  position: relative;
+  z-index: 40;
+}
+.case-row.active-row .dashboard-td {
+  position: relative;
+  z-index: 40;
+}
+.case-row.active-row .cell-content {
+  position: relative;
+  z-index: 40;
+}
 </style>
