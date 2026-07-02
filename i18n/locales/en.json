@@ -238,5 +238,12 @@
     "notifications": "Notifications",
     "mark_all_read": "Mark all as read",
     "no_notifications": "No notifications",
-    "view_all_cases": "View all cases"
+    "view_all_cases": "View all cases",
+    "view_all_notifications": "View all notifications",
+    "notifications_desc": "A list of all system notifications and warnings",
+    "read": "Read",
+    "unread": "Unread",
+    "message": "Message",
+    "show_more": "Show More",
+    "loading_more": "Loading..."
 }

@@ -225,11 +225,11 @@ defineEmits(['toggle-sidebar'])
               <!-- Footer -->
               <div class="px-4 py-2 border-t border-slate-100 dark:border-slate-700 text-center bg-slate-50/50 dark:bg-slate-800/80">
                 <NuxtLink 
-                  :to="localePath('/admin/patient-cases')" 
+                  :to="localePath('/admin/notifications')" 
                   @click="closeNotificationsMenu"
                   class="text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                 >
-                  {{ t('view_all_cases') }}
+                  {{ t('view_all_notifications') }}
                 </NuxtLink>
               </div>
             </div>

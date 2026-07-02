@@ -238,5 +238,12 @@
     "notifications": "الإشعارات",
     "mark_all_read": "تحديد الكل كمقروء",
     "no_notifications": "لا توجد إشعارات جديدة",
-    "view_all_cases": "عرض جميع الحالات"
+    "view_all_cases": "عرض جميع الحالات",
+    "view_all_notifications": "عرض جميع الإشعارات",
+    "notifications_desc": "قائمة بكافة الإشعارات والتحذيرات الواردة في النظام",
+    "read": "مقروء",
+    "unread": "غير مقروء",
+    "message": "الرسالة",
+    "show_more": "إظهار المزيد",
+    "loading_more": "جاري التحميل..."
 }
