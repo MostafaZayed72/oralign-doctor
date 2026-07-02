@@ -179,6 +179,7 @@
                 <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
                 <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('uuid') }}</th>
                 <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('date') }}</th>
+                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('temp_treatment_plan') }}</th>
                 <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('treatment_plan1') }}</th>
                 <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('treatment_plan2') }}</th>
                 <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('status') }}</th>
@@ -265,6 +266,40 @@
                   <span class="text-slate-700 dark:text-slate-300 text-[13px] font-black">{{ item.date_modified.split(' ')[0] }}</span>
                 </td>
                 
+                <!-- Temporary Treatment Plan Block -->
+                <td @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <div class="flex flex-col items-stretch justify-center gap-2 w-full">
+                        <div class="flex flex-col items-stretch justify-center gap-1 w-full" @click.stop>
+                            <a v-if="item.temp_treatment_plan_file && !checkDefault(item.temp_treatment_plan_file)" :href="fixFileUrl(item.temp_treatment_plan_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
+                                <i class="fas fa-file-pdf text-red-500 text-lg"></i>
+                            </a>
+                            <a v-if="item.temp_treatment_plan_url" :href="item.temp_treatment_plan_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                                <i class="fas fa-external-link-alt text-[10px]"></i>
+                                <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
+                            </a>
+                            <button v-if="item.temp_treatment_plan && !checkDefault(item.temp_treatment_plan)" @click.stop="openNoteModal(item.temp_treatment_plan, t('temp_treatment_plan'))" class="w-full h-8 flex items-center justify-center text-white bg-slate-500 rounded shadow-md hover:bg-slate-600 transition-all gap-2 px-2">
+                              <i class="fas fa-comment-dots text-[10px]"></i>
+                              <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'ملاحظة' : 'Note' }}</span>
+                            </button>
+                            
+                            <!-- Approve Button (Only for Super Admin) -->
+                            <button 
+                              v-if="isSuperAdmin && (item.temp_treatment_plan_file || item.temp_treatment_plan_url || item.temp_treatment_plan)" 
+                              @click.stop="approveTemporaryPlan(item)" 
+                              class="w-full h-8 flex items-center justify-center text-white bg-green-600 hover:bg-green-700 rounded shadow-md transition-all gap-2 px-2 mt-1"
+                              :title="locale === 'ar' ? 'اعتماد ونقل للخطة 1' : 'Approve & Move to Plan 1'"
+                            >
+                              <i class="fas fa-check text-[10px]"></i>
+                              <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'اعتماد' : 'Approve' }}</span>
+                            </button>
+                        </div>
+                        <span v-if="item.temp_treatment_plan_status && !checkDefault(item.temp_treatment_plan_status)" class="text-[11px] font-black uppercase tracking-tight text-emerald-600 dark:text-emerald-400">
+                          {{ item.temp_treatment_plan_status }}
+                        </span>
+                        <span v-else-if="!(item.temp_treatment_plan_file && !checkDefault(item.temp_treatment_plan_file)) && !item.temp_treatment_plan_url && !(item.temp_treatment_plan && !checkDefault(item.temp_treatment_plan))" class="text-[12px] font-black text-slate-400">—</span>
+                    </div>
+                </td>
+
                 <!-- Treatment Plan Status 1 Block -->
                 <td @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
@@ -827,6 +862,49 @@
             
             <hr class="border-t-2 border-slate-300 dark:border-slate-700 relative z-0" v-show="activeModalSection === 'all'">
 
+            <!-- Temporary Plan Section (Only for Admin/Assistants) -->
+            <div class="p-8 rounded-3xl border border-dashed border-emerald-300 dark:border-emerald-700 bg-emerald-50/30 dark:bg-emerald-950/10 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="activeModalSection === 'all' || activeModalSection === 'plans'">
+              <h4 class="text-xl font-black text-emerald-800 dark:text-emerald-400 flex items-center gap-3 pb-4 border-b-2 border-emerald-250 dark:border-emerald-800 uppercase tracking-widest"><i class="fas fa-file-invoice text-2xl"></i> {{ t('temp_treatment_plan') }}</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <!-- File Upload Temp Plan -->
+                  <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('upload_attachment') }}</label>
+                    <div class="relative flex flex-col items-start w-full gap-4">
+                      <label class="flex flex-col items-center justify-center w-full h-36 border-4 border-slate-200 dark:border-slate-800 border-dashed rounded-3xl cursor-pointer bg-white dark:bg-slate-900 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 hover:border-emerald-400 group transition-all shadow-inner">
+                          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                              <i class="fas fa-cloud-upload-alt text-4xl text-slate-300 dark:text-slate-700 group-hover:text-emerald-400 transition-all mb-3"></i>
+                              <p class="text-sm text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider" v-if="!editForm.selectedFileTemp">{{ t('click_to_upload') }}</p>
+                              <p class="text-sm font-black text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/50 px-4 py-1 rounded-full shadow-sm" v-else>{{ editForm.selectedFileTemp.name }}</p>
+                          </div>
+                          <input type="file" accept=".pdf,image/*" @change="onFileSelectedTemp" class="hidden" />
+                      </label>
+                      <div v-if="editForm.temp_treatment_plan_file_url && !editForm.selectedFileTemp" class="flex items-center gap-3 w-full">
+                        <a :href="fixFileUrl(editForm.temp_treatment_plan_file_url)" target="_blank" class="flex-1 inline-flex items-center justify-center gap-3 px-6 py-4 text-base font-black bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-emerald-600 hover:text-emerald-700 hover:bg-slate-50 dark:text-emerald-400 dark:hover:bg-slate-700 transition-all shadow-md">
+                            <i class="fas fa-external-link-alt text-lg"></i> {{ t('browse_current') }}
+                        </a>
+                        <button @click.prevent="removeAttachmentTemp" class="h-14 w-14 flex items-center justify-center text-xl font-bold bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-500/20 dark:hover:bg-red-500/30 dark:text-red-400 border-2 border-red-200 dark:border-red-500/30 rounded-2xl transition-all shadow-md" :title="t('delete_permanent')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                      <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('add_plan_notes') }}</label>
+                      <textarea v-model="editForm.temp_treatment_plan" rows="4" :placeholder="t('add_plan_notes_placeholder')" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-medium outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 dark:text-white shadow-sm transition-all resize-y"></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('plan_url') }}</label>
+                        <div class="relative group">
+                          <i class="fas fa-link absolute rtl:right-5 ltr:left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors"></i>
+                          <input type="text" v-model="editForm.temp_treatment_plan_url" placeholder="https://..." class="w-full px-12 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-lg font-bold outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 dark:text-white shadow-sm transition-all">
+                        </div>
+                        <p class="mt-3 text-xs text-slate-400 font-black italic tracking-wide opacity-70">* {{ t('view_link_hint') }}</p>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
             <!-- Plan 1 Section -->
             <div class="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-800/40 space-y-8 relative z-10 shadow-sm transition-all hover:shadow-md" v-show="activeModalSection === 'all' || activeModalSection === 'plans'">
               <h4 class="text-xl font-black text-slate-800 dark:text-slate-300 flex items-center gap-3 pb-4 border-b-2 border-slate-300 dark:border-slate-700 uppercase tracking-widest"><i class="fas fa-file-medical-alt text-2xl"></i> {{ t('treatment_plan_1') }}</h4>
@@ -1166,7 +1244,10 @@ import Swal from 'sweetalert2'
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
-const { token } = useAuth()
+const { token, user } = useAuth()
+const isSuperAdmin = computed(() => {
+  return user.value && (user.value.id === 1 || user.value.email === 'admin@doctors.oralign.co')
+})
 const headers = computed(() => ({
   Authorization: `Bearer ${token.value}`,
   Accept: 'application/json'
@@ -2210,6 +2291,15 @@ const openModal = async (item, section = 'all') => {
         treatment_plan2_file_url: isDefaultTp2File ? '' : (item.treatment_plan2 || ''),
         treatment_plan1_url: item.treatment_plan1_url || '',
         treatment_plan2_url: item.treatment_plan2_url || '',
+        
+        // Temp Treatment Plan Fields
+        temp_treatment_plan: checkDefault(item.temp_treatment_plan) ? '' : (item.temp_treatment_plan || ''),
+        temp_treatment_plan_file_url: checkDefault(item.temp_treatment_plan_file) ? '' : (item.temp_treatment_plan_file || ''),
+        temp_treatment_plan_url: item.temp_treatment_plan_url || '',
+        temp_treatment_plan_status: item.temp_treatment_plan_status || 'pending',
+        selectedFileTemp: null,
+        remove_temp_treatment_plan_file: false,
+
         price_list_url: item.price_list_url || '',
         receipt_url: item.receipt_url || '',
         documents: item.documents || [],
@@ -2313,6 +2403,15 @@ const removeAttachment1 = () => {
     editForm.value.treatment_plan1_file_url = ''
 }
 
+const onFileSelectedTemp = (event) => {
+    editForm.value.selectedFileTemp = event.target.files[0]
+}
+
+const removeAttachmentTemp = () => {
+    editForm.value.remove_temp_treatment_plan_file = true
+    editForm.value.temp_treatment_plan_file_url = ''
+}
+
 const deleteExistingDocument = async (docId, index) => {
     const result = await Swal.fire({
         title: locale.value === 'ar' ? 'هل أنت متأكد؟' : 'Are you sure?',
@@ -2350,6 +2449,46 @@ const removeAttachment2 = () => {
     editForm.value.treatment_plan2_file_url = ''
 }
 
+const approveTemporaryPlan = async (item) => {
+  const result = await Swal.fire({
+      title: locale.value === 'ar' ? 'هل أنت متأكد؟' : 'Are you sure?',
+      text: locale.value === 'ar' ? 'هل تريد اعتماد هذه الخطة ونقلها كخطة علاج أولى للمريض؟' : 'Do you want to approve this plan and move it to treatment plan 1?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: locale.value === 'ar' ? 'نعم، اعتمدها!' : 'Yes, approve it!',
+      cancelButtonText: locale.value === 'ar' ? 'إلغاء' : 'Cancel'
+  })
+  
+  if (!result.isConfirmed) return;
+
+  try {
+      const res = await $fetch(`${config.public.apiBase}/patient-cases/${item.id}/approve-temp-plan`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token.value}` }
+      })
+      if (res && res.success) {
+          await refresh()
+          Swal.fire({
+              title: locale.value === 'ar' ? 'تم الاعتماد بنجاح!' : 'Approved successfully!',
+              icon: 'success',
+              confirmButtonColor: '#10b981',
+              timer: 1500,
+              showConfirmButton: false
+          })
+      }
+  } catch(e) {
+      console.error(e)
+      Swal.fire({
+          title: locale.value === 'ar' ? 'خطأ!' : 'Error!',
+          text: e.data?.message || e.message,
+          icon: 'error',
+          confirmButtonColor: '#d33'
+      })
+  }
+}
+
 const saveEdit = async () => {
     isSaving.value = true
     const formData = new FormData()
@@ -2372,9 +2511,16 @@ const saveEdit = async () => {
     
     // Files
     if (editForm.value.selectedFile1) formData.append('treatment_plan1_file', editForm.value.selectedFile1)
+    if (editForm.value.selectedFileTemp) formData.append('temp_treatment_plan_file', editForm.value.selectedFileTemp)
     if (editForm.value.selectedFile2) formData.append('treatment_plan2', editForm.value.selectedFile2)
     if (editForm.value.remove_attachment1) formData.append('delete_treatment_plan1_file', 'true')
+    if (editForm.value.remove_temp_treatment_plan_file) formData.append('delete_temp_treatment_plan_file', 'true')
     if (editForm.value.remove_attachment2) formData.append('delete_treatment_plan2', 'true')
+
+    // Temp treatment plan fields
+    if (editForm.value.temp_treatment_plan && editForm.value.temp_treatment_plan.trim()) formData.append('temp_treatment_plan', editForm.value.temp_treatment_plan)
+    if (editForm.value.temp_treatment_plan_url && editForm.value.temp_treatment_plan_url.trim()) formData.append('temp_treatment_plan_url', editForm.value.temp_treatment_plan_url)
+    if (editForm.value.temp_treatment_plan_status) formData.append('temp_treatment_plan_status', editForm.value.temp_treatment_plan_status)
     
     // Documents
     if (editForm.value.price_list_files && editForm.value.price_list_files.length > 0) {

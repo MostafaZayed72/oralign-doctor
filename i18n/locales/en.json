@@ -113,6 +113,7 @@
     "doctor": "Doctor",
     "uuid": "UUID",
     "date": "Date",
+    "temp_treatment_plan": "Temporary Plan",
     "treatment_plan1": "Treatment Plan 1",
     "treatment_plan2": "Treatment Plan 2",
     "status": "Status",
@@ -233,5 +234,9 @@
     "add_bill": "Add Bill",
     "add_receipt": "Add Receipt",
     "bills": "Bills",
-    "receipt": "Receipt"
+    "receipt": "Receipt",
+    "notifications": "Notifications",
+    "mark_all_read": "Mark all as read",
+    "no_notifications": "No notifications",
+    "view_all_cases": "View all cases"
 }
