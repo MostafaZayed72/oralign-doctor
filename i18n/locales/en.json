@@ -245,5 +245,6 @@
     "unread": "Unread",
     "message": "Message",
     "show_more": "Show More",
-    "loading_more": "Loading..."
+    "loading_more": "Loading...",
+    "page": "Page"
 }

@@ -70,7 +70,7 @@ defineProps({
 defineEmits(['close'])
 
 const { t, locale } = useI18n()
-const { token } = useAuth()
+const { token, user } = useAuth()
 const config = useRuntimeConfig()
 const isRtl = computed(() => locale.value === 'ar')
 const dir = computed(() => (isRtl.value ? 'rtl' : 'ltr'))
@@ -105,19 +105,35 @@ const toggleCollapse = () => {
 
 const localePath = useLocalePath()
 
-const menuItems = computed(() => [
-  { name: t('dashboard'), icon: 'fas fa-th-large', path: localePath('/admin') },
-  { name: t('users'), icon: 'fas fa-users', path: localePath('/admin/users') },
-  { name: t('services'), icon: 'fas fa-wrench', path: localePath('/services') },
-  { name: t('blogs'), icon: 'fas fa-paste', path: localePath('/blog') },
-  { 
-    name: t('cases_sidebar'), 
-    icon: 'fas fa-briefcase-medical', 
-    path: localePath('/admin/patient-cases'), 
-    badge: stats.value?.unreadCasesCount > 0 ? stats.value.unreadCasesCount : null 
-  },
-  { name: t('all_categories'), icon: 'fas fa-layer-group', path: localePath('/admin/categories') },
-  { name: t('gallery'), icon: 'fas fa-images', path: localePath('/gallery') },
-  { name: t('areas'), icon: 'fas fa-map-marker-alt', path: localePath('/areas') },
-])
+const menuItems = computed(() => {
+  const allItems = [
+    { name: t('dashboard'), icon: 'fas fa-th-large', path: localePath('/admin') },
+    { name: t('users'), icon: 'fas fa-users', path: localePath('/admin/users'), permKey: 'doctors' },
+    { 
+      name: t('cases_sidebar'), 
+      icon: 'fas fa-briefcase-medical', 
+      path: localePath('/admin/patient-cases'), 
+      badge: stats.value?.unreadCasesCount > 0 ? stats.value.unreadCasesCount : null,
+      permKey: 'patient_cases'
+    },
+    { name: t('all_categories'), icon: 'fas fa-layer-group', path: localePath('/admin/categories'), permKey: 'categories' },
+    { 
+      name: t('notifications'), 
+      icon: 'fas fa-bell', 
+      path: localePath('/admin/notifications'), 
+      permKey: 'notifications'
+    },
+  ]
+  
+  if (user.value?.role === 'employee') {
+    const perms = user.value.permissions ? (typeof user.value.permissions === 'string' ? JSON.parse(user.value.permissions) : user.value.permissions) : null
+    if (perms && perms.pages) {
+      return allItems.filter(item => {
+        if (!item.permKey) return true
+        return !!perms.pages[item.permKey]
+      })
+    }
+  }
+  return allItems
+})
 </script>
