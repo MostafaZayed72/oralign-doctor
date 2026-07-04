@@ -111,7 +111,7 @@
     </div>
 
     <!-- Main Table Card -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col relative z-0">
+    <div id="cases-table-card" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col relative z-0">
       
       <!-- Card Header -->
       <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -169,42 +169,42 @@
         <table class="w-full text-left rtl:text-right border-collapse whitespace-nowrap custom-patient-table">
           <thead>
             <tr :class="getGroupHeaderClass(activeGroup)" class="text-[11px] uppercase tracking-wider font-bold">
-              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 w-10 text-center">
+              <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 w-10 text-center">
                 <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="rounded border-slate-300 text-#063c31 focus:ring-#063c31 w-4 h-4 cursor-pointer">
               </th>
               
               <!-- Virtual Planning Group (Reordered) -->
               <template v-if="activeGroup === 'Virtual Planning'">
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('patient') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('uuid') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('date') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('temp_treatment_plan') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('treatment_plan1') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('treatment_plan2') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('status') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('patient') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('uuid') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('date') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('temp_treatment_plan') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('treatment_plan1') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('treatment_plan2') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('status') }}</th>
               </template>
 
               <!-- Finance Group (Reordered) -->
               <template v-else-if="activeGroup === 'Finance'">
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('patient') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('package') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('price_list') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('price_after_discount') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('receipt_bills') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('patient') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('package') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('price_list') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('document_notes') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('receipt_bills') }}</th>
               </template>
 
               <!-- Laboratory Group (Reordered) -->
               <template v-else-if="activeGroup === 'Laboratory'">
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('patient') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('type') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('aligners_delivered') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('accessories') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('manufacturing') }}</th>
-                <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('date_modified') }}</th>
-                <th class="p-4 border-b border-slate-200 dark:border-slate-800 text-center">{{ t('actions') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('patient') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('doctor') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('type') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('aligners_delivered') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('accessories') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('manufacturing') }}</th>
+                <th class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('date_modified') }}</th>
+                <th class="px-2 py-3 border-b border-slate-200 dark:border-slate-800 text-center">{{ t('actions') }}</th>
               </template>
             </tr>
           </thead>
@@ -224,14 +224,14 @@
                 class="transition-all cursor-pointer border-l-4 border-l-transparent hover:bg-slate-50 dark:hover:bg-slate-800/20"
                 :class="getRowClass(item)">
               <td class="p-0 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 0)">
-                <div class="w-full h-full min-h-[65px] flex items-center justify-center p-4">
+                <div class="w-full h-full min-h-[38px] flex items-center justify-center p-2">
                   <input type="checkbox" v-model="selectedCases" :value="item.id" class="rounded border-slate-300 text-#063c31 focus:ring-#063c31 w-4 h-4 cursor-pointer">
                 </div>
               </td>
               <template v-if="activeGroup === 'Virtual Planning'">
                 <!-- Patient Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
-                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
+                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
                     <div class="flex flex-col items-center justify-center">
@@ -251,7 +251,7 @@
  
                 <!-- Doctor Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                  <div class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
@@ -348,7 +348,7 @@
  
                 <!-- Status -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 7)">
-                    <div class="w-full min-h-[70px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getBadgeClass(item.status)">
+                    <div class="w-full min-h-[38px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getBadgeClass(item.status)">
                       <span v-if="item.status" class="text-[12px] font-black uppercase tracking-tight text-white-force">
                         {{ item.status }}
                       </span>
@@ -362,7 +362,7 @@
                 <!-- Patient Block -->
                 <!-- Patient Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
-                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
+                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
                     <div class="flex flex-col items-center justify-center">
@@ -382,7 +382,7 @@
 
                 <!-- Doctor Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                  <div class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
@@ -397,7 +397,7 @@
 
                 <!-- Price List Block -->
                 <td @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 4)">
-                    <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[70px]">
+                    <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[38px]">
                         <!-- Old price_list_url if exists -->
                         <button v-if="item.price_list_url" @click.stop="openPreview(item.price_list_url, locale === 'ar' ? 'قائمة الأسعار' : 'Price List')" class="w-10 h-10 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة قائمة الأسعار' : 'Preview Price List'">
                             <i class="fas fa-file-invoice text-sm"></i>
@@ -415,14 +415,14 @@
                     </div>
                 </td>
 
-                <!-- Price Block -->
-                <td @click.stop="openModal(item, 'documents')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-800 dark:text-white cursor-pointer" :class="getGroupColClass(activeGroup, 5)">
-                    {{ item.price_after_discount || '--' }}
+                <!-- Document Notes Block -->
+                <td @click.stop="openModal(item, 'documents')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-semibold text-slate-800 dark:text-white cursor-pointer" :class="getGroupColClass(activeGroup, 5)">
+                    {{ item.document_notes || '--' }}
                 </td>
 
                 <!-- Receipt Block -->
                 <td @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
-                    <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[70px]">
+                    <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[38px]">
                         <!-- Old receipt_url if exists -->
                         <button v-if="item.receipt_url" @click.stop="openPreview(item.receipt_url, locale === 'ar' ? 'الفاتورة' : 'Receipt')" class="w-10 h-10 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة الفاتورة' : 'Preview Receipt'">
                             <i class="fas fa-receipt text-sm"></i>
@@ -446,7 +446,7 @@
               <template v-else-if="activeGroup === 'Laboratory'">
                 <!-- Patient Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
-                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
+                  <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
                     <div class="flex flex-col items-center justify-center">
@@ -466,14 +466,14 @@
 
                 <!-- Doctor Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
-                  <div class="min-h-[50px] flex items-center justify-center p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
+                  <div class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
 
                 <!-- Type Block -->
                 <td @click.stop="openModal(item, 'general')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
-                    {{ item.type || '-' }}
+                    {{ item.case_type || '-' }}
                 </td>
                 
                 <!-- Aligners Block -->
@@ -510,7 +510,7 @@
 
                 <!-- Manufacturing -->
                 <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
-                    <div class="w-full min-h-[70px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getLabBadgeClass(item.lab_status)">
+                    <div class="w-full min-h-[38px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getLabBadgeClass(item.lab_status)">
                       <span v-if="item.lab_status" class="text-[12px] font-black uppercase tracking-tight text-white-force">
                         {{ item.lab_status }}
                       </span>
@@ -642,7 +642,7 @@
           <!-- Modal Body -->
           <div class="p-10 space-y-12 overflow-y-auto flex-1 custom-scroll bg-slate-50/20 dark:bg-slate-950/20 relative">
             
-            <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10" v-show="activeModalSection === 'all' || activeModalSection === 'general'">
+            <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10" v-show="activeModalSection === 'all' || activeModalSection === 'general'">
                 <!-- Patient Name -->
                 <div class="space-y-2">
                   <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ t('patient_name') }}</label>
@@ -674,6 +674,19 @@
                         <option v-for="ls in labStatuses" :key="ls" :value="ls" class="text-slate-900 dark:text-white">{{ ls }}</option>
                       </select>
                       <i class="fas fa-flask absolute rtl:right-6 ltr:left-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                      <i class="fas fa-chevron-down absolute rtl:left-6 ltr:right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                  </div>
+                </div>
+
+                <!-- Case Type -->
+                <div class="space-y-2">
+                  <label class="block text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ locale === 'ar' ? 'نوع الحالة (Case Type)' : 'Case Type' }}</label>
+                  <div class="relative">
+                      <select v-model="editForm.case_type" class="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none dark:text-white transition-all shadow-inner appearance-none cursor-pointer">
+                        <option value="aligner">Aligner</option>
+                        <option value="retainer">Retainer</option>
+                        <option value="refinement">Refinement</option>
+                      </select>
                       <i class="fas fa-chevron-down absolute rtl:left-6 ltr:right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                   </div>
                 </div>
@@ -1503,10 +1516,21 @@ const cases = computed(() => {
             lab_status: item.lab_status || rc.lab_status || null,
             aligners_upper: item.aligners_upper ?? rc.aligners_upper ?? null,
             aligners_lower: item.aligners_lower ?? rc.aligners_lower ?? null,
-            accessories_data: item.accessories_data || rc.accessories_data || null,
+            accessories_data: (() => {
+                const rawVal = item.accessories_data || rc.accessories_data || null
+                if (!rawVal) return null
+                if (typeof rawVal === 'object') return rawVal
+                try {
+                    return JSON.parse(rawVal)
+                } catch (e) {
+                    console.error('Failed to parse accessories_data', e)
+                    return null
+                }
+            })(),
             aligners_notes: item.aligners_notes || rc.aligners_notes || null,
             accessories_notes: item.accessories_notes || rc.accessories_notes || null,
             document_notes: item.document_notes || rc.document_notes || null,
+            case_type: String(item.case_type || rc.case_type || 'aligner').toLowerCase(),
             parent_id: pId,
             refinement_number: refinementNumber
         }
@@ -1607,12 +1631,57 @@ const filteredCases = computed(() => {
     )
   }
  
+  // Sort approved in last 7 days first, keeping date modified descending overall
+  const now = new Date()
+  const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000))
+
+  const parseCaseDate = (dateStr) => {
+    if (!dateStr) return new Date(0)
+    const [datePart, timePart] = dateStr.split(' ')
+    const [year, month, day] = datePart.split('-').map(Number)
+    if (timePart) {
+      const [hours, minutes, seconds] = timePart.split(':').map(Number)
+      return new Date(year, month - 1, day, hours || 0, minutes || 0, seconds || 0)
+    }
+    return new Date(year, month - 1, day)
+  }
+
+  result = [...result].sort((a, b) => {
+    const aDate = parseCaseDate(a.date_modified)
+    const bDate = parseCaseDate(b.date_modified)
+    
+    const aIsApprovedRecent = a.status === 'approved' && aDate >= sevenDaysAgo
+    const bIsApprovedRecent = b.status === 'approved' && bDate >= sevenDaysAgo
+    
+    if (aIsApprovedRecent && !bIsApprovedRecent) return -1
+    if (!aIsApprovedRecent && bIsApprovedRecent) return 1
+    
+    // Within same group, sort descending by date modified
+    return bDate.getTime() - aDate.getTime()
+  })
+
   return result
 })
 
 // Pagination Logic
 const currentPage = ref(1)
 const itemsPerPage = 8
+
+watch(currentPage, () => {
+  if (typeof window !== 'undefined') {
+    const tableCardEl = document.getElementById('cases-table-card')
+    const mainEl = document.querySelector('main')
+    if (tableCardEl && mainEl) {
+      const mainRect = mainEl.getBoundingClientRect()
+      const cardRect = tableCardEl.getBoundingClientRect()
+      const relativeTop = cardRect.top - mainRect.top + mainEl.scrollTop
+      mainEl.scrollTo({
+        top: relativeTop - 10,
+        behavior: 'smooth'
+      })
+    }
+  }
+})
 
 const totalPages = computed(() => Math.ceil(filteredCases.value.length / itemsPerPage) || 1)
 
@@ -2138,7 +2207,8 @@ const editForm = ref({
     sub_category_id: null,
     sub_category_id2: null,
     aligners_notes: '',
-    accessories_notes: ''
+    accessories_notes: '',
+    case_type: 'aligner'
 })
 
 const checkDefault = (val) => {
@@ -2317,7 +2387,8 @@ const openModal = async (item, section = 'all') => {
         receipt_file: null,
         aligners_notes: item.aligners_notes || '',
         accessories_notes: item.accessories_notes || '',
-        document_notes: item.document_notes || ''
+        document_notes: item.document_notes || '',
+        case_type: String(item.case_type || 'aligner').toLowerCase()
     }
     isModalOpen.value = true
 }
@@ -2547,6 +2618,7 @@ const saveEdit = async () => {
     if (editForm.value.aligners_lower !== null && editForm.value.aligners_lower !== '') formData.append('aligners_lower', editForm.value.aligners_lower)
     if (editForm.value.accessories_data) formData.append('accessories_data', JSON.stringify(editForm.value.accessories_data))
     if (editForm.value.lab_status && editForm.value.lab_status.trim()) formData.append('lab_status', editForm.value.lab_status)
+    formData.append('case_type', editForm.value.case_type || 'Aligner')
 
     try {
         const res = await $fetch(`${config.public.apiBase}/patient-cases/${editForm.value.id}/update`, {
@@ -2596,8 +2668,7 @@ const saveEdit = async () => {
 }
 
 .custom-patient-table td {
-  font-family: 'Fira Code', monospace !important;
-  font-size: 18px !important;
+  font-size: 13px !important;
   color: #000000;
 }
 

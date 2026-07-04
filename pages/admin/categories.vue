@@ -1,5 +1,13 @@
 <template>
   <div class="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <!-- Back Button -->
+    <div>
+      <NuxtLink :to="localePath('/admin/patient-cases')" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:scale-105">
+        <i class="fas fa-arrow-left rtl:rotate-180"></i>
+        <span>{{ locale === 'ar' ? 'رجوع' : 'Back' }}</span>
+      </NuxtLink>
+    </div>
+
     <div class="flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t('manage_categories') }}</h1>
@@ -135,6 +143,7 @@ import { useI18n } from 'vue-i18n'
 import Swal from 'sweetalert2'
 
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { token } = useAuth()
 const loading = ref(false)

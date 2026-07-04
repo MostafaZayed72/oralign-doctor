@@ -1,5 +1,13 @@
 <template>
   <div class="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <!-- Back Button -->
+    <div>
+      <NuxtLink :to="localePath('/admin/patient-cases')" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:scale-105">
+        <i class="fas fa-arrow-left rtl:rotate-180"></i>
+        <span>{{ locale === 'ar' ? 'رجوع' : 'Back' }}</span>
+      </NuxtLink>
+    </div>
+
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
@@ -48,18 +56,18 @@
     </div>
 
     <!-- Doctors Table Card -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col relative">
+    <div id="doctors-table-card" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col relative">
       <div class="overflow-x-auto w-full">
         <table class="w-full text-left rtl:text-right border-collapse whitespace-nowrap">
           <thead>
             <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[11px] uppercase tracking-wider font-bold border-b border-slate-200 dark:border-slate-800">
-              <th class="p-4 text-center">{{ locale === 'ar' ? 'الاسم' : 'Name' }}</th>
-              <th class="p-4 text-center">{{ t('email') }}</th>
-              <th class="p-4 text-center">{{ t('phone') }}</th>
-              <th class="p-4 text-center">{{ locale === 'ar' ? 'الموقع' : 'Location' }}</th>
-              <th class="p-4 text-center">{{ t('status') }}</th>
-              <th class="p-4 text-center">{{ locale === 'ar' ? 'تاريخ التسجيل' : 'Registration Date' }}</th>
-              <th class="p-4 text-center">{{ locale === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
+              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ locale === 'ar' ? 'الاسم' : 'Name' }}</th>
+              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('email') }}</th>
+              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('phone') }}</th>
+              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ locale === 'ar' ? 'الموقع' : 'Location' }}</th>
+              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('status') }}</th>
+              <th class="p-4 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ locale === 'ar' ? 'تاريخ التسجيل' : 'Registration Date' }}</th>
+              <th class="p-4 border-b border-slate-200 dark:border-slate-800 text-center">{{ locale === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -77,32 +85,32 @@
             </tr>
             <!-- Doctors rows -->
             <tr 
-              v-else 
-              v-for="doc in filteredDoctors" 
+              v-else-if="paginatedDoctors.length > 0" 
+              v-for="doc in paginatedDoctors" 
               :key="doc.id" 
               class="transition-all hover:bg-slate-50 dark:hover:bg-slate-800/10"
             >
               <!-- Name -->
-              <td class="p-4 text-center font-bold text-slate-800 dark:text-slate-100">
+              <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center font-bold text-slate-800 dark:text-slate-100">
                 {{ doc.name }}
               </td>
               <!-- Email -->
-              <td class="p-4 text-center font-semibold text-slate-600 dark:text-slate-300">
+              <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center font-semibold text-slate-600 dark:text-slate-300">
                 {{ doc.email }}
               </td>
               <!-- Phone -->
-              <td class="p-4 text-center font-semibold text-slate-600 dark:text-slate-300">
+              <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center font-semibold text-slate-600 dark:text-slate-300">
                 {{ doc.phone }}
               </td>
               <!-- Location -->
-              <td class="p-4 text-center text-xs text-slate-500 dark:text-slate-400">
+              <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
                 <span v-if="doc.country || doc.region || doc.area">
                   {{ [doc.country, doc.region, doc.area].filter(Boolean).join(' / ') }}
                 </span>
                 <span v-else class="text-slate-400">-</span>
               </td>
               <!-- Status -->
-              <td class="p-4 text-center">
+              <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center">
                 <span 
                   class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-sm"
                   :class="doc.status === 'active' 
@@ -114,7 +122,7 @@
                 </span>
               </td>
               <!-- Created At -->
-              <td class="p-4 text-center text-xs text-slate-500 dark:text-slate-400 font-sans">
+              <td class="p-4 border-r border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 font-sans">
                 {{ doc.created_at || '-' }}
               </td>
               <!-- Actions -->
@@ -158,6 +166,77 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination Controls -->
+      <div v-if="totalPages > 1" class="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-center gap-6 mt-auto">
+        <div class="flex items-center gap-3">
+            <span class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+              {{ t('page') }} 
+            </span>
+            <div class="px-4 py-1.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-black text-teal-600 dark:text-teal-400 shadow-inner flex items-center gap-2">
+                <span>{{ currentPage }}</span>
+                <span class="text-slate-300 dark:text-slate-700">/</span>
+                <span class="opacity-60">{{ totalPages }}</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
+          <!-- Jump to First -->
+          <button 
+            @click="currentPage = 1" 
+            :disabled="currentPage === 1"
+            class="w-10 h-10 flex items-center justify-center rounded-xl font-black transition-all border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_rgb(226,232,240)] dark:shadow-[0_3px_0_rgb(30,41,59)] active:translate-y-[2px] active:shadow-none disabled:opacity-30 disabled:cursor-not-allowed bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-teal-500"
+            :title="locale === 'ar' ? 'الصفحة الأولى' : 'First Page'"
+          >
+            <i class="fas fa-angle-double-left rtl:rotate-180"></i>
+          </button>
+
+          <!-- Prev Page -->
+          <button 
+            @click="currentPage--" 
+            :disabled="currentPage === 1"
+            class="w-10 h-10 flex items-center justify-center rounded-xl font-black transition-all border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_rgb(226,232,240)] dark:shadow-[0_3px_0_rgb(30,41,59)] active:translate-y-[2px] active:shadow-none disabled:opacity-30 disabled:cursor-not-allowed bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-teal-500"
+          >
+            <i class="fas fa-chevron-left rtl:rotate-180"></i>
+          </button>
+
+          <!-- Numbered Pages -->
+          <div class="flex items-center gap-2 px-1">
+            <template v-for="p in visiblePages" :key="p">
+                <span v-if="p === '...'" class="px-2 text-slate-400 font-bold italic select-none">...</span>
+                <button 
+                  v-else
+                  @click="currentPage = p"
+                  class="w-10 h-10 flex items-center justify-center rounded-xl font-black transition-all border outline-none active:translate-y-[2px] active:shadow-none"
+                  :class="p === currentPage 
+                    ? 'bg-gradient-to-b from-teal-400 to-teal-600 text-white border-teal-500 shadow-[0_4px_0_rgb(13,148,136),0_8px_15px_rgba(20,184,166,0.2)]' 
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 shadow-[0_3px_0_rgb(226,232,240)] dark:shadow-[0_3px_0_rgb(30,41,59)] hover:border-teal-500/50 hover:text-teal-500'"
+                >
+                  {{ p }}
+                </button>
+            </template>
+          </div>
+
+          <!-- Next Page -->
+          <button 
+            @click="currentPage++" 
+            :disabled="currentPage === totalPages"
+            class="w-10 h-10 flex items-center justify-center rounded-xl font-black transition-all border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_rgb(226,232,240)] dark:shadow-[0_3px_0_rgb(30,41,59)] active:translate-y-[2px] active:shadow-none disabled:opacity-30 disabled:cursor-not-allowed bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-teal-500"
+          >
+            <i class="fas fa-chevron-right rtl:rotate-180"></i>
+          </button>
+
+          <!-- Jump to Last -->
+          <button 
+            @click="currentPage = totalPages" 
+            :disabled="currentPage === totalPages"
+            class="w-10 h-10 flex items-center justify-center rounded-xl font-black transition-all border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_rgb(226,232,240)] dark:shadow-[0_3px_0_rgb(30,41,59)] active:translate-y-[2px] active:shadow-none disabled:opacity-30 disabled:cursor-not-allowed bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-teal-500"
+            :title="locale === 'ar' ? 'الصفحة الأخيرة' : 'Last Page'"
+          >
+            <i class="fas fa-angle-double-right rtl:rotate-180"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -166,11 +245,12 @@
 definePageMeta({
   layout: 'admin'
 })
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Swal from 'sweetalert2'
 
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { token, user } = useAuth()
 const loading = ref(false)
@@ -204,6 +284,58 @@ const filteredDoctors = computed(() => {
 
     return true
   })
+})
+
+// Pagination Logic
+const currentPage = ref(1)
+const itemsPerPage = 10
+
+const totalPages = computed(() => Math.ceil(filteredDoctors.value.length / itemsPerPage) || 1)
+
+const visiblePages = computed(() => {
+  const total = totalPages.value
+  const current = currentPage.value
+  const delta = 2 
+  
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+  
+  let pages = []
+  pages.push(1)
+  if (current > delta + 2) pages.push('...')
+  
+  const start = Math.max(2, current - delta)
+  const end = Math.min(total - 1, current + delta)
+  for (let i = start; i <= end; i++) pages.push(i)
+  
+  if (current < total - delta - 1) pages.push('...')
+  pages.push(total)
+  return pages
+})
+
+const paginatedDoctors = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredDoctors.value.slice(start, end)
+})
+
+watch([searchQuery, statusFilter], () => {
+  currentPage.value = 1
+})
+
+watch(currentPage, () => {
+  if (typeof window !== 'undefined') {
+    const tableCardEl = document.getElementById('doctors-table-card')
+    const mainEl = document.querySelector('main')
+    if (tableCardEl && mainEl) {
+      const mainRect = mainEl.getBoundingClientRect()
+      const cardRect = tableCardEl.getBoundingClientRect()
+      const relativeTop = cardRect.top - mainRect.top + mainEl.scrollTop
+      mainEl.scrollTo({
+        top: relativeTop - 10,
+        behavior: 'smooth'
+      })
+    }
+  }
 })
 
 const approveDoctor = async (doc) => {

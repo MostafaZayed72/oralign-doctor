@@ -1,5 +1,13 @@
 <template>
   <div class="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <!-- Back Button -->
+    <div>
+      <NuxtLink :to="localePath('/admin/patient-cases')" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:scale-105">
+        <i class="fas fa-arrow-left rtl:rotate-180"></i>
+        <span>{{ locale === 'ar' ? 'رجوع' : 'Back' }}</span>
+      </NuxtLink>
+    </div>
+
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
