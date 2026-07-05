@@ -50,8 +50,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiProxyBase: '/api/p',
-      apiBase: '/api/admin-proxy',
+      apiProxyBase: '/api/website',
+      apiBase: '/api/admin',
     },
   },
 
