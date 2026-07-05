@@ -504,10 +504,7 @@
                 <input type="checkbox" v-model="permissionsForm.pages.categories" class="w-5 h-5 accent-teal-500 rounded cursor-pointer">
                 <span class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ locale === 'ar' ? 'إدارة الباقات والأقسام' : 'Packages & Categories' }}</span>
               </label>
-              <label class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer hover:bg-slate-100/50 dark:hover:bg-slate-900/50 transition-all">
-                <input type="checkbox" v-model="permissionsForm.pages.doctors" class="w-5 h-5 accent-teal-500 rounded cursor-pointer">
-                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ locale === 'ar' ? 'إدارة الأطباء والموظفين' : 'Doctors & Employees' }}</span>
-              </label>
+
               <label class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer hover:bg-slate-100/50 dark:hover:bg-slate-900/50 transition-all">
                 <input type="checkbox" v-model="permissionsForm.pages.notifications" class="w-5 h-5 accent-teal-500 rounded cursor-pointer">
                 <span class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ locale === 'ar' ? 'الإشعارات' : 'Notifications' }}</span>
@@ -575,6 +572,10 @@
               <label class="flex items-center gap-2 p-2 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800/40 cursor-pointer hover:bg-amber-100/50 transition-all">
                 <input type="checkbox" v-model="permissionsForm.columns.fin_receipts" class="w-4 h-4 accent-amber-500 rounded">
                 <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ locale === 'ar' ? 'الإيصالات والفواتير' : 'Receipts & Bills' }}</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800/40 cursor-pointer hover:bg-amber-100/50 transition-all">
+                <input type="checkbox" v-model="permissionsForm.columns.fin_actions" class="w-4 h-4 accent-amber-500 rounded">
+                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ locale === 'ar' ? 'الإجراءات' : 'Actions' }}</span>
               </label>
             </div>
           </div>
@@ -1108,7 +1109,7 @@ const defaultPerms = {
     // Virtual Planning
     vp_patient: true, vp_doctor: true, vp_plans: true, vp_status: true, vp_actions: true,
     // Finance
-    fin_patient: true, fin_doctor: true, fin_package: true, fin_price_list: true, fin_doc_notes: true, fin_receipts: true,
+    fin_patient: true, fin_doctor: true, fin_package: true, fin_price_list: true, fin_doc_notes: true, fin_receipts: true, fin_actions: true,
     // Laboratory
     lab_patient: true, lab_doctor: true, lab_case_type: true, lab_aligners: true, lab_accessories: true, lab_manufacturing: true, lab_actions: true,
     // Legacy (keep for backward compat)

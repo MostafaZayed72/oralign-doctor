@@ -154,7 +154,7 @@
                           <a v-if="c.treatment_plan1_file && !checkDefault(c.treatment_plan1_file)" :href="fixFileUrl(c.treatment_plan1_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="$t('download_pdf')">
                               <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                           </a>
-                          <a v-if="c.treatment_plan1_url" :href="c.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 transition-all gap-2 px-2 border-b-2 border-teal-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_link')">
+                          <a v-if="c.treatment_plan1_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(c.treatment_plan1_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 transition-all gap-2 px-2 border-b-2 border-teal-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_link')">
                               <i class="fas fa-link text-[10px]"></i>
                               <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('link') || 'رابط' }}</span>
                           </a>
@@ -199,7 +199,7 @@
                           <a v-if="c.treatment_plan2 && !checkDefault(c.treatment_plan2)" :href="fixFileUrl(c.treatment_plan2)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="$t('download_pdf')">
                               <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                           </a>
-                          <a v-if="c.treatment_plan2_url" :href="c.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 transition-all gap-2 px-2 border-b-2 border-teal-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_link')">
+                          <a v-if="c.treatment_plan2_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(c.treatment_plan2_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 transition-all gap-2 px-2 border-b-2 border-teal-700 active:border-b-0 active:translate-y-0.5" :title="$t('view_link')">
                               <i class="fas fa-link text-[10px]"></i>
                               <span class="text-[10px] font-black uppercase tracking-wider">{{ $t('link') || 'رابط' }}</span>
                           </a>

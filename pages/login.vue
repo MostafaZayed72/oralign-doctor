@@ -59,7 +59,7 @@ const handleLogin = async () => {
   
   if (result.success) {
     const role = useAuth().user.value?.role
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'employee') {
       router.push(localePath('/admin/patient-cases'))
     } else {
       router.push(localePath('/dashboard'))

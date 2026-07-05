@@ -108,7 +108,7 @@ const localePath = useLocalePath()
 const menuItems = computed(() => {
   const allItems = [
     { name: t('dashboard'), icon: 'fas fa-th-large', path: localePath('/admin') },
-    { name: t('users'), icon: 'fas fa-users', path: localePath('/admin/users'), permKey: 'doctors' },
+    ...(user.value?.role === 'admin' ? [{ name: t('users'), icon: 'fas fa-users', path: localePath('/admin/users') }] : []),
     { 
       name: t('cases_sidebar'), 
       icon: 'fas fa-briefcase-medical', 

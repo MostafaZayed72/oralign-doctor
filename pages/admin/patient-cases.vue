@@ -194,6 +194,7 @@
                 <th v-if="hasPermission('columns', 'fin_price_list')" class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('price_list') }}</th>
                 <th v-if="hasPermission('columns', 'fin_doc_notes')" class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('document_notes') }}</th>
                 <th v-if="hasPermission('columns', 'fin_receipts')" class="px-2 py-3 border-b border-r border-slate-200 dark:border-slate-800 text-center">{{ t('receipt_bills') }}</th>
+                <th v-if="hasPermission('columns', 'fin_actions')" class="px-2 py-3 border-b border-slate-200 dark:border-slate-800 text-center">{{ t('actions') }}</th>
               </template>
 
               <!-- Laboratory Group (Reordered) -->
@@ -231,7 +232,7 @@
               </td>
               <template v-if="activeGroup === 'Virtual Planning'">
                 <!-- Patient Block -->
-                <td v-if="hasPermission('columns', 'patient')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
+                <td v-if="hasPermission('columns', 'vp_patient')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
@@ -251,7 +252,7 @@
                 </td>
  
                 <!-- Doctor Block -->
-                <td v-if="hasPermission('columns', 'doctor')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
+                <td v-if="hasPermission('columns', 'vp_doctor')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle" :class="getGroupColClass(activeGroup, 2)">
                   <div class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
@@ -268,13 +269,13 @@
                 </td>
                 
                 <!-- Temporary Treatment Plan Block -->
-                <td v-if="hasPermission('columns', 'plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td v-if="hasPermission('columns', 'vp_plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full" @click.stop>
                             <a v-if="item.temp_treatment_plan_file && !checkDefault(item.temp_treatment_plan_file)" :href="fixFileUrl(item.temp_treatment_plan_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
                                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
-                            <a v-if="item.temp_treatment_plan_url" :href="item.temp_treatment_plan_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                            <a v-if="item.temp_treatment_plan_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.temp_treatment_plan_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
@@ -302,13 +303,13 @@
                 </td>
 
                 <!-- Treatment Plan Status 1 Block -->
-                <td v-if="hasPermission('columns', 'plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
+                <td v-if="hasPermission('columns', 'vp_plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
                             <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
                                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
-                            <a v-if="item.treatment_plan1_url" :href="item.treatment_plan1_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                            <a v-if="item.treatment_plan1_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.treatment_plan1_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
@@ -325,13 +326,13 @@
                 </td>
                 
                 <!-- Treatment Plan Status 2 Block -->
-                <td v-if="hasPermission('columns', 'plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
+                <td v-if="hasPermission('columns', 'vp_plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full">
                             <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
                                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
-                            <a v-if="item.treatment_plan2_url" :href="item.treatment_plan2_url" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                            <a v-if="item.treatment_plan2_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.treatment_plan2_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
@@ -348,7 +349,7 @@
                 </td>
  
                 <!-- Status -->
-                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 7)">
+                <td v-if="hasPermission('columns', 'vp_status')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 7)">
                     <div class="w-full min-h-[38px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getBadgeClass(item.status)">
                       <span v-if="item.status" class="text-[12px] font-black uppercase tracking-tight text-white-force">
                         {{ item.status }}
@@ -356,12 +357,34 @@
                       <span v-else class="text-slate-400 text-xs font-bold">-</span>
                     </div>
                 </td>
+
+                <!-- Actions Block -->
+                <td v-if="hasPermission('columns', 'vp_actions')" @click.stop class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 8)">
+                    <div class="flex items-center justify-center gap-2">
+                        <template v-if="showDrafts">
+                          <button @click.stop="restoreSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-emerald-500 text-white rounded shadow-lg hover:bg-emerald-600 active:scale-95 transition-all cursor-pointer" :title="locale === 'ar' ? 'استعادة' : 'Restore'">
+                            <i class="fas fa-undo text-xs"></i>
+                          </button>
+                          <button @click.stop="forceDeleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded shadow-lg hover:bg-red-700 active:scale-95 transition-all cursor-pointer" :title="locale === 'ar' ? 'حذف نهائياً' : 'Delete Permanently'">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                          </button>
+                        </template>
+                        <template v-else>
+                          <button @click.stop="openModal(item)" class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 active:scale-95 transition-all cursor-pointer">
+                            <i class="fas fa-pen text-xs"></i>
+                          </button>
+                          <button v-if="hasPermission('actions', 'delete_case')" @click.stop="deleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded shadow-lg hover:bg-red-600 active:scale-95 transition-all cursor-pointer">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                          </button>
+                        </template>
+                    </div>
+                </td>
               </template>
 
               <!-- Finance Cells -->
               <template v-else-if="activeGroup === 'Finance'">
                 <!-- Patient Block -->
-                <td v-if="hasPermission('columns', 'patient')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
+                <td v-if="hasPermission('columns', 'fin_patient')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
@@ -379,24 +402,24 @@
                     </div>
                   </NuxtLink>
                 </td>
-
+ 
                 <!-- Doctor Block -->
-                <td v-if="hasPermission('columns', 'doctor')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
+                <td v-if="hasPermission('columns', 'fin_doctor')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
                   <div class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
-
+ 
                 <!-- Package Block -->
-                <td v-if="hasPermission('columns', 'package')" @click.stop="openModal(item, 'package')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
+                <td v-if="hasPermission('columns', 'fin_package')" @click.stop="openModal(item, 'package')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
                     <div class="flex flex-col items-center justify-center gap-1">
                         <span>{{ item.package }}</span>
                         <span v-if="item.sub_package" class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 uppercase tracking-widest">{{ item.sub_package }}</span>
                     </div>
                 </td>
-
+ 
                 <!-- Price List Block -->
-                <td v-if="hasPermission('columns', 'finance')" @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 4)">
+                <td v-if="hasPermission('columns', 'fin_price_list')" @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 4)">
                     <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[38px]">
                         <!-- Old price_list_url if exists -->
                         <button v-if="item.price_list_url" @click.stop="openPreview(item.price_list_url, locale === 'ar' ? 'قائمة الأسعار' : 'Price List')" class="w-10 h-10 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة قائمة الأسعار' : 'Preview Price List'">
@@ -414,14 +437,14 @@
                         <span v-if="!item.price_list_url && (!item.documents || !item.documents.filter(d => d.type === 'price_list').length)" class="text-slate-400 font-bold">-</span>
                     </div>
                 </td>
-
+ 
                 <!-- Document Notes Block -->
-                <td v-if="hasPermission('columns', 'finance')" @click.stop="openModal(item, 'documents')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-semibold text-slate-800 dark:text-white cursor-pointer" :class="getGroupColClass(activeGroup, 5)">
+                <td v-if="hasPermission('columns', 'fin_doc_notes')" @click.stop="openModal(item, 'documents')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-semibold text-slate-800 dark:text-white cursor-pointer" :class="getGroupColClass(activeGroup, 5)">
                     {{ item.document_notes || '--' }}
                 </td>
 
                 <!-- Receipt Block -->
-                <td v-if="hasPermission('columns', 'finance')" @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
+                <td v-if="hasPermission('columns', 'fin_receipts')" @click.stop="openModal(item, 'documents')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-wrap items-center justify-center gap-2 p-2 min-h-[38px]">
                         <!-- Old receipt_url if exists -->
                         <button v-if="item.receipt_url" @click.stop="openPreview(item.receipt_url, locale === 'ar' ? 'الفاتورة' : 'Receipt')" class="w-10 h-10 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md transition-all hover:scale-110" :title="locale === 'ar' ? 'معاينة الفاتورة' : 'Preview Receipt'">
@@ -440,12 +463,34 @@
                         <span v-if="!item.receipt_url && (!item.documents || !item.documents.filter(d => d.type === 'receipt' || d.type === 'bill').length)" class="text-slate-400 font-bold">-</span>
                     </div>
                 </td>
+
+                <!-- Actions Block -->
+                <td v-if="hasPermission('columns', 'fin_actions')" @click.stop class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 7)">
+                    <div class="flex items-center justify-center gap-2">
+                        <template v-if="showDrafts">
+                          <button @click.stop="restoreSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-emerald-500 text-white rounded shadow-lg hover:bg-emerald-600 active:scale-95 transition-all cursor-pointer" :title="locale === 'ar' ? 'استعادة' : 'Restore'">
+                            <i class="fas fa-undo text-xs"></i>
+                          </button>
+                          <button @click.stop="forceDeleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded shadow-lg hover:bg-red-700 active:scale-95 transition-all cursor-pointer" :title="locale === 'ar' ? 'حذف نهائياً' : 'Delete Permanently'">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                          </button>
+                        </template>
+                        <template v-else>
+                          <button @click.stop="openModal(item)" class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 active:scale-95 transition-all cursor-pointer">
+                            <i class="fas fa-pen text-xs"></i>
+                          </button>
+                          <button v-if="hasPermission('actions', 'delete_case')" @click.stop="deleteSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded shadow-lg hover:bg-red-600 active:scale-95 transition-all cursor-pointer">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                          </button>
+                        </template>
+                    </div>
+                </td>
               </template>
 
               <!-- Laboratory Cells -->
               <template v-else-if="activeGroup === 'Laboratory'">
                 <!-- Patient Block -->
-                <td v-if="hasPermission('columns', 'patient')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
+                <td v-if="hasPermission('columns', 'lab_patient')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 1)">
                   <NuxtLink :to="localePath(`/case-details/${item.id}`)" class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl relative group overflow-hidden"
                        :class="getPatientLinkClass(item)">
                     <span v-if="item.is_admin_read === 0" class="absolute top-0 right-4 flex h-3 w-3 rounded-full bg-white shadow-sm animate-pulse z-20"></span>
@@ -463,21 +508,21 @@
                     </div>
                   </NuxtLink>
                 </td>
-
+ 
                 <!-- Doctor Block -->
-                <td v-if="hasPermission('columns', 'doctor')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
+                <td v-if="hasPermission('columns', 'lab_doctor')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 2)">
                   <div class="min-h-[38px] flex items-center justify-center px-2.5 py-1.5 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:z-20 hover:shadow-xl cursor-pointer group">
                     <span class="text-slate-600 dark:text-slate-300 text-[14px] font-black tracking-tight group-hover:text-teal-600 transition-colors">{{ item.doctor }}</span>
                   </div>
                 </td>
-
+ 
                 <!-- Type Block -->
-                <td v-if="hasPermission('columns', 'case_type')" @click.stop="openModal(item, 'general')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
+                <td v-if="hasPermission('columns', 'lab_case_type')" @click.stop="openModal(item, 'general')" class="p-4 border-r border-slate-200 dark:border-slate-800 text-center align-middle font-black text-slate-700 dark:text-slate-200 cursor-pointer" :class="getGroupColClass(activeGroup, 3)">
                     {{ item.case_type || '-' }}
                 </td>
                 
                 <!-- Aligners Block -->
-                <td v-if="hasPermission('columns', 'aligners')" @click.stop="openModal(item, 'aligners')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 4)">
+                <td v-if="hasPermission('columns', 'lab_aligners')" @click.stop="openModal(item, 'aligners')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 4)">
                   <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                       <div class="flex items-center justify-center gap-1 w-full" v-if="item.aligners_upper || item.aligners_lower">
                           <div class="flex-1 bg-blue-100 dark:bg-blue-900/50 px-2 py-1.5 rounded border border-blue-200 text-[10px] font-black text-blue-700 dark:text-blue-300">U: {{ item.aligners_upper || '0' }}</div>
@@ -492,13 +537,13 @@
                 </td>
                 
                 <!-- Accessories Block -->
-                <td v-if="hasPermission('columns', 'accessories')" @click.stop="openModal(item, 'accessories')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
+                <td v-if="hasPermission('columns', 'lab_accessories')" @click.stop="openModal(item, 'accessories')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                   <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                       <div class="flex items-center justify-center gap-1 w-full" v-if="item.accessories_data && getActiveAccessoriesCount(item.accessories_data) > 0">
-                           <div v-for="(summary, index) in getAccessoriesSummary(item.accessories_data).slice(0, 2)" :key="index" class="w-full text-center text-[9px] font-black bg-slate-100 dark:bg-slate-700 px-1.5 py-1.5 rounded border border-slate-200 truncate">
-                              {{ summary.label }}: {{ summary.teeth }}
-                           </div>
-                           <span v-if="getAccessoriesSummary(item.accessories_data).length > 2" class="text-[8px] text-slate-500 font-black">+{{ getAccessoriesSummary(item.accessories_data).length - 2 }} more</span>
+                            <div v-for="(summary, index) in getAccessoriesSummary(item.accessories_data).slice(0, 2)" :key="index" class="w-full text-center text-[9px] font-black bg-slate-100 dark:bg-slate-700 px-1.5 py-1.5 rounded border border-slate-200 truncate">
+                               {{ summary.label }}: {{ summary.teeth }}
+                            </div>
+                            <span v-if="getAccessoriesSummary(item.accessories_data).length > 2" class="text-[8px] text-slate-500 font-black">+{{ getAccessoriesSummary(item.accessories_data).length - 2 }} more</span>
                       </div>
                       <button v-if="item.accessories_notes" @click.stop="openNoteModal(item.accessories_notes, t('accessories'))" class="w-full h-8 flex items-center justify-center bg-rose-500 text-white rounded shadow hover:bg-rose-600 transition-all gap-2">
                           <i class="fas fa-sticky-note text-[10px]"></i>
@@ -509,7 +554,7 @@
                 </td>
 
                 <!-- Manufacturing -->
-                <td @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
+                <td v-if="hasPermission('columns', 'lab_manufacturing')" @click.stop="openModal(item, 'general')" class="p-2 border-r border-slate-200 dark:border-slate-800 text-center align-middle cursor-pointer" :class="getGroupColClass(activeGroup, 6)">
                     <div class="w-full min-h-[38px] flex items-center justify-center bg-gradient-to-br from-white/20 via-transparent to-black/20 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] border-t border-white/30 border-l border-white/20 rounded-xl transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-2xl z-10" :class="getLabBadgeClass(item.lab_status)">
                       <span v-if="item.lab_status" class="text-[12px] font-black uppercase tracking-tight text-white-force">
                         {{ item.lab_status }}
@@ -526,7 +571,7 @@
                 </td>
 
                 <!-- Actions Block -->
-                <td v-if="hasPermission('columns', 'actions')" @click.stop class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 8)">
+                <td v-if="hasPermission('columns', 'lab_actions')" @click.stop class="p-4 align-middle text-center" :class="getGroupColClass(activeGroup, 8)">
                     <div class="flex items-center justify-center gap-2">
                         <template v-if="showDrafts">
                           <button @click.stop="restoreSingleRow(item.id)" class="w-8 h-8 flex items-center justify-center bg-emerald-500 text-white rounded shadow-lg hover:bg-emerald-600 active:scale-95 transition-all cursor-pointer" :title="locale === 'ar' ? 'استعادة' : 'Restore'">
