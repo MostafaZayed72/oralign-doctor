@@ -272,10 +272,10 @@
                 <td v-if="hasPermission('columns', 'vp_plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
                         <div class="flex flex-col items-stretch justify-center gap-1 w-full" @click.stop>
-                            <a v-if="item.temp_treatment_plan_file && !checkDefault(item.temp_treatment_plan_file)" :href="fixFileUrl(item.temp_treatment_plan_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
+                            <a v-if="item.temp_treatment_plan_file && !checkDefault(item.temp_treatment_plan_file)" :href="fixFileUrl(item.temp_treatment_plan_file)" target="_blank" @click.stop class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
                                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
-                            <a v-if="item.temp_treatment_plan_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.temp_treatment_plan_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                            <a v-if="item.temp_treatment_plan_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.temp_treatment_plan_url)" target="_blank" @click.stop class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
@@ -305,11 +305,11 @@
                 <!-- Treatment Plan Status 1 Block -->
                 <td v-if="hasPermission('columns', 'vp_plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 5)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
-                        <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
+                        <div class="flex flex-col items-stretch justify-center gap-1 w-full" @click.stop>
+                            <a v-if="item.treatment_plan1_file && !checkDefault(item.treatment_plan1_file)" :href="fixFileUrl(item.treatment_plan1_file)" target="_blank" @click.stop class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
                                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
-                            <a v-if="item.treatment_plan1_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.treatment_plan1_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                            <a v-if="item.treatment_plan1_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.treatment_plan1_url)" target="_blank" @click.stop class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
@@ -328,11 +328,11 @@
                 <!-- Treatment Plan Status 2 Block -->
                 <td v-if="hasPermission('columns', 'vp_plans')" @click.stop="openModal(item, 'plans')" class="p-2 border-r border-slate-200 dark:border-slate-800 align-middle text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" :class="getGroupColClass(activeGroup, 6)">
                     <div class="flex flex-col items-stretch justify-center gap-2 w-full">
-                        <div class="flex flex-col items-stretch justify-center gap-1 w-full">
-                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
+                        <div class="flex flex-col items-stretch justify-center gap-1 w-full" @click.stop>
+                            <a v-if="item.treatment_plan2 && !checkDefault(item.treatment_plan2)" :href="fixFileUrl(item.treatment_plan2)" target="_blank" @click.stop class="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all mx-auto" :title="t('download_pdf')">
                                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
                             </a>
-                            <a v-if="item.treatment_plan2_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.treatment_plan2_url)" target="_blank" class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
+                            <a v-if="item.treatment_plan2_url" :href="localePath('/viewer') + '?url=' + encodeURIComponent(item.treatment_plan2_url)" target="_blank" @click.stop class="w-full h-8 flex items-center justify-center text-white bg-teal-500 rounded shadow-md hover:bg-teal-600 transition-all gap-2 px-2" :title="locale === 'ar' ? 'عرض الرابط' : 'View Link'">
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                                 <span class="text-[10px] font-bold">{{ locale === 'ar' ? 'رابط' : 'Link' }}</span>
                             </a>
