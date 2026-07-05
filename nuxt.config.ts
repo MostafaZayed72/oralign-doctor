@@ -2,6 +2,12 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  nitro: {
+    prerender: {
+      failOnError: false
+    }
+  },
+
   app: {
     head: {
       link: [
