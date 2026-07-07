@@ -173,7 +173,7 @@ const removeFile = (key: string) => {
 const fixFileUrl = (url: string) => {
   if (!url) return url
   if (url.startsWith('http')) return url
-  return `https://doctors.oralign.co/public/impressions/xraysphotos/${url}`
+  return `https://doctors.oralign.co/impressions/xraysphotos/${url}`
 }
 </script>
 
