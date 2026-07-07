@@ -133,9 +133,9 @@
                       <button @click="viewImage(img)" class="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center hover:scale-110 transition-transform">
                         <i class="fas fa-eye text-xs"></i>
                       </button>
-                      <a :href="`https://doctors.oralign.co/doctor/downloadXRaysPhotoFile/${img}`" class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center hover:scale-110 transition-transform">
+                      <button @click.stop="triggerDownload(img)" class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center hover:scale-110 transition-transform">
                         <i class="fas fa-download text-xs"></i>
-                      </a>
+                      </button>
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 py-1 text-center text-[9px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest border-t border-slate-100 dark:border-slate-800">
                       {{ key.replace(/_/g, ' ') }}
@@ -626,6 +626,25 @@ const currentPlanStatus = computed(() => {
 const viewImage = (img) => {
   selectedImage.value = fixFileUrl(img)
   showLightbox.value = true
+}
+
+const triggerDownload = async (img) => {
+  try {
+    const url = fixFileUrl(img)
+    const response = await fetch(url)
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = blobUrl
+    link.download = img.split('/').pop() || 'download'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(blobUrl)
+  } catch (error) {
+    console.error('Failed to download image directly:', error)
+    window.open(fixFileUrl(img), '_blank')
+  }
 }
 
 const fixFileUrl = (url) => {
