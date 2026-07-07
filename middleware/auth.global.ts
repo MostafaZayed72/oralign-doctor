@@ -16,6 +16,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   
   // If not logged in and trying to access protected route
   if (isProtectedPath && !isAuthenticated.value) {
+    if (process.server) return
     return navigateTo(localePath('/login'))
   }
   
