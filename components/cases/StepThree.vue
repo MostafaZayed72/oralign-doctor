@@ -22,26 +22,26 @@
       <div v-for="slot in photoSlots" :key="slot.key" class="space-y-2 group">
         <div class="flex justify-between items-center px-1">
           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-brand-primary transition-colors">{{ slot.label }}</label>
-          <i v-if="formData.recordFiles?.[slot.key]" class="fas fa-check-circle text-emerald-500 text-xs"></i>
+          <i v-if="formData.recordFiles?.[slot.key] || formData.existingRecords?.[slot.key]" class="fas fa-check-circle text-emerald-500 text-xs"></i>
         </div>
         
         <div 
           @click="triggerSlotClick(slot.key)"
           class="relative aspect-[4/3] rounded-2xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center overflow-hidden cursor-pointer group/card"
           :class="[
-            formData.recordFiles?.[slot.key] 
+            (formData.recordFiles?.[slot.key] || formData.existingRecords?.[slot.key])
               ? 'border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-900/10' 
               : 'border-slate-200 dark:border-slate-800 hover:border-brand-primary hover:bg-slate-50 dark:hover:bg-slate-800/50'
           ]"
         >
           <!-- Preview Image -->
-          <template v-if="previews[slot.key]">
-            <img :src="previews[slot.key]" class="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110" />
+          <template v-if="previews[slot.key] || formData.existingRecords?.[slot.key]">
+            <img :src="previews[slot.key] || fixFileUrl(formData.existingRecords[slot.key])" class="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110" />
             <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover/card:opacity-100 transition-opacity flex flex-col items-center justify-center p-4">
                <button @click.stop="removeFile(slot.key)" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-red-600 transition-all transform hover:scale-105 shadow-lg">
                  Remove
                </button>
-               <p class="text-[8px] text-white/70 mt-2 text-center truncate w-full">{{ formData.recordFiles[slot.key].name }}</p>
+               <p class="text-[8px] text-white/70 mt-2 text-center truncate w-full">{{ formData.recordFiles[slot.key]?.name || formData.existingRecords[slot.key] }}</p>
             </div>
           </template>
 
@@ -160,10 +160,20 @@ const removeFile = (key: string) => {
   delete newRecordFiles[key]
   emit('update', 'recordFiles', newRecordFiles)
   
+  if (props.formData.existingRecords) {
+    props.formData.existingRecords[key] = ''
+  }
+  
   if (previews.value[key]) {
     URL.revokeObjectURL(previews.value[key])
     delete previews.value[key]
   }
+}
+
+const fixFileUrl = (url: string) => {
+  if (!url) return url
+  if (url.startsWith('http')) return url
+  return `https://doctors.oralign.co/impressions/xraysphotos/${url}`
 }
 </script>
 

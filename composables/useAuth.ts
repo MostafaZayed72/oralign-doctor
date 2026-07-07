@@ -27,6 +27,7 @@ export const useAuth = () => {
 
   const fetchUser = async () => {
     if (!token.value) return
+    if (!process.client) return
     try {
       const response: any = await $fetch(`${config.public.apiProxyBase}/me`, {
         headers: { Authorization: `Bearer ${token.value}` },

@@ -658,7 +658,7 @@ const fixFileUrl = (url) => {
     return url
   }
   
-  const baseUrl = 'https://doctors.oralign.co/public/impressions'
+  const baseUrl = 'https://doctors.oralign.co/impressions'
   
   // If it's just a filename (no slashes)
   if (!url.includes('/')) {

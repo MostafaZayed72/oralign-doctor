@@ -181,6 +181,7 @@ const formData = ref({
   
   // Step 2: Patient Records
   recordFiles: {},
+  existingRecords: {},
 
   // Step 3: Jaw Scans
   impressionType: 'upload', // 'upload', 'link', 'pickup'
@@ -249,6 +250,21 @@ onMounted(async () => {
           formData.value.impressionType = c.impression_type || 'upload'
           formData.value.stlLinks = c.stl_links || ''
           formData.value.pickupAddress = c.pickup_address || ''
+        }
+        
+        if (response.data.records) {
+          formData.value.existingRecords = {
+            frontal: response.data.records.frontal || '',
+            right_buccal: response.data.records.right_buccal || '',
+            left_buccal: response.data.records.left_buccal || '',
+            panoramic: response.data.records.panoramic || '',
+            upper_occlusal: response.data.records.upper_occlusal || '',
+            lower_occlusal: response.data.records.lower_occlusal || '',
+            front_smiling: response.data.records.front_smiling || '',
+            cephalometric: response.data.records.cephalometric || '',
+            front_pose: response.data.records.front_pose || '',
+            profile_pose: response.data.records.profile || '',
+          }
         }
         
         if (response.data.detailedPlan) {
@@ -394,20 +410,28 @@ const submitCase = async () => {
     // Stage 2: Upload Files ONE BY ONE (to bypass server payload limits)
     
     // 1. Upload Clinical Photos
-    if (formData.value.recordFiles) {
-      for (const key in formData.value.recordFiles) {
-        const file = formData.value.recordFiles[key]
+    const photoKeys = [
+      'frontal', 'right_buccal', 'left_buccal', 'panoramic', 'upper_occlusal',
+      'lower_occlusal', 'front_smiling', 'cephalometric', 'front_pose', 'profile_pose'
+    ]
+    for (const key of photoKeys) {
+      const file = formData.value.recordFiles?.[key]
+      const isDeleted = formData.value.existingRecords?.[key] === ''
+      
+      if (file || isDeleted) {
+        const photoBody = new FormData()
+        photoBody.append('case_id', caseId)
         if (file) {
-          const photoBody = new FormData()
-          photoBody.append('case_id', caseId)
           photoBody.append(key, file)
-
-          await $fetch('/api/doctor/case-file-upload-direct', {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
-            body: photoBody
-          })
+        } else {
+          photoBody.append(key, '')
         }
+
+        await $fetch('/api/doctor/case-file-upload-direct', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
+          body: photoBody
+        })
       }
     }
     

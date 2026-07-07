@@ -318,7 +318,7 @@ const fixFileUrl = (url) => {
   
   // If it's just a filename (doesn't contain slashes), 
   // point it to the production impressions folder
-  const baseUrl = 'https://doctors.oralign.co/public/impressions'
+  const baseUrl = 'https://doctors.oralign.co/impressions'
   if (!url.includes('/')) {
      return `${baseUrl}/patient_cases/files/${url}`
   }
