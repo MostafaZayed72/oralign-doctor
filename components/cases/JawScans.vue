@@ -34,24 +34,26 @@
                  @click="triggerFileClick(jaw)"
                  class="relative aspect-video rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-brand-primary hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300 flex flex-col items-center justify-center overflow-hidden cursor-pointer group"
                >
-                 <template v-if="formData.stlFiles[jaw]">
-                   <div class="absolute inset-0 w-full h-full">
-                     <CasesStlViewer :file="formData.stlFiles[jaw]" />
-                     <!-- File Info Overlay -->
-                     <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                       <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-2 max-w-[70%]">
-                         <i class="fas fa-cube text-brand-primary text-[10px]"></i>
-                         <span class="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">{{ formData.stlFiles[jaw].name }}</span>
-                       </div>
-                       <button 
-                         @click.stop="removeFile(jaw)" 
-                         class="pointer-events-auto w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
-                       >
-                         <i class="fas fa-times text-xs"></i>
-                       </button>
-                     </div>
-                   </div>
-                 </template>
+                  <template v-if="formData.stlFiles[jaw] || formData.existingStls?.[jaw]">
+                    <div class="absolute inset-0 w-full h-full">
+                      <CasesStlViewer :file="formData.stlFiles[jaw] || fixStlUrl(formData.existingStls[jaw])" />
+                      <!-- File Info Overlay -->
+                      <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                        <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-2 max-w-[70%]">
+                          <i class="fas fa-cube text-brand-primary text-[10px]"></i>
+                          <span class="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">
+                            {{ formData.stlFiles[jaw] ? formData.stlFiles[jaw].name : getFileName(formData.existingStls[jaw]) }}
+                          </span>
+                        </div>
+                        <button 
+                          @click.stop="removeFile(jaw)" 
+                          class="pointer-events-auto w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                        >
+                          <i class="fas fa-times text-xs"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </template>
                  <template v-else>
                    <img src="/images/placeholders/stl_scan.png" class="absolute inset-0 w-full h-full object-cover opacity-10 grayscale group-hover:opacity-30 transition-opacity" />
                    <div class="relative z-10 text-center p-6">
@@ -231,5 +233,20 @@ const handleFileChange = (event: Event, jaw: string) => {
 const removeFile = (jaw: string) => {
   const newStlFiles = { ...props.formData.stlFiles, [jaw]: null }
   emit('update', 'stlFiles', newStlFiles)
+  if (props.formData.existingStls) {
+    const newExistingStls = { ...props.formData.existingStls, [jaw]: '' }
+    emit('update', 'existingStls', newExistingStls)
+  }
+}
+
+const fixStlUrl = (url: string) => {
+  if (!url) return url
+  if (url.startsWith('http')) return url
+  return `https://doctors.oralign.co/impressions/3dFiles/${url}`
+}
+
+const getFileName = (url: string) => {
+  if (!url) return ''
+  return url.substring(url.lastIndexOf('/') + 1)
 }
 </script>

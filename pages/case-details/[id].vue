@@ -236,6 +236,80 @@
                 </div>
               </div>
 
+              <!-- Scans Tab -->
+              <div v-if="activeTab === 'scans'" class="animate-in fade-in duration-500 space-y-6">
+                <h3 class="text-lg md:text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  <i class="fas fa-cube text-brand-primary text-base"></i>
+                  {{ $t('jaw_scans') || 'Jaw Scans (3D Models)' }}
+                </h3>
+
+                <!-- Upload Type Scans -->
+                <div v-if="!caseData.impression || (caseData.impression.impressions_type === 'digital' && caseData.impression.digital_impression_type === '3d_scans')" class="space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div v-for="jaw in ['lower', 'upper']" :key="jaw" class="space-y-3">
+                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">{{ jaw }} Occlusal Scan</label>
+                      <div class="relative aspect-video rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col items-center justify-center overflow-hidden">
+                        <template v-if="caseData.impression?.[jaw === 'lower' ? 'lower_occlusal' : 'upper_occlusal']">
+                          <div class="absolute inset-0 w-full h-full">
+                            <CasesStlViewer :file="fixStlUrl(caseData.impression[jaw === 'lower' ? 'lower_occlusal' : 'upper_occlusal'])" />
+                            <!-- File Info & Download Overlay -->
+                            <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                              <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-2 max-w-[70%]">
+                                <i class="fas fa-cube text-brand-primary text-[10px]"></i>
+                                <span class="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">
+                                  {{ getFileName(caseData.impression[jaw === 'lower' ? 'lower_occlusal' : 'upper_occlusal']) }}
+                                </span>
+                              </div>
+                              <button 
+                                @click.stop="triggerDownload(fixStlUrl(caseData.impression[jaw === 'lower' ? 'lower_occlusal' : 'upper_occlusal']))" 
+                                class="pointer-events-auto w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                                title="Download STL File"
+                              >
+                                <i class="fas fa-download text-xs"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </template>
+                        <template v-else>
+                          <div class="text-center p-6 text-slate-400">
+                            <i class="fas fa-exclamation-circle text-2xl mb-2"></i>
+                            <p class="text-[10px] font-black uppercase tracking-widest">No {{ jaw }} scan uploaded</p>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Link Type Scans -->
+                <div v-else-if="caseData.impression.impressions_type === 'digital' && caseData.impression.digital_impression_type === 'other'" class="space-y-4">
+                  <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-[#005f59]">STL Files Shared Links</h4>
+                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">The doctor provided links to external storage (e.g. WeTransfer, Google Drive):</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 whitespace-pre-line text-xs font-semibold leading-relaxed break-all select-all">
+                      {{ caseData.impression.stl_files_link }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pickup Type Scans -->
+                <div v-else-if="caseData.impression.impressions_type === 'physical'" class="space-y-4">
+                  <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
+                        <i class="fas fa-truck"></i>
+                      </div>
+                      <h4 class="text-xs font-black uppercase tracking-widest text-[#005f59]">Physical Impression Pickup</h4>
+                    </div>
+                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">The doctor requested physical impression pickup at the following address:</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 text-xs font-semibold">
+                      <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                      {{ caseData.impression.pickup_address }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- History Tab -->
               <div v-if="activeTab === 'history'" class="animate-in fade-in duration-500">
                 <h3 class="text-lg md:text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -563,6 +637,9 @@ const tabs = computed(() => {
   t.push({ id: 'details', title: 'Details' })
   if (caseData.value.case.case_type === 'aligner') {
     t.push({ id: 'records', title: 'Records' })
+    if (authUser.value?.role === 'admin') {
+      t.push({ id: 'scans', title: 'Jaw Scans' })
+    }
     t.push({ id: 'detailed_plan', title: 'Detailed Plan' })
   }
   t.push({ id: 'history', title: 'History' })
@@ -783,6 +860,17 @@ const formatTime = (date) => {
     minute: '2-digit',
     hour12: true
   })
+}
+
+const fixStlUrl = (url) => {
+  if (!url) return url
+  if (url.startsWith('http')) return url
+  return `https://doctors.oralign.co/impressions/3dFiles/${url}`
+}
+
+const getFileName = (url) => {
+  if (!url) return ''
+  return url.substring(url.lastIndexOf('/') + 1)
 }
 
 const refineCase = () => {

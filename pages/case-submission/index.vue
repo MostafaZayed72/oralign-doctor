@@ -186,6 +186,7 @@ const formData = ref({
   // Step 3: Jaw Scans
   impressionType: 'upload', // 'upload', 'link', 'pickup'
   stlFiles: { lower: null, upper: null },
+  existingStls: { lower: '', upper: '' },
   stlLinks: '',
   pickupAddress: '',
 
@@ -264,6 +265,13 @@ onMounted(async () => {
             cephalometric: response.data.records.cephalometric || '',
             front_pose: response.data.records.front_pose || '',
             profile_pose: response.data.records.profile || '',
+          }
+        }
+
+        if (response.data.impression) {
+          formData.value.existingStls = {
+            upper: response.data.impression.upper_occlusal || '',
+            lower: response.data.impression.lower_occlusal || '',
           }
         }
         
@@ -436,10 +444,15 @@ const submitCase = async () => {
     }
     
     // 2. Upload STL Files
-    if (formData.value.stlFiles.upper) {
+    const isUpperStlDeleted = formData.value.existingStls?.upper === ''
+    if (formData.value.stlFiles.upper || isUpperStlDeleted) {
       const upperBody = new FormData()
       upperBody.append('case_id', caseId)
-      upperBody.append('stl_upper', formData.value.stlFiles.upper)
+      if (formData.value.stlFiles.upper) {
+        upperBody.append('stl_upper', formData.value.stlFiles.upper)
+      } else {
+        upperBody.append('stl_upper', '')
+      }
       await $fetch('/api/doctor/case-file-upload-direct', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
@@ -447,10 +460,15 @@ const submitCase = async () => {
       })
     }
 
-    if (formData.value.stlFiles.lower) {
+    const isLowerStlDeleted = formData.value.existingStls?.lower === ''
+    if (formData.value.stlFiles.lower || isLowerStlDeleted) {
       const lowerBody = new FormData()
       lowerBody.append('case_id', caseId)
-      lowerBody.append('stl_lower', formData.value.stlFiles.lower)
+      if (formData.value.stlFiles.lower) {
+        lowerBody.append('stl_lower', formData.value.stlFiles.lower)
+      } else {
+        lowerBody.append('stl_lower', '')
+      }
       await $fetch('/api/doctor/case-file-upload-direct', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },

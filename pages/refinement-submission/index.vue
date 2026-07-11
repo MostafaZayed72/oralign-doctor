@@ -199,6 +199,7 @@ const formData = ref({
   stlLinks: '',
   pickupAddress: '',
   stlFiles: { upper: null, lower: null },
+  existingStls: { upper: '', lower: '' },
 
   // Step 4: Plan Options (Chief Complaint & Package)
   chiefComplaint: '',
@@ -264,6 +265,13 @@ onMounted(async () => {
           formData.value.treatmentArch = p.arch || 'Both'
           formData.value.hasPrimaryTeeth = p.has_primary_teeth === '1' || p.has_primary_teeth === true
           formData.value.packageType = p.package_id == 2 ? 'Plus' : (p.package_id == 3 ? 'Pro' : 'Basic')
+        }
+
+        if (response.data.impression) {
+          formData.value.existingStls = {
+            upper: response.data.impression.upper_occlusal || '',
+            lower: response.data.impression.lower_occlusal || '',
+          }
         }
 
         if (response.data.detailedPlan) {
@@ -463,10 +471,15 @@ const submitRefinement = async () => {
     }
     
     // 2. STLs
-    if (formData.value.stlFiles.upper) {
+    const isUpperStlDeleted = formData.value.existingStls?.upper === ''
+    if (formData.value.stlFiles.upper || isUpperStlDeleted) {
       const upperBody = new FormData()
       upperBody.append('case_id', caseId)
-      upperBody.append('stl_upper', formData.value.stlFiles.upper)
+      if (formData.value.stlFiles.upper) {
+        upperBody.append('stl_upper', formData.value.stlFiles.upper)
+      } else {
+        upperBody.append('stl_upper', '')
+      }
       await $fetch('/api/doctor/case-file-upload-direct', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
@@ -474,10 +487,15 @@ const submitRefinement = async () => {
       })
     }
 
-    if (formData.value.stlFiles.lower) {
+    const isLowerStlDeleted = formData.value.existingStls?.lower === ''
+    if (formData.value.stlFiles.lower || isLowerStlDeleted) {
       const lowerBody = new FormData()
       lowerBody.append('case_id', caseId)
-      lowerBody.append('stl_lower', formData.value.stlFiles.lower)
+      if (formData.value.stlFiles.lower) {
+        lowerBody.append('stl_lower', formData.value.stlFiles.lower)
+      } else {
+        lowerBody.append('stl_lower', '')
+      }
       await $fetch('/api/doctor/case-file-upload-direct', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token.value}`, Accept: 'application/json' },
